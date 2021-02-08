@@ -1,0 +1,18 @@
+---
+site_name: BinTra
+site_dir: pub_mkdocs
+site_description: Binary Transparency Directory
+site_author: Kai KRETSCHMANN
+copyright: Kai KRETSCHMANN
+repo_url: https://gitlab.kretschmann.software/kai/bintra
+repo_name: Gitlab
+theme: readthedocs
+extra_javascript:
+  - matomo.js
+extra_css:
+  - demodata.css
+nav:
+  - Home: index.md
+  - Imprint: imprint.md
+  - 'Issue tracker': 'https://gitlab.kretschmann.software/kai/bintra/-/issues'
+  - 'Swagger API': 'https://api.bintra.directory/docs/'

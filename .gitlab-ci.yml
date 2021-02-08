@@ -1,0 +1,79 @@
+stages:
+  - build
+  - test
+  - analyze
+  - deploy
+
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+image: node:12
+
+# This folder is cached between builds
+# http://docs.gitlab.com/ee/ci/yaml/README.html#cache
+cache:
+  paths:
+    - node_modules/
+
+variables:
+  versionTag: '$CI_COMMIT_SHA'
+
+makedocs:
+  stage: build
+  image: $CI_REGISTRY/kai/lggr:mkdocs
+  before_script:
+  - mkdir pub_mkdocs
+  script:
+  - mkdocs build
+  artifacts:
+    paths:
+    - pub_mkdocs
+
+jsdocs:
+  stage: build
+  before_script:
+  - npm install
+  script:
+  - ./node_modules/.bin/jsdoc --verbose -c jsdoc.json
+  artifacts:
+    paths:
+    - out
+
+unittest:
+  stage: test
+  before_script:
+  - npm install
+  script:
+  - npm test
+  - npm run coverage
+  artifacts:
+    paths:
+    - mochawesome-report/
+    - coverage/
+
+sonarqube:
+  stage: analyze
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  before_script:
+    - git fetch --unshallow
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
+  allow_failure: true
+
+pages:
+  stage: deploy
+  image: alpine
+  before_script:
+  - mkdir public
+  - mkdir public/jsdoc
+  - mkdir public/mocha
+  script:
+  - cp -a pub_mkdocs/* public/
+  - cp -a out/* public/jsdoc/
+  - cp -a mochawesome-report/* public/mocha/
+  artifacts:
+    paths:
+    - public
