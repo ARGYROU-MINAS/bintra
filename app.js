@@ -20,6 +20,12 @@ var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
+var mongoose = require('mongoose');
+
+var mongoDB = 'mongodb://127.0.0.1/bintra';
+mongoose.connect(mongoDB, { useNewUrlParser: true, useInifiedTopology: true });
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // swaggerRouter configuration
 var options = {
