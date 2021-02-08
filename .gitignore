@@ -1,0 +1,8 @@
+node_modules/
+.env
+.version
+pub_mkdocs/
+out/
+mochawesome-report/
+coverage/
+.nyc_output/
