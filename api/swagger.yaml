@@ -54,7 +54,49 @@ paths:
         400:
           description: bad input parameter(s)
       x-swagger-router-controller: "Users"
+  /count:
+    get:
+      x-swagger-router-controller: "Users"
+      tags:
+      - users
+      summary: return number of entries
+      operationId: countPackage
+      description: |
+        By passing in the appropriate options, you can validate a
+        package before installing it
+      produces:
+      - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/PackageCount'
+        400:
+          description: bad input parameter(s)
+  /packages:
+    delete:
+      x-swagger-router-controller: "Users"
+      tags:
+      - users
+      summary: delete all packages
+      operationId: cleanupPackage
+      description: |
+        By passing in the appropriate options, you can validate a
+        package before installing it
+      responses:
+        200:
+          description: positive result we hope
+        400:
+          description: bad input parameter(s)
 definitions:
+  PackageCount:
+    type: object
+    required:
+    - count
+    properties:
+      count:
+        type: integer
+        example: 123
   PackageItem:
     type: object
     required:

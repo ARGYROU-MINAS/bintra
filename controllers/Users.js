@@ -73,10 +73,46 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
 
   Users.validatePackage(packageName, packageVersion, packageHash)
     .then(function (payload) {
-      utils.writeText(res, payload, 200);
+      utils.writeJson(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeText(res, payload, 400);
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * Expose API lorem ipsum.
+ * @public
+ */
+module.exports.cleanupPackage = function cleanupPackage (req, res, next) {
+
+  trackMethod(req);
+
+  Users.cleanupPackage()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * Expose API lorem ipsum.
+ * @public
+ */
+module.exports.countPackage = function countPackage (req, res, next) {
+
+  trackMethod(req);
+
+  Users.countPackage()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
     });
 };
 

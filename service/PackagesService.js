@@ -27,11 +27,11 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service");
     var myData = new PackageModel({
-	    packageName: packageName, packageVersion: packageVersion, packageHash: packageHash, id: 0
+	    name: packageName, version: packageVersion, hash: packageHash
     });
     myData.save()
 	  .then(item => {
-		  console.info("Was OK");
+		  console.info("Was OK: " + item);
 		  resolve("OK");
 	  })
 	  .catch(err => {
@@ -41,3 +41,44 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
   });
 }
 
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.cleanupPackage = function() {
+  return new Promise(function(resolve, reject) {
+    console.log("In cleanup service");
+    var myData = new PackageModel();
+    myData.remove({})
+          .then(item => {
+                  console.info("Was OK: " + item);
+                  resolve("OK");
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.countPackage = function() {
+  return new Promise(function(resolve, reject) {
+    console.log("In count service");
+    PackageModel.countDocuments({}, function(err, count) {
+      console.info("Was OK: " + count);
+      var examples = {};
+      examples['application/json'] = { count: count };
+      resolve(examples[Object.keys(examples)[0]]);
+    });
+  });
+}
