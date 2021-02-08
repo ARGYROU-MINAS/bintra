@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
-    "start": "node index.js",
+    "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "testlink": "mocha --reporter=xunit --exit"
