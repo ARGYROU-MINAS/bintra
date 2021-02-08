@@ -1,0 +1,79 @@
+swagger: '2.0'
+info:
+  description: bintra API
+  version: 1.0.0
+  title: Binary Transparency  API
+  # put the contact info for your development or API team
+  contact:
+    email: kai@kretschmann.consulting
+
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+# tags are used for organizing operations
+tags:
+- name: users
+  description: Operations available to regular users
+
+paths:
+  /validate:
+    get:
+      tags:
+      - users
+      summary: validates package info
+      operationId: validatePackage
+      description: |
+        By passing in the appropriate options, you can validate a
+        package before installing it
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: packageName
+        description: package name from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageVersion
+        description: package version from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageHash
+        description: SHA256 hash of downloaded file
+        required: true
+        type: string
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PackageItem'
+        400:
+          description: bad input parameter(s)
+definitions:
+  PackageItem:
+    type: object
+    required:
+    - id
+    - count
+    - creationDate
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      count:
+        type: integer
+        example: 123
+      creationDate:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /kkretsch/bintra/1.0.0
+schemes:
+ - https
