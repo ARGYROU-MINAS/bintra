@@ -29,7 +29,10 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
     var myData = new PackageModel({
 	    name: packageName, version: packageVersion, hash: packageHash
     });
-    myData.save()
+    PackageModel.updateMany(
+	    {name: packageName, version: packageVersion, hash: packageHash},
+	    { $inc: {count: 1} },
+	    { upsert: true })
 	  .then(item => {
 		  console.info("Was OK: " + item);
 		  resolve("OK");
@@ -51,8 +54,7 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
 exports.cleanupPackage = function() {
   return new Promise(function(resolve, reject) {
     console.log("In cleanup service");
-    var myData = new PackageModel();
-    myData.remove({})
+    PackageModel.remove({})
           .then(item => {
                   console.info("Was OK: " + item);
                   resolve("OK");

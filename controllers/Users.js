@@ -91,10 +91,10 @@ module.exports.cleanupPackage = function cleanupPackage (req, res, next) {
 
   Users.cleanupPackage()
     .then(function (payload) {
-      utils.writeJson(res, payload, 200);
+      utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+      utils.writeText(res, payload, 400);
     });
 };
 
