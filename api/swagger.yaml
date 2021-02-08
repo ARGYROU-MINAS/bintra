@@ -73,7 +73,8 @@ definitions:
         format: date-time
         example: 2016-08-29T09:12:33.001Z
 # Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /kkretsch/bintra/1.0.0
+#host: virtserver.swaggerhub.com
+basePath: /api
 schemes:
  - https
+ - http
