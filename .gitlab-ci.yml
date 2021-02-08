@@ -38,17 +38,17 @@ jsdocs:
     paths:
     - out
 
-unittest:
-  stage: test
-  before_script:
-  - npm install
-  script:
-  - npm test
-  - npm run coverage
-  artifacts:
-    paths:
-    - mochawesome-report/
-    - coverage/
+#unittest:
+#  stage: test
+#  before_script:
+#  - npm install
+#  script:
+#  - npm test
+#  - npm run coverage
+#  artifacts:
+#    paths:
+#    - mochawesome-report/
+#    - coverage/
 
 sonarqube:
   stage: analyze
