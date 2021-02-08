@@ -27,7 +27,7 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service");
     var myData = new PackageModel({
-	    packageName: packageName, packageVersion: packageVersion, packageHash: packageHash
+	    packageName: packageName, packageVersion: packageVersion, packageHash: packageHash, id: 0
     });
     myData.save()
 	  .then(item => {
@@ -35,7 +35,7 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
 		  resolve("OK");
 	  })
 	  .catch(err => {
-		  console.error("Not OK");
+		  console.error("Not OK: ", err);
 		  reject("bahh");
 	  });
   });
