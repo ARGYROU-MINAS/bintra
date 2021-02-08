@@ -11,6 +11,7 @@ var fs = require('fs');
 const cdigit = require("cdigit");
 var dateFormat = require("dateformat");
 require("datejs");
+var PackageModel = require('../models/package.js');
 
 /**
  * @method
@@ -24,9 +25,19 @@ require("datejs");
  **/
 exports.validatePackage = function(packageName, packageVersion, packageHash) {
   return new Promise(function(resolve, reject) {
-
-    var sentence="";
-    resolve(sentence);
+    console.log("In validate service");
+    var myData = new PackageModel({
+	    packageName: packageName, packageVersion: packageVersion, packageHash: packageHash
+    });
+    myData.save()
+	  .then(item => {
+		  console.info("Was OK");
+		  resolve("OK");
+	  })
+	  .catch(err => {
+		  console.error("Not OK");
+		  reject("bahh");
+	  });
   });
 }
 
