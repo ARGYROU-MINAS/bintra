@@ -53,6 +53,7 @@ paths:
               $ref: '#/definitions/PackageItem'
         400:
           description: bad input parameter(s)
+      x-swagger-router-controller: "Users"
 definitions:
   PackageItem:
     type: object
@@ -76,5 +77,4 @@ definitions:
 #host: virtserver.swaggerhub.com
 basePath: /api
 schemes:
- - https
  - http

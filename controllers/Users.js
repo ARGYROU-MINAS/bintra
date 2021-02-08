@@ -65,11 +65,13 @@ function trackMethod(req) {
  * @public
  */
 module.exports.validatePackage = function validatePackage (req, res, next) {
-  var amount = req.swagger.params['amount'].value;
+  var packageName = req.swagger.params['packageName'].value;
+  var packageVersion = req.swagger.params['packageVersion'].value;
+  var packageHash = req.swagger.params['packageHash'].value;
 
   trackMethod(req);
 
-  Packages.validatePackage(amount)
+  Users.validatePackage(packageName, packageVersion, packageHash)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })

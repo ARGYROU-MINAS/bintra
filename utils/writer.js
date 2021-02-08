@@ -7,7 +7,6 @@ function setHeaders(response) {
   response.setHeader('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
   response.setHeader('Pragma', 'no-cache');
   response.setHeader('Expires', '-1');
-  response.setHeader('X-version', process.env.VERSION);
 }
 
 exports.respondWithCode = function(code, payload) {

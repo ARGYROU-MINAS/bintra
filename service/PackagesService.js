@@ -14,35 +14,19 @@ require("datejs");
 
 /**
  * @method
- * Get lorem ipsum text.
+ * Validate the package.
  * @public
  *
- * @param {int} amount - Integer positive whole number of words
+ * @param {string} packageName - Name of the package
+ * @param {string} packageVersion - Version of the package
+ * @param {string} packageHash - SHA hash of the package
  * @returns String
  **/
-exports.validatePackage = function(amount) {
+exports.validatePackage = function(packageName, packageVersion, packageHash) {
   return new Promise(function(resolve, reject) {
-    if(amount <= 0) {
-      console.log("amount to small");
-      reject("amount must be positive");
-    }
 
     var sentence="";
-    fs.readFile('data/lorem_ipsum.txt', 'utf8', function(err, data) {
-      if (err) throw err;
-      var words = data.split(" ");
-      var lengthSource = words.length;
-      // console.log("source lenth=" + lengthSource);
-      if(lengthSource >= amount) {
-        words = words.slice(0, amount);
-        sentence = words.join(" ");
-      } else {
-        var longWords = arrayRepeat(words, amount);
-        sentence = longWords.join(" ");
-      }
-
-      resolve(sentence);
-    });
+    resolve(sentence);
   });
 }
 
