@@ -64,19 +64,19 @@ function trackMethod(req) {
  * Expose API lorem ipsum.
  * @public
  */
-module.exports.validatePackage = function validatePackage (req, res, next) {
+module.exports.deletePackage = function deletePackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
   var packageHash = req.swagger.params['packageHash'].value;
 
   trackMethod(req);
 
-  Service.validatePackage(packageName, packageVersion, packageHash)
+  Service.deletePackage(packageName, packageVersion, packageHash)
     .then(function (payload) {
-      utils.writeJson(res, payload, 200);
+      utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+      utils.writeText(res, payload, 400);
     });
 };
 
@@ -85,54 +85,16 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
  * Expose API lorem ipsum.
  * @public
  */
-module.exports.listPackage = function listPackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
+module.exports.cleanupPackages = function cleanupPackages (req, res, next) {
 
   trackMethod(req);
 
-  Service.listPackage(packageName, packageVersion)
+  Service.cleanupPackages()
     .then(function (payload) {
-      utils.writeJson(res, payload, 200);
+      utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
-};
-
-/**
- * @method
- * Expose API lorem ipsum.
- * @public
- */
-module.exports.listPackages = function listPackage (req, res, next) {
-
-  trackMethod(req);
-
-  Service.listPackages()
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
-};
-
-/**
- * @method
- * Expose API lorem ipsum.
- * @public
- */
-module.exports.countPackage = function countPackage (req, res, next) {
-
-  trackMethod(req);
-
-  Service.countPackage()
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+      utils.writeText(res, payload, 400);
     });
 };
 

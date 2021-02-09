@@ -15,10 +15,13 @@ info:
 tags:
 - name: users
   description: Operations available to regular users
+- name: admins
+  description: Operations available to admin users
 
 paths:
-  /validate:
-    get:
+  /package:
+    put:
+      x-swagger-router-controller: "Users"
       tags:
       - users
       summary: validates package info
@@ -53,13 +56,73 @@ paths:
               $ref: '#/definitions/PackageItem'
         400:
           description: bad input parameter(s)
+    get:
       x-swagger-router-controller: "Users"
+      tags:
+      - users
+      summary: get data for a package
+      operationId: listPackage
+      description: |
+        Return no match at all, a single match with a high count for good
+        matches, or multiple matches with only one good and one or more
+        faked entries.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: packageName
+        description: package name from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageVersion
+        description: package version from extracted meta info
+        required: true
+        type: string
+      responses:
+        200:
+          description: single good result we hope
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PackageVariants'
+        400:
+          description: bad input parameter(s)
+    delete:
+      x-swagger-router-controller: "Admins"
+      tags:
+      - admins
+      summary: delete one package
+      operationId: deletePackage
+      description: |
+        Delete one entry
+      parameters:
+      - in: query
+        name: packageName
+        description: package name from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageVersion
+        description: package version from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageHash
+        description: SHA256 hash of downloaded file
+        required: true
+        type: string
+      responses:
+        200:
+          description: positive result we hope
+        400:
+          description: bad input parameter(s)
   /count:
     get:
       x-swagger-router-controller: "Users"
       tags:
       - users
-      summary: return number of entries
+      summary: return number of all entries
       operationId: countPackage
       description: |
         By passing in the appropriate options, you can validate a
@@ -74,12 +137,29 @@ paths:
         400:
           description: bad input parameter(s)
   /packages:
-    delete:
+    get:
       x-swagger-router-controller: "Users"
       tags:
       - users
+      summary: return all entries
+      operationId: listPackages
+      description: |
+        Get all package data
+      produces:
+      - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/PackageItem'
+        400:
+          description: bad input parameter(s)
+    delete:
+      x-swagger-router-controller: "Admins"
+      tags:
+      - admins
       summary: delete all packages
-      operationId: cleanupPackage
+      operationId: cleanupPackages
       description: |
         By passing in the appropriate options, you can validate a
         package before installing it
@@ -89,14 +169,6 @@ paths:
         400:
           description: bad input parameter(s)
 definitions:
-  PackageCount:
-    type: object
-    required:
-    - count
-    properties:
-      count:
-        type: integer
-        example: 123
   PackageItem:
     type: object
     required:
@@ -115,8 +187,46 @@ definitions:
         type: string
         format: date-time
         example: 2016-08-29T09:12:33.001Z
+  PackageVariants:
+    type: object
+    required:
+    - id
+    - packageName
+    - packageVersion
+    - packageHash
+    - count
+    - creationDate
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      packageName:
+        type: string
+      packageVersion:
+        type: string
+      packageHash:
+        type: string
+      count:
+        type: integer
+        example: 123
+      creationDate:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+  PackageCount:
+    type: object
+    required:
+    - count
+    properties:
+      count:
+        type: integer
+        example: 123
 # Added by API Auto Mocking Plugin
-#host: virtserver.swaggerhub.com
+# host: virtserver.swaggerhub.com
 basePath: /api
+# schemes:
+#  - http
+# Added by API Auto Mocking Plugin
 schemes:
  - http

@@ -26,9 +26,6 @@ var PackageModel = require('../models/package.js');
 exports.validatePackage = function(packageName, packageVersion, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service");
-    var myData = new PackageModel({
-	    name: packageName, version: packageVersion, hash: packageHash
-    });
     PackageModel.updateMany(
 	    {name: packageName, version: packageVersion, hash: packageHash},
 	    { $inc: {count: 1} },
@@ -49,12 +46,87 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
  * Validate the package.
  * @public
  *
+ * @param {string} packageName - Name of the package
+ * @param {string} packageVersion - Version of the package
  * @returns String
  **/
-exports.cleanupPackage = function() {
+exports.listPackage = function(packageName, packageVersion) {
+  return new Promise(function(resolve, reject) {
+    console.log("In list service");
+    PackageModel.find({name: packageName, version: packageVersion})
+          .then(item => {
+                  console.info("Was OK: " + item);
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @param {string} packageName - Name of the package
+ * @param {string} packageVersion - Version of the package
+ * @returns String
+ **/
+exports.listPackages = function(packageName, packageVersion) {
+  return new Promise(function(resolve, reject) {
+    console.log("In list service");
+    PackageModel.find({})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.cleanupPackages = function() {
   return new Promise(function(resolve, reject) {
     console.log("In cleanup service");
+
     PackageModel.remove({})
+          .then(item => {
+                  console.info("Was OK: " + item);
+                  resolve("OK");
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ * @param {string} packageName - Name of the package
+ * @param {string} packageVersion - Version of the package
+ * @param {string} packageHash - SHA hash of the package
+ *
+ * @returns String
+ **/
+exports.deletePackage = function(packageName, packageVersion, packageHash) {
+  return new Promise(function(resolve, reject) {
+    console.log("In cleanup service");
+
+    PackageModel.remove({name: packageName, version: packageVersion, hash: packageHash})
           .then(item => {
                   console.info("Was OK: " + item);
                   resolve("OK");
@@ -76,6 +148,7 @@ exports.cleanupPackage = function() {
 exports.countPackage = function() {
   return new Promise(function(resolve, reject) {
     console.log("In count service");
+
     PackageModel.countDocuments({}, function(err, count) {
       console.info("Was OK: " + count);
       var examples = {};
