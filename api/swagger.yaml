@@ -222,11 +222,4 @@ definitions:
       count:
         type: integer
         example: 123
-# Added by API Auto Mocking Plugin
-# host: virtserver.swaggerhub.com
-basePath: /api
-# schemes:
-#  - http
-# Added by API Auto Mocking Plugin
-schemes:
- - http
+basePath: /v1
