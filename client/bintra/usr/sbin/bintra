@@ -1,0 +1,31 @@
+#!/bin/bash
+
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>/var/log/bintra.log 2>&1
+
+echo "Got called with optianal args: '$@'"
+
+while IFS='$\n' read -r line; do
+  echo "input '$line' received"
+
+  tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
+  echo "Work in $tmp_dir"
+  cd $tmp_dir
+
+  packageHash=$(sha256sum -b $line | cut -d" " -f1 | xargs)
+  echo "Hash: $packageHash"
+
+  cp $line package.deb
+  ar x package.deb
+  ls -l
+  tar xf control.tar.xz
+
+  packageName=$(cat control | grep "Package" | cut -d":" -f2- | xargs)
+  packageVersion=$(cat control | grep "Version" | cut -d":" -f2- | xargs)
+
+  curl -X PUT "https://api.bintra.directory/v1/package?packageName=$packageName&packageVersion=$packageVersion&packageHash=$packageHash" -H "accept: application/json" --no-progress-meter --show-error --user-agent "bintra/1.0"
+
+  cd /tmp
+  rm -rf $tmp_dir
+done

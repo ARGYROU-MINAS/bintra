@@ -1,0 +1,9 @@
+Package: bintra
+Version: 1.0
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Installed-Size: 1024
+Maintainer: bintra.directory
+Description: Binary Transparency check on package install
