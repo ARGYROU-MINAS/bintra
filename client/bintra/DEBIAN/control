@@ -5,5 +5,7 @@ Priority: optional
 Architecture: all
 Essential: no
 Installed-Size: 1024
-Maintainer: bintra.directory
+Maintainer: Kai KRETSCHMANN <kai@kretschmann.consulting>
+Homepage: https://bintra.directory
+Depends: curl, jq, bash
 Description: Binary Transparency check on package install
