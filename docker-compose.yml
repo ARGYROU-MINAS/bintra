@@ -5,13 +5,12 @@ services:
     image: mongo:latest
     container_name: 'bintra-mongo'
     restart: unless-stopped
-    env_file: .env
+    env_file: .env.docker
     environment:
       - MONGO_INITDB_DATABASE=$MONGO_DB
       - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
     volumes:
-            #      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - dbdata:/data/db
     networks:
       - bintra-network
@@ -23,8 +22,11 @@ services:
     image: nodejs
     container_name: 'bintra-nodejs'
     restart: unless-stopped
-    env_file: .env
+    depends_on:
+      - database
+    env_file: .env.docker
     environment:
+      - NODE_ENV=docker
       - MONGO_USERNAME=$MONGO_USERNAME
       - MONGO_PASSWORD=$MONGO_PASSWORD
       - MONGO_HOSTNAME=database
@@ -37,6 +39,7 @@ services:
       - node_modules:/home/node/app/node_modules
     networks:
       - bintra-network
+    command: npm start
 
 networks:
   bintra-network:
