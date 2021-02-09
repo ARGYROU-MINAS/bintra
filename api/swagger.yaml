@@ -250,4 +250,4 @@ definitions:
       count:
         type: integer
         example: 123
-basePath: /api
+basePath: /v1
