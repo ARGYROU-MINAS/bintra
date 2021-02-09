@@ -67,11 +67,12 @@ function trackMethod(req) {
 module.exports.deletePackage = function deletePackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
+  var packageArch = req.swagger.params['packageArch'].value;
   var packageHash = req.swagger.params['packageHash'].value;
 
   trackMethod(req);
 
-  Service.deletePackage(packageName, packageVersion, packageHash)
+  Service.deletePackage(packageName, packageVersion, packageArch, packageHash)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })

@@ -15,7 +15,7 @@ var piwik = null;
 if(process.env.MATOMO_ID) {
   piwik = new PiwikTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
 }
-var baseUrl = 'https://demodata.eu';
+var baseUrl = 'https://bintra.directory';
 
 /**
  * @function
@@ -67,11 +67,12 @@ function trackMethod(req) {
 module.exports.validatePackage = function validatePackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
+  var packageArch = req.swagger.params['packageArch'].value;
   var packageHash = req.swagger.params['packageHash'].value;
 
   trackMethod(req);
 
-  Service.validatePackage(packageName, packageVersion, packageHash)
+  Service.validatePackage(packageName, packageVersion, packageArch, packageHash)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -88,10 +89,11 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
 module.exports.listPackage = function listPackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
+  var packageVersion = req.swagger.params['packageArch'].value;
 
   trackMethod(req);
 
-  Service.listPackage(packageName, packageVersion)
+  Service.listPackage(packageName, packageVersion, packageArch)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

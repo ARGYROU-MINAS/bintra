@@ -27,8 +27,9 @@ paths:
       summary: validates package info
       operationId: validatePackage
       description: |
-        By passing in the appropriate options, you can validate a
-        package before installing it
+        Add new package entry or increment an existing one.
+        Returns all existing name-version variants with their hash and counts
+        values for further decision of the installer tool.
       produces:
       - application/json
       parameters:
@@ -43,13 +44,20 @@ paths:
         required: true
         type: string
       - in: query
+        name: packageArch
+        description: package architecture from extracted meta info
+        required: true
+        type: string
+      - in: query
         name: packageHash
         description: SHA256 hash of downloaded file
         required: true
         type: string
       responses:
         200:
-          description: positive result we hope
+          description: |
+            Single array entry with high count in best case,
+            otherwise multiple entries with one high count and one or more faked ones to beware of.
           schema:
             type: array
             items:
@@ -77,6 +85,11 @@ paths:
       - in: query
         name: packageVersion
         description: package version from extracted meta info
+        required: true
+        type: string
+      - in: query
+        name: packageArch
+        description: package architecture from extracted meta info
         required: true
         type: string
       responses:
@@ -110,6 +123,11 @@ paths:
       - in: query
         name: packageHash
         description: SHA256 hash of downloaded file
+        required: true
+        type: string
+      - in: query
+        name: packageArch
+        description: package architecture from extracted meta info
         required: true
         type: string
       responses:
@@ -172,18 +190,25 @@ definitions:
   PackageItem:
     type: object
     required:
-    - id
     - count
-    - creationDate
+    - hash
+    - name
+    - version
+    - arch
+    - tscreated
     properties:
-      id:
+      hash:
         type: string
-        format: uuid
-        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+      version:
+        type: string
+      arch:
+        type: string
       count:
         type: integer
         example: 123
-      creationDate:
+      tscreated:
         type: string
         format: date-time
         example: 2016-08-29T09:12:33.001Z
@@ -194,6 +219,7 @@ definitions:
     - packageName
     - packageVersion
     - packageHash
+    - packageArch
     - count
     - creationDate
     properties:
@@ -204,6 +230,8 @@ definitions:
       packageName:
         type: string
       packageVersion:
+        type: string
+      packageArch:
         type: string
       packageHash:
         type: string
@@ -222,4 +250,4 @@ definitions:
       count:
         type: integer
         example: 123
-basePath: /v1
+basePath: /api

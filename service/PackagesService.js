@@ -20,19 +20,20 @@ var PackageModel = require('../models/package.js');
  *
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
+ * @param {string} packageArch - Architecture of the package
  * @param {string} packageHash - SHA hash of the package
  * @returns String
  **/
-exports.validatePackage = function(packageName, packageVersion, packageHash) {
+exports.validatePackage = function(packageName, packageVersion, packageArch, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service");
     PackageModel.updateMany(
-	    {name: packageName, version: packageVersion, hash: packageHash},
+	    {name: packageName, version: packageVersion, arch: packageArch, hash: packageHash},
 	    { $inc: {count: 1} },
 	    { upsert: true })
 	  .then(item => {
 		  console.info("Was OK");
-		  PackageModel.find({name: packageName, version: packageVersion})
+		  PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
 		  	.then(item2 => {
 				console.info("Was inner OK");
 		  		resolve(item2);
@@ -56,14 +57,15 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
  *
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
+ * @param {string} packageArch - Architecture of the package
  * @returns String
  **/
-exports.listPackage = function(packageName, packageVersion) {
+exports.listPackage = function(packageName, packageVersion, packageArch) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({name: packageName, version: packageVersion})
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
           .then(item => {
-                  console.info("Was OK: " + item);
+                  console.info("Was OK");
                   resolve(item);
           })
           .catch(err => {
@@ -80,9 +82,10 @@ exports.listPackage = function(packageName, packageVersion) {
  *
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
+ * @param {string} packageArch - Architecture of the package
  * @returns String
  **/
-exports.listPackages = function(packageName, packageVersion) {
+exports.listPackages = function(packageName, packageVersion, packageArch) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
     PackageModel.find({})
@@ -126,17 +129,18 @@ exports.cleanupPackages = function() {
  * @public
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
+ * @param {string} packageArch - Architecture of the package
  * @param {string} packageHash - SHA hash of the package
  *
  * @returns String
  **/
-exports.deletePackage = function(packageName, packageVersion, packageHash) {
+exports.deletePackage = function(packageName, packageVersion, packageArch, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In cleanup service");
 
-    PackageModel.remove({name: packageName, version: packageVersion, hash: packageHash})
+    PackageModel.remove({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash})
           .then(item => {
-                  console.info("Was OK: " + item);
+                  console.info("Was OK");
                   resolve("OK");
           })
           .catch(err => {

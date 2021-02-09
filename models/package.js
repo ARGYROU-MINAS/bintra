@@ -9,6 +9,7 @@ var PackageSchema = new Schema({
 	tscreated: {type: Date, default: Date.now},
 	name: {type: String, required: true},
 	version: {type: String, required: true},
+	arch: {type: String, required: true},
 	hash: {type: String, required: true},
 	count: {type: Number, required: true, min: 1, default: 1},
 });
