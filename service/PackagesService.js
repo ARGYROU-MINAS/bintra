@@ -31,8 +31,16 @@ exports.validatePackage = function(packageName, packageVersion, packageHash) {
 	    { $inc: {count: 1} },
 	    { upsert: true })
 	  .then(item => {
-		  console.info("Was OK: " + item);
-		  resolve("OK");
+		  console.info("Was OK");
+		  PackageModel.find({name: packageName, version: packageVersion})
+		  	.then(item2 => {
+				console.info("Was inner OK");
+		  		resolve(item2);
+			})
+		  	.catch(err => {
+				console.error("Not inner OK: ", err);
+				reject("bahh");
+			});
 	  })
 	  .catch(err => {
 		  console.error("Not OK: ", err);
