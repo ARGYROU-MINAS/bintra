@@ -11,7 +11,7 @@ var fs = require('fs'),
     path = require('path'),
     http = require('http');
 
-require('dotenv').config();
+require('custom-env').env(true);
 
 var app = require('connect')();
 var favicon = require('serve-favicon');
@@ -20,8 +20,9 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 
-var mongoDB = 'mongodb://127.0.0.1/bintra';
-mongoose.connect(mongoDB, { useNewUrlParser: true, useInifiedTopology: true });
+const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
+console.log(mongoHost + mongoUrl);
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useInifiedTopology: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
