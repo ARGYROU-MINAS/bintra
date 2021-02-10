@@ -23,7 +23,7 @@ describe('getCount', function() {
 				properties: {
 					count: {
 						type: 'number',
-						minimum: 1
+						minimum: 0
 					}
 				}
 			};
