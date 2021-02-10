@@ -128,6 +128,8 @@ module.exports.listPackages = function listPackage (req, res, next) {
 module.exports.countPackage = function countPackage (req, res, next) {
 
   trackMethod(req);
+  var a = req.headers['Authorize'];
+  console.log("Auth: " + a); 
 
   Service.countPackage()
     .then(function (payload) {

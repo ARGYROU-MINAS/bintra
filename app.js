@@ -19,6 +19,7 @@ var serveStatic = require('serve-static');
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
+var auth = require("./utils/auth");
 
 const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
 console.log(mongoHost + mongoUrl);
@@ -48,6 +49,13 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   app.use(serveStatic(path.join(__dirname, 'static')));
 
+  app.use(
+    middleware.swaggerSecurity({
+      //manage token function in the 'auth' module
+      Bearer: auth.verifyToken
+    })
+  );
+
   // Validate Swagger requests
   app.use(middleware.swaggerValidator());
 
@@ -58,6 +66,18 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   app.use(middleware.swaggerUi({
           url: "/api/swagger.yaml"
   }));
+
+  // Error handlers
+  app.use((err, req, res, next) => {
+    if (err.statusCode === 401) {
+       // do something you like
+
+       res.code = 401;
+       res.end(err.message);
+       return;
+     }
+     res.statusCode(500).send(err)
+  });
 
   /**
    * Start the server

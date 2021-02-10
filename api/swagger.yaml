@@ -11,6 +11,15 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: |
+     For accessing the API a valid JWT token must be passed in all the queries in
+     the 'Authorization' header.
+
 # tags are used for organizing operations
 tags:
 - name: users
@@ -19,6 +28,30 @@ tags:
   description: Operations available to admin users
 
 paths:
+  /login/{role}:
+    x-swagger-router-controller: "Admins"
+    post:
+      operationId: loginPost
+      description: "Login with a particular role"
+      parameters:
+        - name: role
+          in: path
+          required: true
+          type: string
+        - name: authentication
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Authentication"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Token"
+        "403":
+          description: "Access Denied"
+          schema:
+            $ref: "#/definitions/Error"
   /package:
     put:
       x-swagger-router-controller: "Users"
@@ -106,6 +139,11 @@ paths:
       tags:
       - admins
       summary: delete one package
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+        - user
       operationId: deletePackage
       description: |
         Delete one entry
@@ -135,6 +173,10 @@ paths:
           description: positive result we hope
         400:
           description: bad input parameter(s)
+        403:
+          description: "Access Denied"
+          schema:
+            $ref: "#/definitions/Error"
   /count:
     get:
       x-swagger-router-controller: "Users"
@@ -186,7 +228,20 @@ paths:
           description: positive result we hope
         400:
           description: bad input parameter(s)
+        403:
+          description: "Access Denied"
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
+  Authentication:
+    type: object
+    properties:
+      username:
+        type: string
+        example: "username"
+      password:
+        type: string
+        example: "password"
   PackageItem:
     type: object
     required:
@@ -250,4 +305,14 @@ definitions:
       count:
         type: integer
         example: 123
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
 basePath: /v1

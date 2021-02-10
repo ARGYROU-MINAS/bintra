@@ -24,6 +24,7 @@
     "dotenv": "^8.2.0",
     "events": "^3.2.0",
     "js-yaml": "^3.3.0",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
     "piwik-tracker": "^1.1.2",
