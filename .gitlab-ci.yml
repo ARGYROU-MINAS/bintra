@@ -40,8 +40,10 @@ jsdocs:
 
 unittest:
   stage: test
+  image: $CI_REGISTRY/kai/bintra:fat
   before_script:
   - npm install
+  - ./setup_env_test.sh
   script:
   - npm test
   - npm run coverage
