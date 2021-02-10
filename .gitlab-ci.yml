@@ -42,6 +42,7 @@ unittest:
   stage: test
   image: $CI_REGISTRY/kai/bintra:fat
   before_script:
+  - /etc/init.d/mongodb start
   - npm install
   - ./setup_env_test.sh
   script:
