@@ -7,5 +7,5 @@ Essential: no
 Installed-Size: 1024
 Maintainer: Kai KRETSCHMANN <kai@kretschmann.consulting>
 Homepage: https://bintra.directory
-Depends: curl, jq, bash
+Depends: curl, jq, bash, binutils, xz-utils
 Description: Binary Transparency check on package install
