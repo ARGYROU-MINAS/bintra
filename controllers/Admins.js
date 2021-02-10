@@ -2,7 +2,7 @@
 
 /**
  * @module controller
- * API controller for methods mapping.
+ * API controller for admin methods mapping.
  * @license MIT
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
@@ -60,6 +60,11 @@ function trackMethod(req) {
   });
 }
 
+/**
+ * @function
+ * Receive login data and return JWT token.
+ * @private
+ */
 module.exports.loginPost = function loginPost(args, res, next) {
   var role = args.swagger.params.role.value;
   var username = args.body.username;
@@ -87,7 +92,7 @@ module.exports.loginPost = function loginPost(args, res, next) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * Delete package with given package data. Permission required.
  * @public
  */
 module.exports.deletePackage = function deletePackage (req, res, next) {
@@ -109,7 +114,7 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * Delete all packages, for testing purpose. Permission required.
  * @public
  */
 module.exports.cleanupPackages = function cleanupPackages (req, res, next) {

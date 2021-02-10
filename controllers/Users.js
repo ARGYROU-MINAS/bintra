@@ -61,7 +61,7 @@ function trackMethod(req) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * Validate package, store information and return alternatives.
  * @public
  */
 module.exports.validatePackage = function validatePackage (req, res, next) {
@@ -83,13 +83,13 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * List package data for arguments matching.
  * @public
  */
 module.exports.listPackage = function listPackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageVersion = req.swagger.params['packageArch'].value;
+  var packageArch = req.swagger.params['packageArch'].value;
 
   trackMethod(req);
 
@@ -104,7 +104,7 @@ module.exports.listPackage = function listPackage (req, res, next) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * List all packages and variations.
  * @public
  */
 module.exports.listPackages = function listPackage (req, res, next) {
@@ -122,7 +122,7 @@ module.exports.listPackages = function listPackage (req, res, next) {
 
 /**
  * @method
- * Expose API lorem ipsum.
+ * Return total number of package variations.
  * @public
  */
 module.exports.countPackage = function countPackage (req, res, next) {
@@ -139,4 +139,3 @@ module.exports.countPackage = function countPackage (req, res, next) {
       utils.writeJson(res, payload, 400);
     });
 };
-
