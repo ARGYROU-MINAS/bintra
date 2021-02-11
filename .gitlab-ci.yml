@@ -48,6 +48,9 @@ unittest:
   script:
   - npm test
   - npm run coverage
+  coverage: 'All files\s+|\s+\d+.\d+\s+|'
+  after_script:
+    - ls -l
   artifacts:
     paths:
     - mochawesome-report/
