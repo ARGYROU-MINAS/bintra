@@ -7,7 +7,7 @@
     "prestart": "npm install",
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
+    "coverage": "nyc npm run test --reporter=lcov --reporter=text-summary --exit",
     "testlink": "mocha --reporter=xunit --exit"
   },
   "keywords": [
