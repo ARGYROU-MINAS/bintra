@@ -88,7 +88,7 @@ package:
   stage: deploy
   image: $CI_REGISTRY/kai/bintra:deb
   script:
-  - cd client && chmod -R 644 . && chmod 755 bintra/usr/sbin/bintra && dpkg-deb --root-owner-group --build bintra
+  - cd client && chmod -R 644 . && find . -type d -exec chmod 755 {} \; && chmod 755 bintra/usr/sbin/bintra && dpkg-deb --root-owner-group --build bintra
   artifacts:
     paths:
     - client/bintra.deb
