@@ -2,12 +2,12 @@
   "name": "bintra",
   "version": "0.1.0",
   "description": "Binary Transparency Directory API",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "prestart": "npm install",
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
-    "coverage": "nyc npm run test --reporter=lcov --reporter=text-summary --exit",
+    "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "testlink": "mocha --reporter=xunit --exit"
   },
   "keywords": [
