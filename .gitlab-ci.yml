@@ -83,3 +83,13 @@ pages:
   artifacts:
     paths:
     - public
+
+package:
+  stage: deploy
+  image: $CI_REGISTRY/kai/bintra:deb
+  script:
+  - cd client && dpkg-deb --root-owner-group --build bintra
+  artifacts:
+    path:
+    - client/bintra.deb
+
