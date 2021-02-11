@@ -90,6 +90,6 @@ package:
   script:
   - cd client && dpkg-deb --root-owner-group --build bintra
   artifacts:
-    path:
+    paths:
     - client/bintra.deb
 
