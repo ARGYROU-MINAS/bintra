@@ -1,2 +1,5 @@
 2021.02.10
 Add JWT authorization filter for destructive actions.
+
+2021.02.11
+Add gpg signing of deb package and commits.
