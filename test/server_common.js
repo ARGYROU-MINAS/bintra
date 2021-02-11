@@ -10,9 +10,9 @@ let request = require('supertest');
 
 chai.use(chaiHttp);
 
-describe('Server common', () => {
+describe('server', () => {
 
-	describe('[DDATA-15] /GET home', () => {
+	describe('[BINTRA-2] GET home', () => {
 		it('[STEP-1] should redirect', (done) => {
 		  request(server)
 		      .get('/')

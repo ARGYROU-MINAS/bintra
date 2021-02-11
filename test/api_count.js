@@ -14,7 +14,7 @@ const service = require('../service/PackagesService.js');
 
 describe('getCount', function() {
 
-	context('[DDATA-5] with right arguments', function() {
+	context('[BINTRA-1] get count', function() {
 		it('[STEP-1] should generate number property', async () => {
 			const countSchema = {
 				title: 'count schema',
