@@ -8,57 +8,11 @@
  */
 
 var utils = require('../utils/writer.js');
+var eventEmitter = require('../utils/eventer').em;
 var Service = require('../service/PackagesService');
 var auth = require("../utils/auth");
 
-var PiwikTracker = require('piwik-tracker');
-var piwik = null;
-if(process.env.MATOMO_ID) {
-  piwik = new PiwikTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
-}
-var baseUrl = 'https://api.demodata.eu';
 
-/**
- * @function
- * Get remote IP number by connection or header data.
- * @private
- * @returns {string} IP number
- */
-function getRemoteAddr(req) {
-  if(req.headers['x-real-ip']) return req.headers['x-real-ip'];
-
-  if (req.ip) return req.ip;
-  if (req._remoteAddress) return req._remoteAddress;
-  var sock = req.socket;
-  if (sock.socket) return sock.socket.remoteAddress;
-  return sock.remoteAddress;
-}
-
-/**
- * @function
- * Log API access, reduced to method without argument data.
- * @private
- * @param {object} req - web request object
- */
-function trackMethod(req) {
-  if(null == piwik) return;
-  var url = req.url;
-  var urlparts = url.split('/');
-  var urlMethod = urlparts[0] + '/' + urlparts[1] + '/' + urlparts[2];
-  console.log("log " + urlMethod);
-  piwik.track({
-    url: baseUrl + urlMethod,
-    action_name: 'API call',
-    token_auth: process.env.MATOMO_TOKEN_AUTH,
-    cip: getRemoteAddr(req),
-    ua: req.headers['user-agent'],
-    lang: req.headers['accept-language'],
-    cvar: JSON.stringify({
-      '1': ['API version', urlparts[1]],
-      '2': ['HTTP method', req.method]
-    })
-  });
-}
 
 /**
  * @function
@@ -70,6 +24,8 @@ module.exports.loginPost = function loginPost(args, res, next) {
   var username = args.body.username;
   var password = args.body.password;
   var response;
+
+  eventEmitter.emit('apihit', req);
 
   if (role != "user" && role != "admin") {
     response = { message: 'Error: Role must be either "admin" or "user"' };
@@ -101,7 +57,7 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
   var packageArch = req.swagger.params['packageArch'].value;
   var packageHash = req.swagger.params['packageHash'].value;
 
-  trackMethod(req);
+  eventEmitter.emit('apihit', req);
 
   Service.deletePackage(packageName, packageVersion, packageArch, packageHash)
     .then(function (payload) {
@@ -119,7 +75,7 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
  */
 module.exports.cleanupPackages = function cleanupPackages (req, res, next) {
 
-  trackMethod(req);
+  eventEmitter.emit('apihit', req);
 
   Service.cleanupPackages()
     .then(function (payload) {

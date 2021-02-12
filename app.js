@@ -21,6 +21,10 @@ var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
+var emitter = require('events').EventEmitter;
+var eventEmitter = require('./utils/eventer').em;
+require('./subscribers/matomo');
+
 const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
 console.log(mongoHost + mongoUrl);
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useInifiedTopology: true });
@@ -76,7 +80,8 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
        res.end(err.message);
        return;
      }
-     res.statusCode(500).send(err)
+     res.code = 500;
+     res.end(err);
   });
 
   /**
