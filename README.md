@@ -15,5 +15,5 @@ NODE_ENV=develop npm start
 ## add user manually
 
     docker exec -it bintra-nodejs bash
-    root@bfedf154d642:/usr/src/app# npm run adduser
+    root@bfedf154d642:/usr/src/app# npm run adduser USER PASSWD
     ^C

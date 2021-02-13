@@ -10,8 +10,10 @@ var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
 const saltRounds = 10;
 
-var username = "kai";
-var password = "test";
+var cmdArgs = process.argv.slice(2);
+var username = cmdArgs[0];
+var password = cmdArgs[1];
+console.log("Add user name=" + username + " Password=" + password);
 
 // salt, hash, and store
 bcrypt.hash(password, saltRounds, async function(err, hash) {
