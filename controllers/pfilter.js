@@ -47,6 +47,15 @@ packageName: {
                 case "packageHash":
                     structure.value = cleanupStringHex(structure.value);
                     break;
+                case "id":
+                    structure.value = cleanupStringHex(structure.value);
+                    if(structure.value.length != 24) {
+                        console.error("ID must be 24 hex chars");
+                        res.writeHead(400, { "Content-Type": "application/json" });
+                        var response = { message: "Error: ID must be 24 hex chars" };
+                        return res.end(JSON.stringify(response));
+                    }
+                    break;
             }
 	    }
         next();
