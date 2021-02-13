@@ -81,7 +81,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
        return;
      }
      res.code = 500;
-     res.end(err);
+     res.end(err.message);
   });
 
   /**

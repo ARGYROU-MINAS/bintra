@@ -25,7 +25,7 @@ module.exports.loginPost = function loginPost(args, res, next) {
   var password = args.body.password;
   var response;
 
-  eventEmitter.emit('apihit', req);
+  //eventEmitter.emit('apihit', req);
 
   if (role != "user" && role != "admin") {
     response = { message: 'Error: Role must be either "admin" or "user"' };
