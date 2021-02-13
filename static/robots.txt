@@ -1,0 +1,5 @@
+User-agent: ProbelySPDR
+Disallow:
+
+User-agent: *
+Disallow: /v1
