@@ -1,8 +1,9 @@
 "use strict";
 
 var jwt = require("jsonwebtoken");
-var sharedSecret = "psst";
-var issuer = "bintra.directory";
+require('custom-env').env(true);
+var sharedSecret = process.env.JWT_SECRET;
+var issuer = process.env.JWT_ISSUER;
 
 //Here we setup the security checks for the endpoints
 //that need it (in our case, only /protected). This
@@ -23,6 +24,7 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
   if (token && token.indexOf("Bearer ") == 0) {
     var tokenString = token.split(" ")[1];
 
+    console.log("Secret from env: " + sharedSecret);
     jwt.verify(tokenString, sharedSecret, function(
       verificationError,
       decodedToken
