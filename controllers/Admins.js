@@ -70,6 +70,25 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
 
 /**
  * @method
+ * Delete package with given package id. Permission required.
+ * @public
+ */
+module.exports.deletePackageById = function deletePackageById (req, res, next) {
+  var packageId = req.swagger.params['id'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.deletePackageById(packageId)
+    .then(function (payload) {
+      utils.writeText(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeText(res, payload, 400);
+    });
+};
+
+/**
+ * @method
  * Delete all packages, for testing purpose. Permission required.
  * @public
  */

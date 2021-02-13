@@ -154,6 +154,30 @@ exports.deletePackage = function(packageName, packageVersion, packageArch, packa
  * @method
  * Validate the package.
  * @public
+ * @param {string} packageId - ID of the package
+ *
+ * @returns String
+ **/
+exports.deletePackageById = function(packageId) {
+  return new Promise(function(resolve, reject) {
+    console.log("In cleanup service");
+
+    PackageModel.remove({_id: packageId})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve("OK");
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
  *
  * @returns String
  **/
