@@ -18,15 +18,15 @@ securityDefinitions:
     name: Authorization
     in: header
     description: |
-     For accessing the API a valid JWT token must be passed in all the queries in
-     the 'Authorization' header.
+     For accessing the API a valid JWT token must be passed in all the queries
+     in the 'Authorization' header.
 
 # tags are used for organizing operations
 tags:
-- name: users
-  description: Operations available to regular users
-- name: admins
-  description: Operations available to admin users
+  - name: users
+    description: Operations available to regular users
+  - name: admins
+    description: Operations available to admin users
 
 paths:
   /login/{role}:
@@ -57,7 +57,7 @@ paths:
     put:
       x-swagger-router-controller: "Users"
       tags:
-      - users
+        - users
       summary: validates package info
       operationId: validatePackage
       description: |
@@ -65,33 +65,34 @@ paths:
         Returns all existing name-version variants with their hash and counts
         values for further decision of the installer tool.
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: packageName
-        description: package name from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageVersion
-        description: package version from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageArch
-        description: package architecture from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageHash
-        description: SHA256 hash of downloaded file
-        required: true
-        type: string
+        - in: query
+          name: packageName
+          description: package name from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageVersion
+          description: package version from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageArch
+          description: package architecture from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageHash
+          description: SHA256 hash of downloaded file
+          required: true
+          type: string
       responses:
         200:
           description: |
             Single array entry with high count in best case,
-            otherwise multiple entries with one high count and one or more faked ones to beware of.
+            otherwise multiple entries with one high count and one or more
+            faked ones to beware of.
           schema:
             type: array
             items:
@@ -101,7 +102,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-      - users
+        - users
       summary: get data for a package
       operationId: listPackage
       description: |
@@ -109,23 +110,23 @@ paths:
         matches, or multiple matches with only one good and one or more
         faked entries.
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: packageName
-        description: package name from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageVersion
-        description: package version from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageArch
-        description: package architecture from extracted meta info
-        required: true
-        type: string
+        - in: query
+          name: packageName
+          description: package name from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageVersion
+          description: package version from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageArch
+          description: package architecture from extracted meta info
+          required: true
+          type: string
       responses:
         200:
           description: single good result we hope
@@ -138,7 +139,7 @@ paths:
     delete:
       x-swagger-router-controller: "Admins"
       tags:
-      - admins
+        - admins
       summary: delete one package
       security:
         - Bearer: []
@@ -149,26 +150,26 @@ paths:
       description: |
         Delete one entry
       parameters:
-      - in: query
-        name: packageName
-        description: package name from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageVersion
-        description: package version from extracted meta info
-        required: true
-        type: string
-      - in: query
-        name: packageHash
-        description: SHA256 hash of downloaded file
-        required: true
-        type: string
-      - in: query
-        name: packageArch
-        description: package architecture from extracted meta info
-        required: true
-        type: string
+        - in: query
+          name: packageName
+          description: package name from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageVersion
+          description: package version from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageHash
+          description: SHA256 hash of downloaded file
+          required: true
+          type: string
+        - in: query
+          name: packageArch
+          description: package architecture from extracted meta info
+          required: true
+          type: string
       responses:
         200:
           description: positive result we hope
@@ -182,14 +183,14 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-      - users
+        - users
       summary: return number of all entries
       operationId: countPackage
       description: |
         By passing in the appropriate options, you can validate a
         package before installing it
       produces:
-      - application/json
+        - application/json
       responses:
         200:
           description: positive result we hope
@@ -201,13 +202,13 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-      - users
+        - users
       summary: return all entries
       operationId: listPackages
       description: |
         Get all package data
       produces:
-      - application/json
+        - application/json
       responses:
         200:
           description: positive result we hope
@@ -218,7 +219,7 @@ paths:
     delete:
       x-swagger-router-controller: "Admins"
       tags:
-      - admins
+        - admins
       summary: delete all packages
       operationId: cleanupPackages
       description: |
@@ -246,12 +247,12 @@ definitions:
   PackageItem:
     type: object
     required:
-    - count
-    - hash
-    - name
-    - version
-    - arch
-    - tscreated
+      - count
+      - hash
+      - name
+      - version
+      - arch
+      - tscreated
     properties:
       hash:
         type: string
@@ -271,13 +272,13 @@ definitions:
   PackageVariants:
     type: object
     required:
-    - id
-    - packageName
-    - packageVersion
-    - packageHash
-    - packageArch
-    - count
-    - creationDate
+      - id
+      - packageName
+      - packageVersion
+      - packageHash
+      - packageArch
+      - count
+      - creationDate
     properties:
       id:
         type: string
@@ -301,7 +302,7 @@ definitions:
   PackageCount:
     type: object
     required:
-    - count
+      - count
     properties:
       count:
         type: integer
