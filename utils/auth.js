@@ -1,5 +1,10 @@
 "use strict";
 
+var LoginModel = require('../models/login.js');
+const bcrypt = require ('bcrypt');
+const saltRounds = 10;
+
+
 var jwt = require("jsonwebtoken");
 require('custom-env').env(true);
 var sharedSecret = process.env.JWT_SECRET;

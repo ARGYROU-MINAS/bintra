@@ -12,6 +12,8 @@ const cdigit = require("cdigit");
 var dateFormat = require("dateformat");
 require("datejs");
 var PackageModel = require('../models/package.js');
+var LoginModel = require('../models/login.js');
+const bcrypt = require ('bcrypt');
 
 /**
  * @method
@@ -92,6 +94,61 @@ exports.listPackages = function(packageName, packageVersion, packageArch) {
           .then(item => {
                   console.info("Was OK");
                   resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.listUsers = function() {
+  return new Promise(function(resolve, reject) {
+    console.log("In list users service");
+
+    LoginModel.find({})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns boolean
+ **/
+exports.checkUser = function(name, passwd) {
+  return new Promise(function(resolve, reject) {
+    console.log("In check users service");
+
+    LoginModel.find({name: name})
+          .then(item => {
+                  console.info("Was OK: " + item);
+                  var pwhash = item[0].passwd;
+                  console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
+                  bcrypt.compare(passwd, pwhash, function(err, result) {
+	                  if(err) {
+		                  console.error("Pwd mismatch");
+                          reject("bahh");
+                      }
+	                  console.log("pwd matched");
+                      resolve(item);
+                  });
           })
           .catch(err => {
                   console.error("Not OK: ", err);

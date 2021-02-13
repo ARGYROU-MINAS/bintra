@@ -8,7 +8,8 @@
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
-    "testlink": "mocha --reporter=xunit --exit"
+    "testlink": "mocha --reporter=xunit --exit",
+    "adduser": "node local/adduser.js"
   },
   "keywords": [
     "swagger",
@@ -17,6 +18,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "cdigit": "^2.6.0",
     "connect": "^3.2.0",
     "custom-env": "^2.0.1",

@@ -251,6 +251,11 @@ paths:
         - admins
       summary: delete all packages
       operationId: cleanupPackages
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+        - user
       description: |
         By passing in the appropriate options, you can validate a
         package before installing it
@@ -263,6 +268,29 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
+  /users:
+    get:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - admins
+      summary: return all entries
+      operationId: listUsers
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+        - user
+      description: |
+        Get all users data
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/LoginItem'
+        400:
+          description: bad input parameter(s)
 definitions:
   Authentication:
     type: object
@@ -273,6 +301,24 @@ definitions:
       password:
         type: string
         example: "password"
+  LoginItem:
+    type: object
+    required:
+      - name
+      - email
+      - hash
+      - tscreated
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      hash:
+        type: string
+      tscreated:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
   PackageItem:
     type: object
     required:

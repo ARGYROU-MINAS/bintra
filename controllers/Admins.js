@@ -32,19 +32,37 @@ module.exports.loginPost = function loginPost(args, res, next) {
     res.writeHead(400, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(response));
   }
-
-  if (username == "username" && password == "password" && role) {
-    var tokenString = auth.issueToken(username, role);
-    response = { token: tokenString };
-    res.writeHead(200, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify(response));
-  } else {
-    response = { message: "Error: Credentials incorrect" };
-    res.writeHead(403, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify(response));
-  }
+  Service.checkUser(username, password)
+    .then(function () {
+      var tokenString = auth.issueToken(username, role);
+      response = { token: tokenString };
+      res.writeHead(200, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify(response));
+    })
+    .catch(function () {
+      response = { message: "Error: Credentials incorrect" };
+      res.writeHead(403, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify(response));
+    });
 };
 
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.listUsers = function listPackage (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+
+  Service.listUsers()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
 
 /**
  * @method
