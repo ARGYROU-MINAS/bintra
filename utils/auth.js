@@ -24,7 +24,6 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
   if (token && token.indexOf("Bearer ") == 0) {
     var tokenString = token.split(" ")[1];
 
-    console.log("Secret from env: " + sharedSecret);
     jwt.verify(tokenString, sharedSecret, function(
       verificationError,
       decodedToken
