@@ -6,7 +6,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PackageSchema = new Schema({
-	tscreated: {type: Date, default: Date.now},
+	tscreated: {type: Date, required: true},
+	tsupdated: {type: Date, required: true},
 	name: {type: String, required: true},
 	version: {type: String, required: true},
 	arch: {type: String, required: true},

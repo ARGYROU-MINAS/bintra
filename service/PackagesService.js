@@ -29,27 +29,54 @@ const bcrypt = require ('bcrypt');
 exports.validatePackage = function(packageName, packageVersion, packageArch, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service");
-    PackageModel.updateMany(
-	    {name: packageName, version: packageVersion, arch: packageArch, hash: packageHash},
-	    { $inc: {count: 1} },
-	    { upsert: true })
-	  .then(item => {
-		  console.info("Was OK");
-		  PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
-		  	.then(item2 => {
-				console.info("Was inner OK");
-		  		resolve(item2);
-			})
-		  	.catch(err => {
-				console.error("Not inner OK: ", err);
-				reject("bahh");
-			});
-	  })
-	  .catch(err => {
-		  console.error("Not OK: ", err);
-		  reject("bahh");
-	  });
-  });
+    var tsnow = new Date();
+
+    // Does it exist already?
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash})
+        .then(itemFound => {
+	        console.log("Did exist already");
+            PackageModel.updateMany(
+	            {name: packageName, version: packageVersion, arch: packageArch, hash: packageHash},
+	            { $inc: {count: 1}, $set: {tsupdated: tsnow} },
+	            { upsert: true })
+                .then(itemUpdated => {
+                    console.log("Did update counter");
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                        .then(itemOthers => {
+                            console.info("Found others");
+                            resolve(itemOthers);
+                        })
+                        .catch(err => {
+                            console.error("Not found others: ", err);
+                            reject("bahh");
+                        });
+                })
+                .catch(err => {
+                    console.error("Not updated: ", err);
+                    reject("bahh");
+                });
+        })
+        .catch(err => { // Not really an error, just a fresh entry
+            var packageNew = new PackageModel({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash, tscreated: tsnow});
+            packageNew.save()
+                .then(itemSaved => {
+                    console.log("Added fresh entry");
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                        .then(itemOthers => {
+                            console.info("Found others");
+                            resolve(itemOthers);
+                        })
+                        .catch(err => {
+                            console.error("Not found others: ", err);
+                            reject("bahh");
+                        });
+                })
+                .catch(err => {
+                    console.error("Not saved fresh: ", err);
+                    reject("bahh");
+                });
+        });
+    });
 }
 
 /**
