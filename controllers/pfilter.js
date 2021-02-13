@@ -18,7 +18,7 @@ function cleanupStringHex(s) {
 
 module.exports = function (req, res, next) {
 	console.debug("In pfilter: " + req.url);
-    if(req.url.startsWith("/docs/") || req.url.startsWith("/api-docs")) {
+    if(req.url == "/" || req.url.startsWith("/docs/") || req.url.startsWith("/api-docs")) {
 	    console.debug("static stuff OK");
 	    next();
     } else {
