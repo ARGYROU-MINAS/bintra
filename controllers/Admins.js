@@ -20,21 +20,18 @@ var auth = require("../utils/auth");
  * @private
  */
 module.exports.loginPost = function loginPost(args, res, next) {
-  var role = args.swagger.params.role.value;
   var username = args.body.username;
   var password = args.body.password;
   var response;
 
   //eventEmitter.emit('apihit', req);
 
-  if (role != "user" && role != "admin") {
-    response = { message: 'Error: Role must be either "admin" or "user"' };
-    res.writeHead(400, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify(response));
-  }
   Service.checkUser(username, password)
-    .then(function () {
-      var tokenString = auth.issueToken(username, role);
+    .then(function (useritem) {
+	  console.log("User found: " + useritem);
+      var myRole = useritem.role;
+      console.log("User hat role " + myRole);
+      var tokenString = auth.issueToken(username, myRole);
       response = { token: tokenString };
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(JSON.stringify(response));

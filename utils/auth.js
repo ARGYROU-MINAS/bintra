@@ -17,8 +17,10 @@ var issuer = process.env.JWT_ISSUER;
 exports.verifyToken = function(req, authOrSecDef, token, callback) {
   //these are the scopes/roles defined for the current endpoint
   var currentScopes = req.swagger.operation["x-security-scopes"];
+  console.log("Check for scopes:");
+  console.log(currentScopes);
 
-  //console.log("in verify " + currentScopes + token)
+  console.log("in verify " + currentScopes + token)
   function sendError() {
 	var response = { statusCode: 401, message: 'Error: Access Denied' };
     return response;
@@ -33,6 +35,7 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
       verificationError,
       decodedToken
     ) {
+	  console.log(decodedToken);
       //check if the JWT was verified correctly
       if (
         verificationError == null &&
@@ -40,6 +43,7 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
         decodedToken &&
         decodedToken.role
       ) {
+	    console.log("User has role " + decodedToken.role + " in JWT");
         // check if the role is valid for this endpoint
         var roleMatch = currentScopes.indexOf(decodedToken.role) !== -1;
         // check if the issuer matches
@@ -71,6 +75,7 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
 };
 
 exports.issueToken = function(username, role) {
+  console.log("user " + username + ", role" + role);
   var token = jwt.sign(
     {
       sub: username,

@@ -23,22 +23,18 @@ securityDefinitions:
 
 # tags are used for organizing operations
 tags:
-  - name: users
+  - name: user
     description: Operations available to regular users
-  - name: admins
+  - name: admin
     description: Operations available to admin users
 
 paths:
-  /login/{role}:
+  /login:
     x-swagger-router-controller: "Admins"
     post:
       operationId: loginPost
-      description: "Login with a particular role"
+      description: "Login for a particular role from db"
       parameters:
-        - name: role
-          in: path
-          required: true
-          type: string
         - name: authentication
           in: body
           required: true
@@ -57,7 +53,8 @@ paths:
     put:
       x-swagger-router-controller: "Users"
       tags:
-        - users
+        - user
+        - admin
       summary: validates package info
       operationId: validatePackage
       description: |
@@ -102,7 +99,8 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - users
+        - user
+        - admin
       summary: get data for a package
       operationId: listPackage
       description: |
@@ -139,7 +137,7 @@ paths:
     delete:
       x-swagger-router-controller: "Admins"
       tags:
-        - admins
+        - admin
       summary: delete one package
       security:
         - Bearer: []
@@ -183,7 +181,7 @@ paths:
     delete:
       x-swagger-router-controller: "Admins"
       tags:
-        - admins
+        - admin
       summary: delete one package by ID
       security:
         - Bearer: []
@@ -212,7 +210,8 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - users
+        - user
+        - admin
       summary: return number of all entries
       operationId: countPackage
       description: |
@@ -231,7 +230,8 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - users
+        - user
+        - admin
       summary: return all entries
       operationId: listPackages
       description: |
@@ -248,7 +248,7 @@ paths:
     delete:
       x-swagger-router-controller: "Admins"
       tags:
-        - admins
+        - admin
       summary: delete all packages
       operationId: cleanupPackages
       security:
@@ -272,14 +272,13 @@ paths:
     get:
       x-swagger-router-controller: "Admins"
       tags:
-        - admins
+        - admin
       summary: return all entries
       operationId: listUsers
       security:
         - Bearer: []
       x-security-scopes:
         - admin
-        - user
       description: |
         Get all users data
       produces:

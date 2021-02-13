@@ -10,6 +10,12 @@ var LoginSchema = new Schema({
 	name: {type: String, required: true},
 	email: {type: String, required: false},
 	passwd: {type: String, required: true},
+	role: {
+		type: String,
+		enum: ['user', 'admin'],
+	    required: true,
+        default: 'user'
+    },
 });
 
 LoginSchema.index({name: 1}, {unique: true});

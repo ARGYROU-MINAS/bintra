@@ -147,7 +147,7 @@ exports.checkUser = function(name, passwd) {
                           reject("bahh");
                       }
 	                  console.log("pwd matched");
-                      resolve(item);
+                      resolve(item[0]);
                   });
           })
           .catch(err => {

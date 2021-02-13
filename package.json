@@ -9,7 +9,8 @@
     "test": "mocha --reporter mochawesome --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "testlink": "mocha --reporter=xunit --exit",
-    "adduser": "node local/adduser.js"
+    "adduser": "node local/adduser.js",
+    "addadmin": "node local/addadmin.js"
   },
   "keywords": [
     "swagger",
