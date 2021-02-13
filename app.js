@@ -21,6 +21,8 @@ var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
+var pfilter = require('./controllers/pfilter');
+
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
@@ -62,6 +64,9 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Validate Swagger requests
   app.use(middleware.swaggerValidator());
+
+  // Filter all parameters known
+  app.use(pfilter);
 
   // Route validated requests to appropriate controller
   app.use(middleware.swaggerRouter(options));
