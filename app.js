@@ -23,6 +23,8 @@ var auth = require("./utils/auth");
 
 var pfilter = require('./controllers/pfilter');
 
+var bintrafeed = require('./controllers/bintrafeed');
+
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
@@ -54,6 +56,9 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
   app.use(serveStatic(path.join(__dirname, 'static')));
+
+  app.use("/feed.rss", bintrafeed.rss);
+  app.use("/feed.atom", bintrafeed.atom);
 
   app.use(
     middleware.swaggerSecurity({

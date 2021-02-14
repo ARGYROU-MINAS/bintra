@@ -109,12 +109,9 @@ exports.listPackage = function(packageName, packageVersion, packageArch) {
  * Validate the package.
  * @public
  *
- * @param {string} packageName - Name of the package
- * @param {string} packageVersion - Version of the package
- * @param {string} packageArch - Architecture of the package
  * @returns String
  **/
-exports.listPackages = function(packageName, packageVersion, packageArch) {
+exports.listPackages = function() {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
     PackageModel.find({})
