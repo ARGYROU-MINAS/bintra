@@ -17,7 +17,6 @@ console.log("Add user name=" + username + " Password=" + password);
 
 // salt, hash, and store
 bcrypt.hash(password, saltRounds, async function(err, hash) {
-  let values = [hash, username]; // query values
   var login = new LoginModel({name: username, passwd: hash});
 
   // store hash in database

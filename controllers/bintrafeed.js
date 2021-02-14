@@ -46,7 +46,7 @@ module.exports.rss = function (req, res, next) {
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
-                var x = rssfeed.addItem({
+                rssfeed.addItem({
 title: entry.name,
 id: entry._id,
 link: "http://api.bintra.directory/v1/package/" + myid,
@@ -71,7 +71,7 @@ module.exports.atom = function (req, res, next) {
             console.log("before loop");
             items.forEach(function(entry) {
                 var myid = entry._id;
-                var x = atomfeed.addItem({
+                atomfeed.addItem({
 title: entry.name,
 id: entry._id,
 link: "http://api.bintra.directory/v1/package/" + myid,
@@ -79,7 +79,7 @@ description: entry.name,
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
 });
             });
-            res.writeHead(200, { "Content-Type": "text/plain" });
+            res.writeHead(200, { "Content-Type": "application/rss+xml" });
             return res.end(atomfeed.atom1());
         })
         .catch(function (payload) {
