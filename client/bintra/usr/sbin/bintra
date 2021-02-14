@@ -38,9 +38,19 @@ while IFS='$\n' read -r line; do
   if (( $REPLYLENGTH > 1 ));
   then
     echo "Multiple matches, be alarmed"
-    exit -1
+    HASHMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash=="$packageHash").count')
+    HASHMISMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash!="$packageHash").count')
+    echo "Your hash was found $HASHMATCHCOUNT times versus $HASHMISMATCHCOUNT other ones"
+    if (( $HASHMATCHCOUNT <= $BADCOUNT ));
+    then
+      echo "We abort here"
+      exit -1
+    else
+      echo "Seems still OK to me"
+    fi;
   else
-    echo "All is fine"
+    HASHMATCHCOUNT=$(echo $APIREPLY|jq '.[].count')
+    echo "All is fine, we had $HASHMATCHCOUNT uses of that hash"
   fi;
 
   cd /tmp
