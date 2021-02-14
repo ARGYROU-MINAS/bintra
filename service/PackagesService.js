@@ -109,12 +109,15 @@ exports.listPackage = function(packageName, packageVersion, packageArch) {
  * Validate the package.
  * @public
  *
+ * @param {string} count - Limit replies
  * @returns String
  **/
-exports.listPackages = function() {
+exports.listPackages = function(count) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
     PackageModel.find({})
+          .sort({tsupdated: -1})
+          .limit(count)
           .then(item => {
                   console.info("Was OK");
                   resolve(item);

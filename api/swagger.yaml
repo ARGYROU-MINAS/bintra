@@ -241,6 +241,12 @@ paths:
         Get all package data
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: count
+          description: Limit number of entries
+          required: false
+          type: number
       responses:
         200:
           description: positive result we hope

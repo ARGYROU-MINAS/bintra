@@ -3,6 +3,7 @@
 var Service = require('../service/PackagesService');
 
 const Feed = require("feed").Feed;
+const maxFeedItems = 25;
 
 function getInitialFeed() {
   const myfeed = new Feed({
@@ -41,7 +42,7 @@ function getInitialFeed() {
 module.exports.rss = function (req, res, next) {
 	var rssfeed = getInitialFeed();
 
-    Service.listPackages()
+    Service.listPackages(maxFeedItems)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -65,7 +66,7 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
 module.exports.atom = function (req, res, next) {
 	var atomfeed = getInitialFeed();
 
-    Service.listPackages()
+    Service.listPackages(maxFeedItems)
         .then(function (items) {
             console.log("before loop");
             items.forEach(function(entry) {

@@ -61,10 +61,14 @@ module.exports.listPackage = function listPackage (req, res, next) {
  * @public
  */
 module.exports.listPackages = function listPackage (req, res, next) {
+  var count = req.swagger.params['count'].value;
+  if(!count) {
+    count = 100;
+  }
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackages()
+  Service.listPackages(count)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
