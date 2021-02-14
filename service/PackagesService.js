@@ -34,8 +34,32 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
     // Does it exist already?
     PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash})
         .then(itemFound => {
-	        console.log("Did exist already");
-            PackageModel.updateMany(
+            if(0 == itemFound.length) {
+              console.log("Not exist yet");
+
+              var packageNew = new PackageModel({name: packageName, version: packageVersion,
+                                                 arch: packageArch, hash: packageHash, tscreated: tsnow, tsupdated: tsnow});
+              packageNew.save()
+                .then(itemSaved => {
+                    console.log("Added fresh entry");
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                        .then(itemOthers => {
+                            console.info("Found others");
+                            resolve(itemOthers);
+                        })
+                        .catch(err => {
+                            console.error("Not found others: ", err);
+                            reject("bahh");
+                        });
+                })
+                .catch(err => {
+                    console.error("Not saved fresh: ", err);
+                    reject("bahh");
+                });
+            } else {
+              console.log("Did exist already");
+
+              PackageModel.updateMany(
 	            {name: packageName, version: packageVersion, arch: packageArch, hash: packageHash},
 	            { $inc: {count: 1}, $set: {tsupdated: tsnow} },
 	            { upsert: true })
@@ -55,26 +79,11 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                     console.error("Not updated: ", err);
                     reject("bahh");
                 });
+            } // if
         })
         .catch(err => { // Not really an error, just a fresh entry
-            var packageNew = new PackageModel({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash, tscreated: tsnow});
-            packageNew.save()
-                .then(itemSaved => {
-                    console.log("Added fresh entry");
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
-                        .then(itemOthers => {
-                            console.info("Found others");
-                            resolve(itemOthers);
-                        })
-                        .catch(err => {
-                            console.error("Not found others: ", err);
-                            reject("bahh");
-                        });
-                })
-                .catch(err => {
-                    console.error("Not saved fresh: ", err);
-                    reject("bahh");
-                });
+            console.error("Query failed: ", err);
+            reject("bahh");
         });
     });
 }
