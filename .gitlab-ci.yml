@@ -56,7 +56,7 @@ unittest:
     paths:
     - mochawesome-report/
     - coverage/
-    - sonaresults.xml 
+    - test-results.xml 
 
 sonarqube:
   stage: analyze
