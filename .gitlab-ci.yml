@@ -64,7 +64,7 @@ sonarqube:
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   before_script:
-#    - git fetch --unshallow
+    - git fetch --unshallow
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: true
