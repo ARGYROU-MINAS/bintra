@@ -6,5 +6,6 @@ pub_mkdocs/
 out/
 mochawesome-report/
 coverage/
+sonaresults.xml
 .nyc_output/
 *.deb

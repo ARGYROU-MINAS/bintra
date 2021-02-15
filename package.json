@@ -7,6 +7,7 @@
     "prestart": "npm install",
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
+    "sona": "mocha --reporter mocha-xunit-reporter --reporter-options mochaFile=./sonaresults.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "testlink": "mocha --reporter=xunit --exit",
     "adduser": "node local/adduser.js",
@@ -45,6 +46,7 @@
     "chai-string": "^1.5.0",
     "jsdoc": "~3.6.6",
     "mocha": "^8.2.1",
+    "mocha-xunit-reporter": "^2.3.0",
     "mochawesome": "^6.2.1",
     "nyc": "^15.1.0",
     "supertest": "^6.0.1"
