@@ -14,5 +14,6 @@ extra_css:
 nav:
   - Home: index.md
   - Imprint: imprint.md
+  - Architecture: architecture.md
   - 'Issue tracker': 'https://gitlab.kretschmann.software/kai/bintra/-/issues'
   - 'Swagger API': 'https://api.bintra.directory/docs/'

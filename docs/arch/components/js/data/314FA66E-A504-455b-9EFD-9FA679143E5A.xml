@@ -1,0 +1,11 @@
+tocTab[tocTab.length] = new Array("0:1", "", "Components", "EARoot/EA1.html", "175.png", "7", "0", "", "Logical diagram0","{35252D8F-28EF-42a6-9B93-5073FCE91DCF}");
+tocTab[tocTab.length] = new Array("0:2", "", "«Realization» APT bintra", "EARoot/EA5.html", "5.png", "E33", "0", "", "Class0","{F78AE71A-0563-4e81-9017-AFDA15B09B68}");
+tocTab[tocTab.length] = new Array("0:3", "", "«block» APT client", "EARoot/EA6.html", "5.png", "E32", "0", "", "Class0","{85E4E6C3-BBA2-4123-9C4D-E4CA1C5061C2}");
+tocTab[tocTab.length] = new Array("0:4", "", "«Realization» Feed API", "EARoot/EA8.html", "5.png", "E50", "0", "", "Class0","{AAA98E24-C73D-4ae1-8F80-692C5FAF18C0}");
+tocTab[tocTab.length] = new Array("0:5", "", "local cmd line", "EARoot/EA9.html", "5.png", "E52", "0", "", "Class0","{375F5D9B-5D77-4855-8389-A83BFEBCD7EF}");
+tocTab[tocTab.length] = new Array("0:6", "", "«Utility» mongoDB", "EARoot/EA10.html", "5.png", "E36", "0", "", "Class0","{AA33BAD7-86DB-4809-8ECA-B31AEF010148}");
+tocTab[tocTab.length] = new Array("0:7", "", "«Utility» nginx", "EARoot/EA11.html", "5.png", "E35", "0", "", "Class0","{19E9FCC3-4773-42c3-BA57-AFDBD4658465}");
+tocTab[tocTab.length] = new Array("0:8", "", "«Utility» npm", "EARoot/EA12.html", "5.png", "E48", "0", "", "Class0","{0745D451-4D12-4352-A36B-A85BEEFB90D0}");
+tocTab[tocTab.length] = new Array("0:9", "", "«view» REST API", "EARoot/EA13.html", "5.png", "E34", "0", "", "Class0","{8B5461C3-7A52-4e6d-B716-E61FE6C5D3BF}");
+tocTab[tocTab.length] = new Array("0:10", "", "RSS reader", "EARoot/EA14.html", "5.png", "E49", "0", "", "Class0","{8E52D140-9B37-4863-9138-343894AD327D}");
+tocTab[tocTab.length] = new Array("0:11", "", "«InterfaceBlock» Swagger", "EARoot/EA15.html", "5.png", "E47", "0", "", "Class0","{60FD0028-62B9-43a4-8ABB-628D89A75DA0}");
