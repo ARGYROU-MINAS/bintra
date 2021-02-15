@@ -7,7 +7,7 @@
     "prestart": "npm install",
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
-    "sona": "mocha test --reporter mocha-junit-reporter --exit",
+    "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "testlink": "mocha --reporter=xunit --exit",
     "adduser": "node local/adduser.js",
@@ -47,6 +47,7 @@
     "jsdoc": "~3.6.6",
     "mocha": "^8.2.1",
     "mocha-junit-reporter": "^2.0.0",
+    "mocha-sonarqube-reporter": "^1.0.2",
     "mochawesome": "^6.2.1",
     "nyc": "^15.1.0",
     "supertest": "^6.0.1"
