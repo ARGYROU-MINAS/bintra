@@ -183,6 +183,35 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /package/{id}:
+    get:
+      x-swagger-router-controller: "Users"
+      tags:
+        - user
+        - admin
+      summary: get data for a package
+      operationId: listPackageSingle
+      description: |
+        Return single package data
+      parameters:
+        - in: path
+          name: id
+          description: Package ID (24 hex chars)
+          required: true
+          type: string
+          minLength: 24
+          maxLength: 24
+          pattern: '^[a-fA-F0-9]{24}$'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: single good result we hope
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PackageVariants'
+        400:
+          description: bad input parameter(s)
     delete:
       x-swagger-router-controller: "Admins"
       tags:
@@ -234,12 +263,39 @@ paths:
             $ref: '#/definitions/PackageCount'
         400:
           description: bad input parameter(s)
+  /packagesfull:
+    get:
+      x-swagger-router-controller: "Users"
+      tags:
+        - admin
+      summary: return all entries with all fields
+      operationId: listPackagesFull
+      description: |
+        Get all package data
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: count
+          description: Limit number of entries
+          required: false
+          type: number
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/PackageItem'
+        400:
+          description: bad input parameter(s)
   /packages:
     get:
       x-swagger-router-controller: "Users"
       tags:
         - user
-        - admin
       summary: return all entries
       operationId: listPackages
       description: |

@@ -13,6 +13,10 @@ var PackageSchema = new Schema({
 	arch: {type: String, required: true},
 	hash: {type: String, required: true},
 	count: {type: Number, required: true, min: 1, default: 1},
+	creator: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'LoginModel'
+	}
 });
 
 PackageSchema.index({name: 1, version: 1, arch: 1, hash: 1}, {unique: true});

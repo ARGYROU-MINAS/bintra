@@ -15,6 +15,28 @@ var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
 
+
+/**
+ * Helper function
+ */
+function getUserObject(username) {
+  return new Promise(function(resolve, reject) {
+    LoginModel.find({name: username})
+      .then(itemFound => {
+        if(1 == itemFound.length) {
+          console.log("Found user");
+          resolve(itemFound[0]);
+        } else {
+          reject("Not found");
+        }
+      })
+      .catch(err => {
+        console.error("getUser failed: " + err);
+        reject("getUser failed");
+      });
+  });
+}
+
 /**
  * @method
  * Validate the package.
@@ -24,11 +46,12 @@ const bcrypt = require ('bcrypt');
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
  * @param {string} packageHash - SHA hash of the package
+ * @param {string} username - The user asking for this, used for creator
  * @returns String
  **/
-exports.validatePackage = function(packageName, packageVersion, packageArch, packageHash) {
+exports.validatePackage = function(packageName, packageVersion, packageArch, packageHash, username) {
   return new Promise(function(resolve, reject) {
-    console.log("In validate service");
+    console.log("In validate service for " + username);
     var tsnow = new Date();
 
     // Does it exist already?
@@ -37,24 +60,32 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
             if(0 == itemFound.length) {
               console.log("Not exist yet");
 
-              var packageNew = new PackageModel({name: packageName, version: packageVersion,
-                                                 arch: packageArch, hash: packageHash, tscreated: tsnow, tsupdated: tsnow});
-              packageNew.save()
-                .then(itemSaved => {
-                    console.log("Added fresh entry");
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
-                        .then(itemOthers => {
-                            console.info("Found others");
-                            resolve(itemOthers);
-                        })
-                        .catch(err => {
-                            console.error("Not found others: ", err);
-                            reject("bahh");
-                        });
+              getUserObject(username)
+                .then(userObject => {
+                console.log(userObject);
+
+                var packageNew = new PackageModel({name: packageName, version: packageVersion,
+                                                   creator: userObject,
+                                                   arch: packageArch, hash: packageHash, tscreated: tsnow, tsupdated: tsnow});
+                packageNew.save()
+                  .then(itemSaved => {
+                      console.log("Added fresh entry");
+                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                          .then(itemOthers => {
+                              console.info("Found others");
+                              resolve(itemOthers);
+                          })
+                          .catch(err => {
+                              console.error("Not found others: ", err);
+                              reject("bahh");
+                          });
+                  })
+                  .catch(err => {
+                      console.error("Not saved fresh: ", err);
+                      reject("bahh");
+                  })
                 })
                 .catch(err => {
-                    console.error("Not saved fresh: ", err);
-                    reject("bahh");
                 });
             } else {
               console.log("Did exist already");
@@ -65,7 +96,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 	            { upsert: true })
                 .then(itemUpdated => {
                     console.log("Did update counter");
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch}).populate('creator')
                         .then(itemOthers => {
                             console.info("Found others");
                             resolve(itemOthers);
@@ -101,7 +132,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 exports.listPackage = function(packageName, packageVersion, packageArch) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch}).populate('creator')
           .then(item => {
                   console.info("Was OK");
                   resolve(item);
@@ -118,13 +149,62 @@ exports.listPackage = function(packageName, packageVersion, packageArch) {
  * Validate the package.
  * @public
  *
+ * @param {string} packageId - ID of the package
+ * @returns String
+ **/
+exports.listPackageSingle = function(packageId) {
+  return new Promise(function(resolve, reject) {
+    console.log("In list service");
+    PackageModel.find({_id: packageId}, {name: 1, version: 1, arch: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * List all packages.
+ * @public
+ *
  * @param {string} count - Limit replies
  * @returns String
  **/
 exports.listPackages = function(count) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
+    PackageModel.find({}, {name: 1, version: 1, arch: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+          .sort({tsupdated: -1})
+          .limit(count)
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * List all packages.
+ * @public
+ *
+ * @param {string} count - Limit replies
+ * @returns String
+ **/
+exports.listPackagesFull = function(count) {
+  return new Promise(function(resolve, reject) {
+    console.log("In list service");
     PackageModel.find({})
+          .populate('creator')
           .sort({tsupdated: -1})
           .limit(count)
           .then(item => {

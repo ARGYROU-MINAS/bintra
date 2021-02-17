@@ -22,10 +22,11 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
   var packageVersion = req.swagger.params['packageVersion'].value;
   var packageArch = req.swagger.params['packageArch'].value;
   var packageHash = req.swagger.params['packageHash'].value;
+  var username = req.auth.sub;
 
   eventEmitter.emit('apihit', req);
 
-  Service.validatePackage(packageName, packageVersion, packageArch, packageHash)
+  Service.validatePackage(packageName, packageVersion, packageArch, packageHash, username)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -57,6 +58,25 @@ module.exports.listPackage = function listPackage (req, res, next) {
 
 /**
  * @method
+ * List package data for arguments matching.
+ * @public
+ */
+module.exports.listPackageSingle = function listPackage (req, res, next) {
+  var packageId = req.swagger.params['id'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.listPackageSingle(packageId)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
  * List all packages and variations.
  * @public
  */
@@ -69,6 +89,28 @@ module.exports.listPackages = function listPackage (req, res, next) {
   eventEmitter.emit('apihit', req);
 
   Service.listPackages(count)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.listPackagesFull = function listPackage (req, res, next) {
+  var count = req.swagger.params['count'].value;
+  if(!count) {
+    count = 100;
+  }
+
+  eventEmitter.emit('apihit', req);
+
+  Service.listPackagesFull(count)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
