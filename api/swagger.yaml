@@ -54,13 +54,18 @@ paths:
       x-swagger-router-controller: "Users"
       tags:
         - user
-        - admin
       summary: validates package info
       operationId: validatePackage
       description: |
         Add new package entry or increment an existing one.
         Returns all existing name-version variants with their hash and counts
         values for further decision of the installer tool.
+        A valid token is required for this action.
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+        - user
       produces:
         - application/json
       parameters:
