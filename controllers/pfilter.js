@@ -1,7 +1,7 @@
 'use strict';
 
 function cleanupString(s) {
-	var sNew = s.replace(/[^a-zA-Z0-9\-\._]/gi, '');
+	var sNew = s.replace(/[^a-zA-Z0-9\-\._ ]/gi, '');
 	if(sNew != s) {
 		console.warn("Filtered invalid chars");
 	}
@@ -22,23 +22,9 @@ module.exports = function (req, res, next) {
 	    console.debug("static stuff OK");
 	    next();
     } else {
-/*
-packageName: {
-    path: [ 'paths', '/package', 'get', 'parameters', '0' ],
-    schema: {
-      in: 'query',
-      name: 'packageName',
-      description: 'package name from extracted meta info',
-      required: true,
-      type: 'string'
-    },
-    originalValue: 'a',
-    value: 'a'
-  }
-*/
 	    for(var [key, structure] of Object.entries(req.swagger.params)) {
 		    console.debug(key + ":" + structure.value);
-            switch(key) {
+              switch(key) {
                 case "packageName":
                 case "packageArch":
                 case "packageVersion":
@@ -56,7 +42,7 @@ packageName: {
                         return res.end(JSON.stringify(response));
                     }
                     break;
-            }
+              }
 	    }
         next();
     }
