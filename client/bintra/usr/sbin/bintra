@@ -34,6 +34,12 @@ while IFS='$\n' read -r line; do
   packageArch=$(cat control | grep "Architecture" | cut -d":" -f2- | xargs)
 
   APIREPLY=$(curl -X PUT "https://api.bintra.directory/v1/package?packageName=$packageName&packageVersion=$packageVersion&packageArch=$packageArch&packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --no-progress-meter --show-error --user-agent "bintra/1.0")
+  echo "APIreply: $APIREPLY"
+  if [ "$APIREPLY" = "Error: Access Denied" ];
+  then
+    echo "Access denied, JWT invalid?"
+    exit -3
+  fi;
   REPLYLENGTH=$(echo $APIREPLY|jq 'length')
   if (( $REPLYLENGTH > 1 ));
   then

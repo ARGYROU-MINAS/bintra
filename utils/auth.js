@@ -82,7 +82,10 @@ exports.issueToken = function(username, role) {
       iss: issuer,
       role: role
     },
-    sharedSecret
+    sharedSecret,
+    {
+      expiresIn: "365d"
+    }
   );
   return token;
 };
