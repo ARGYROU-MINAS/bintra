@@ -1,7 +1,7 @@
 'use strict';
 
 function cleanupString(s) {
-	var sNew = s.replace(/[^a-zA-Z0-9\-\._ ~]/gi, '');
+	var sNew = s.replace(/[^a-zA-Z0-9\-\._ ~:+]/gi, '');
 	if(sNew != s) {
 		console.warn("Filtered invalid chars");
 	}
