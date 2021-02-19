@@ -23,16 +23,20 @@ securityDefinitions:
 
 # tags are used for organizing operations
 tags:
+  - name: default
+    description: Operations for all with or without token
   - name: user
-    description: Operations available to regular users
+    description: Operations available to regular users and admins
   - name: admin
-    description: Operations available to admin users
+    description: Operations available only to admin users
 
 paths:
   /login:
     x-swagger-router-controller: "Admins"
     post:
       operationId: loginPost
+      tags:
+        - default
       description: "Login for a particular role from db"
       parameters:
         - name: authentication
@@ -104,8 +108,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - user
-        - admin
+        - default
       summary: get data for a package
       operationId: listPackage
       description: |
@@ -186,8 +189,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - user
-        - admin
+        - default
       summary: get data for a package
       operationId: listPackageSingle
       description: |
@@ -247,8 +249,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - user
-        - admin
+        - default
       summary: return number of all entries
       operationId: countPackage
       description: |
@@ -295,7 +296,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - user
+        - default
       summary: return all entries
       operationId: listPackages
       description: |
@@ -372,7 +373,7 @@ paths:
       x-security-scopes:
         - user
       description: |
-        Get meta data from valid JQT token like expiration date
+        Get meta data from valid JWT token like expiration date
       produces:
         - application/json
       responses:
@@ -400,9 +401,11 @@ definitions:
       tsfrom:
         type: string
         format: date-time
+        example: 2016-08-29T09:12:33.001Z
       tsto:
         type: string
         format: date-time
+        example: 2016-08-29T09:12:33.001Z
   LoginItem:
     type: object
     required:
