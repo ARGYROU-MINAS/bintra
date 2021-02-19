@@ -7,10 +7,27 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
+var dateFormat = require("dateformat");
 var utils = require('../utils/writer.js');
 var eventEmitter = require('../utils/eventer').em;
 var Service = require('../service/PackagesService');
 
+
+/**
+ * @method
+ * Validate package, store information and return alternatives.
+ * @public
+ */
+module.exports.checkToken = function checkToken (req, res, next) {
+  eventEmitter.emit('apihit', req);
+
+  var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
+  var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
+
+  var payload = {name: req.auth.sub, tsfrom: tsfrom, tsto: tsto};
+  console.log(payload);
+  utils.writeJson(res, payload, 200);
+};
 
 /**
  * @method

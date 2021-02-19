@@ -360,6 +360,28 @@ paths:
             $ref: '#/definitions/LoginItem'
         400:
           description: bad input parameter(s)
+  /token:
+    get:
+      x-swagger-router-controller: "Users"
+      tags:
+        - user
+      summary: Validate token and return information
+      operationId: checkToken
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - user
+      description: |
+        Get meta data from valid JQT token like expiration date
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/TokenItem'
+        400:
+          description: bad input parameter(s)
 definitions:
   Authentication:
     type: object
@@ -370,6 +392,17 @@ definitions:
       password:
         type: string
         example: "password"
+  TokenItem:
+    type: object
+    properties:
+      name:
+        type: string
+      tsfrom:
+        type: string
+        format: date-time
+      tsto:
+        type: string
+        format: date-time
   LoginItem:
     type: object
     required:
