@@ -48,11 +48,50 @@ module.exports.loginPost = function loginPost(args, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listUsers = function listPackage (req, res, next) {
+module.exports.listUsers = function listUsers (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
   Service.listUsers()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.listUser = function listUser (req, res, next) {
+  var idUser = req.swagger.params['id'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.listUser(idUser)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.patchUser = function patchUser (req, res, next) {
+  var idUser = req.swagger.params['id'].value;
+  var jpatch = req.swagger.params['jpatch'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.patchUser(idUser, jpatch)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

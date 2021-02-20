@@ -11,6 +11,7 @@ var fs = require('fs');
 const cdigit = require("cdigit");
 var dateFormat = require("dateformat");
 require("datejs");
+var jsonpatch = require('json-patch');
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
@@ -229,10 +230,67 @@ exports.listUsers = function() {
   return new Promise(function(resolve, reject) {
     console.log("In list users service");
 
-    LoginModel.find({})
+    LoginModel.find({}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
           .then(item => {
                   console.info("Was OK");
                   resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.listUser = function(idUser) {
+  return new Promise(function(resolve, reject) {
+    console.log("In list user service");
+
+    LoginModel.find({_id: idUser}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
+          .then(item => {
+                  console.info("Was OK");
+		  if(item.length > 0) {
+                  	resolve(item[0]);
+		} else {
+			reject("not found");
+		}
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.patchUser = function(idUser, jpatch) {
+  return new Promise(function(resolve, reject) {
+    console.log("In patch user service");
+
+    LoginModel.find({_id: idUser}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
+          .then(item => {
+                  console.info("Was OK");
+                  if(item.length > 0) {
+			  var userDoc = item[0];
+			  var patchedUser = jsonpatch.apply(userDoc, jpatch);
+			  patchedUser.save();
+                        resolve(patchedUser);
+                } else {
+                        reject("not found");
+                }
           })
           .catch(err => {
                   console.error("Not OK: ", err);

@@ -13,9 +13,15 @@ var LoginSchema = new Schema({
 	role: {
 		type: String,
 		enum: ['user', 'admin'],
-	    required: true,
-        default: 'user'
-    },
+		required: true,
+		default: 'user'
+	},
+	status: {
+		type: String,
+		enum: ['register', 'optin', 'disabled', 'deleted'],
+		required: true,
+		default: 'disabled'
+	}
 });
 
 LoginSchema.index({name: 1}, {unique: true});

@@ -339,7 +339,7 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
-  /users:
+  /user:
     get:
       x-swagger-router-controller: "Admins"
       tags:
@@ -352,6 +352,93 @@ paths:
         - admin
       description: |
         Get all users data
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/UserList'
+        400:
+          description: bad input parameter(s)
+    post:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - admin
+      summary: create a user
+      operationId: listUsers
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+      description: |
+        Create a new user and prepare opt in steps
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/LoginItem'
+        400:
+          description: bad input parameter(s)
+  /user/{id}:
+    get:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - admin
+      summary: return the entries
+      operationId: listUser
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+      parameters:
+        - in: path
+          name: id
+          description: Package ID (24 hex chars)
+          required: true
+          type: string
+          minLength: 24
+          maxLength: 24
+          pattern: '^[a-fA-F0-9]{24}$'
+      description: |
+        Get all user data
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/LoginItem'
+        400:
+          description: bad input parameter(s)
+    patch:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - admin
+      summary: update fields
+      operationId: patchUser
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+      parameters:
+        - in: path
+          name: id
+          description: Package ID (24 hex chars)
+          required: true
+          type: string
+          minLength: 24
+          maxLength: 24
+          pattern: '^[a-fA-F0-9]{24}$'
+        - in: body
+          name: jpatch
+          required: false
+          schema:
+            $ref: '#/definitions/PatchRequest'
+      description: |
+        Update fields for a user
       produces:
         - application/json
       responses:
@@ -384,8 +471,41 @@ paths:
         400:
           description: bad input parameter(s)
 definitions:
-  Authentication:
+  PatchRequest:
+    type: array
+    items:
+      $ref: '#/definitions/PatchEntry'
+  PatchEntry:
+    description: A JSONPatch document as RFC 6902
+    required:
+      - "op"
+      - "path"
+    properties:
+      op:
+        type: string
+        description: The operation
+        enum:
+          - "add"
+          - "remove"
+          - "replace"
+          - "move"
+          - "copy"
+          - "test"
+      path:
+        type: string
+        description: A JSON-Pointer
+      value:
+        type: string
+        description: The value to be used witzhin that operation
+      from:
+        type: string
+        description: A string containing a JSON Pointer value
+  Registration:
     type: object
+    required:
+      - username
+      - password
+      - email
     properties:
       username:
         type: string
@@ -393,6 +513,24 @@ definitions:
       password:
         type: string
         example: "password"
+        format: password
+      email:
+        type: string
+        example: "me@example.com"
+        format: email
+  Authentication:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+        example: "username"
+      password:
+        type: string
+        example: "password"
+        format: password
   TokenItem:
     type: object
     properties:
@@ -406,19 +544,18 @@ definitions:
         type: string
         format: date-time
         example: 2016-08-29T09:12:33.001Z
+  UserList:
+    type: array
+    items:
+      $ref: '#/definitions/LoginItem'
   LoginItem:
     type: object
-    required:
-      - name
-      - email
-      - hash
-      - tscreated
     properties:
       name:
         type: string
       email:
         type: string
-      hash:
+      status:
         type: string
       tscreated:
         type: string
@@ -451,14 +588,6 @@ definitions:
         example: 2016-08-29T09:12:33.001Z
   PackageVariants:
     type: object
-    required:
-      - id
-      - packageName
-      - packageVersion
-      - packageHash
-      - packageArch
-      - count
-      - creationDate
     properties:
       id:
         type: string

@@ -29,6 +29,7 @@
     "events": "^3.2.0",
     "feed": "^4.2.2",
     "js-yaml": "^3.3.0",
+    "json-patch": "^0.7.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
