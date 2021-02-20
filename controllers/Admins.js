@@ -66,6 +66,25 @@ module.exports.listUsers = function listUsers (req, res, next) {
  * List all packages and variations.
  * @public
  */
+module.exports.deleteUser = function deleteUser (req, res, next) {
+  var idUser = req.swagger.params['id'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.deleteUser(idUser)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
 module.exports.listUser = function listUser (req, res, next) {
   var idUser = req.swagger.params['id'].value;
 

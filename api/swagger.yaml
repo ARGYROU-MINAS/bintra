@@ -422,6 +422,36 @@ paths:
             $ref: '#/definitions/LoginItem'
         400:
           description: bad input parameter(s)
+    delete:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - admin
+      summary: delete the user
+      operationId: deleteUser
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+      parameters:
+        - in: path
+          name: id
+          description: Package ID (24 hex chars)
+          required: true
+          type: string
+          minLength: 24
+          maxLength: 24
+          pattern: '^[a-fA-F0-9]{24}$'
+      description: |
+        Deletes the user entry
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/LoginItem'
+        400:
+          description: bad input parameter(s)
     patch:
       x-swagger-router-controller: "Admins"
       tags:

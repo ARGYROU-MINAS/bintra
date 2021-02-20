@@ -4,6 +4,7 @@ var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
 const saltRounds = 10;
 
+var Service = require('../service/PackagesService');
 
 var jwt = require("jsonwebtoken");
 require('custom-env').env(true);
@@ -52,17 +53,24 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
         // you can add more verification checks for the
         // token here if necessary, such as checking if
         // the username belongs to an active user
+	console.log("Check if iser is active:" + decodedToken.sub + "!");
+	Service.isActiveUser(decodedToken.sub).then(function (bRC) {
 
-        if (roleMatch && issuerMatch) {
-          //add the token to the request so that we
-          //can access it in the endpoint code if necessary
-          req.auth = decodedToken;
-          //if there is no error, just return null in the callback
-          return callback(null);
-        } else {
-          //return the error in the callback if there is one
-          return callback(sendError());
-        }
+          if (roleMatch && issuerMatch) {
+            //add the token to the request so that we
+            //can access it in the endpoint code if necessary
+            req.auth = decodedToken;
+            //if there is no error, just return null in the callback
+            return callback(null);
+          } else {
+            //return the error in the callback if there is one
+            return callback(sendError());
+          }
+	})
+	.catch(function () {
+	  console.error("User not active");
+	  return callback(sendError());
+	});
       } else {
         //return the error in the callback if the JWT was not verified
         return callback(sendError());

@@ -18,7 +18,7 @@ var LoginSchema = new Schema({
 	},
 	status: {
 		type: String,
-		enum: ['register', 'optin', 'disabled', 'deleted'],
+		enum: ['register', 'active', 'disabled', 'deleted'],
 		required: true,
 		default: 'disabled'
 	}

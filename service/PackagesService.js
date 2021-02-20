@@ -306,6 +306,45 @@ exports.patchUser = function(idUser, jpatch) {
  *
  * @returns String
  **/
+exports.deleteUser = function(idUser) {
+  return new Promise(function(resolve, reject) {
+    console.log("In delete user service");
+
+    LoginModel.find({_id: idUser}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
+          .then(item => {
+                  console.info("Query OK");
+                  if(item.length > 0) {
+			  console.log("Items found");
+                          var userDoc = item[0];
+			  console.log(userDoc);
+			  userDoc.status = "deleted";
+			  console.log(userDoc);
+                          userDoc.save().then(item => {
+		            console.log("Updated item saved");
+                            resolve(userDoc);
+			  })
+			  .catch(err => {
+		 	    console.error("Not OK" + err);
+		            reject("error");
+			  });
+                } else {
+                        reject("not found");
+                }
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
 exports.createUser = function(user) {
   return new Promise(function(resolve, reject) {
     console.log("In create user service");
@@ -345,8 +384,9 @@ exports.checkUser = function(name, passwd) {
   return new Promise(function(resolve, reject) {
     console.log("In check users service");
 
-    LoginModel.find({name: name})
+    LoginModel.find({name: name, status: "active"})
           .then(item => {
+		  if(item.length > 0) {
                   console.info("Was OK: " + item);
                   var pwhash = item[0].passwd;
                   console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
@@ -358,6 +398,33 @@ exports.checkUser = function(name, passwd) {
 	                  console.log("pwd matched");
                       resolve(item[0]);
                   });
+                  } else {
+                    console.error("No entry found");
+                    reject("bahh");
+                  }
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns boolean
+ **/
+exports.isActiveUser = function(uname) {
+  return new Promise(function(resolve, reject) {
+    console.log("In isActiveUser service");
+
+    LoginModel.find({name: uname, status: "active"})
+          .then(item => {
+                  console.info("Was OK:");
+                  resolve(true);
           })
           .catch(err => {
                   console.error("Not OK: ", err);
