@@ -304,6 +304,41 @@ exports.patchUser = function(idUser, jpatch) {
  * Validate the package.
  * @public
  *
+ * @returns String
+ **/
+exports.createUser = function(user) {
+  return new Promise(function(resolve, reject) {
+    console.log("In create user service");
+    const saltRounds = 10;
+    var tsnow = new Date();
+    bcrypt.hash(user.password, saltRounds, function(err, hash) {
+      var u = new LoginModel({
+        name: user.username,
+        passwd: hash,
+        email: user.email,
+	role: "user",
+	status: "register",
+	tscreated: tsnow
+      });
+
+      u.save()
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(u);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+    });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
  * @returns boolean
  **/
 exports.checkUser = function(name, passwd) {

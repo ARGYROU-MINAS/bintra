@@ -85,6 +85,25 @@ module.exports.listUser = function listUser (req, res, next) {
  * List all packages and variations.
  * @public
  */
+module.exports.createUser = function createUser (req, res, next) {
+  var user = req.swagger.params['user'].value;
+
+  eventEmitter.emit('apihit', req);
+
+  Service.createUser(user)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
 module.exports.patchUser = function patchUser (req, res, next) {
   var idUser = req.swagger.params['id'].value;
   var jpatch = req.swagger.params['jpatch'].value;

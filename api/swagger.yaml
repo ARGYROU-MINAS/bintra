@@ -29,6 +29,8 @@ tags:
     description: Operations available to regular users and admins
   - name: admin
     description: Operations available only to admin users
+  - name: api
+    description: Operations for internal API use
 
 paths:
   /login:
@@ -249,7 +251,7 @@ paths:
     get:
       x-swagger-router-controller: "Users"
       tags:
-        - default
+        - api
       summary: return number of all entries
       operationId: countPackage
       description: |
@@ -364,15 +366,22 @@ paths:
     post:
       x-swagger-router-controller: "Admins"
       tags:
-        - admin
+        - api
       summary: create a user
-      operationId: listUsers
+      operationId: createUser
       security:
         - Bearer: []
       x-security-scopes:
         - admin
+        - api
       description: |
         Create a new user and prepare opt in steps
+      parameters:
+        - in: body
+          name: user
+          required: true
+          schema:
+            $ref: '#/definitions/Registration'
       produces:
         - application/json
       responses:

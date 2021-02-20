@@ -12,7 +12,7 @@ var LoginSchema = new Schema({
 	passwd: {type: String, required: true},
 	role: {
 		type: String,
-		enum: ['user', 'admin'],
+		enum: ['user', 'admin', 'api'],
 		required: true,
 		default: 'user'
 	},
