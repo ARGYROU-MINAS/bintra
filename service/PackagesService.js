@@ -249,6 +249,30 @@ exports.listUsers = function() {
  *
  * @returns String
  **/
+exports.putUserStatus = function(id, newStatus) {
+  return new Promise(function(resolve, reject) {
+    console.log("In put user status service " + id + newStatus);
+
+    LoginModel.findOneAndUpdate({_id: id}, {status: newStatus})
+          .then(item => {
+                  console.info("Was OK");
+		  console.log(item);
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
 exports.listUser = function(idUser) {
   return new Promise(function(resolve, reject) {
     console.log("In list user service");

@@ -452,6 +452,42 @@ paths:
             $ref: '#/definitions/LoginItem'
         400:
           description: bad input parameter(s)
+    put:
+      x-swagger-router-controller: "Admins"
+      tags:
+        - api
+      summary: update user status
+      operationId: putUserStatus
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - admin
+        - api
+      parameters:
+        - in: path
+          name: id
+          description: Package ID (24 hex chars)
+          required: true
+          type: string
+          minLength: 24
+          maxLength: 24
+          pattern: '^[a-fA-F0-9]{24}$'
+        - in: query
+          name: status
+          description: New status enum value
+          required: true
+          type: string
+      description: |
+        Update status of a single user for optin etc
+      produces:
+        - application/json
+      responses:
+        200:
+          description: positive result we hope
+          schema:
+            $ref: '#/definitions/LoginItem'
+        400:
+          description: bad input parameter(s)
     patch:
       x-swagger-router-controller: "Admins"
       tags:
