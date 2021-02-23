@@ -1,4 +1,5 @@
 /*
+ *
  */
 
 /* Include other headers if needed */
@@ -7,10 +8,17 @@
 /* Include pkg */
 #include <pkg.h>
 
+#include <curl/curl.h>
+
 /* Define plugin name and configuration settings */
 static const char PLUGIN_NAME[] = "bintra";
 static const char CFG_JWT[] = "JWT";
 static const char CFG_COUNT[] = "BADCOUNT";
+static const char URL[] = "https://api.bintra.directory/v1/package?";
+static const char ARG_name[] = "packageName";
+static const char ARG_version[] = "packageVersion";
+static const char ARG_arch[] = "packageArch";
+static const char ARG_hash[] = "packageHash";
 
 /* Maintain a reference to ourself */
 static struct pkg_plugin *self;
@@ -119,6 +127,24 @@ pkg_plugin_shutdown(struct pkg_plugin *p __unused)
 	return (EPKG_OK);
 }
 
+static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *stream)
+{
+  size_t retcode;
+  curl_off_t nread;
+ 
+  /* in real-world cases, this would probably get this data differently
+     as this fread() stuff is exactly what the library already would do
+     by default internally */ 
+  retcode = fread(ptr, size, nmemb, stream);
+ 
+  nread = (curl_off_t)retcode;
+ 
+  fprintf(stderr, "*** We read %" CURL_FORMAT_CURL_OFF_T
+          " bytes from file\n", nread);
+ 
+  return retcode;
+}
+
 /*
  * And now we need to define our workers,
  * the plugin functions that carry out the real work.
@@ -150,6 +176,9 @@ my_callback1(void *data, struct pkgdb *db)
 	int64_t count = 0;
 	const pkg_object *cfg = NULL;
 	pkg_iter it = NULL;
+	CURL *curl;
+	CURLcode res;
+	struct curl_slist *curlheaders = NULL;
 
 	/* Get configuration object */
 	cfg = pkg_plugin_conf(self);
@@ -168,6 +197,25 @@ my_callback1(void *data, struct pkgdb *db)
 		pkg_plugin_info(self, "Hmm.. no data for me today, guess I'll just go and grab a mohito then..");
 	else
 		pkg_plugin_info(self, "Got some data.. okay, okay.. I'll do something useful then..");
+
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	if(!curl) {
+		return (EPKG_FATAL);
+	}
+	curlheaders = curl_slist_append(curlheaders, "Content-Type: application/json");
+	curlheaders = curl_slist_append(curlheaders, "Authorization: Bearer ");
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, curlheaders);
+	curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+	//curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_struct);
+	curl_easy_setopt(curl, CURLOPT_URL, URL);
+	res = curl_easy_perform(curl);
+	if(res != CURLE_OK) {
+		fprintf(stderr, "curl error: %s\n", curl_easy_strerror(res));
+	}
+	curl_slist_free_all(curlheaders);
+	curl_easy_cleanup(curl);
 
 	return (EPKG_OK);
 }
