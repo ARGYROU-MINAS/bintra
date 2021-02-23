@@ -182,6 +182,7 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *stream)
 int
 my_callback1(void *data, struct pkgdb *db)
 {
+	struct pkg_jobs *jobs = data;
 	const char *jwt = NULL;
 	int64_t count = 0;
 	const pkg_object *cfg = NULL;
@@ -190,6 +191,11 @@ my_callback1(void *data, struct pkgdb *db)
 	CURLcode res;
 	struct curl_slist *curlheaders = NULL;
 	char headbuf[300];
+	void *pIter=NULL;
+	struct pkg *pPkgN;
+	struct pkg *pPkgO;
+	int pType;
+	bool brc;
 
 	openlog("bintra", LOG_CONS|LOG_PID, LOG_LOCAL0);
 	syslog(LOG_INFO, "start pkg callback");
@@ -212,8 +218,16 @@ my_callback1(void *data, struct pkgdb *db)
 	else
 		pkg_plugin_info(self, "Got some data.. okay, okay.. I'll do something useful then..");
 
-	int64_t pkgSize = pkgdb_stats(db, PKG_STATS_LOCAL_SIZE);
-	pkg_plugin_info(self, " package size %l", pkgSize);
+/*	int64_t pkgSize = pkgdb_stats(db, PKG_STATS_LOCAL_SIZE);
+	pkg_plugin_info(self, " package size %l", pkgSize);*/
+
+	int countJobs = pkg_jobs_count(jobs);
+	pkg_plugin_info(self, "job count: %i", countJobs);
+
+	while(pkg_jobs_iter(jobs, &pIter, &pPkgN, &pPkgO, &pType))
+	{
+		pkg_plugin_info(self, "Got data from jobs iter");
+	}
 
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
