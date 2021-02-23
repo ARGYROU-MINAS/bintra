@@ -9,3 +9,6 @@ coverage/
 test-results.xml
 .nyc_output/
 *.deb
+
+client/**/*.so*
+client/**/*pico
