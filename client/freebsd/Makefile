@@ -10,6 +10,7 @@ SRCS=		bintra.c
 
 PKGFLAGS!=	pkgconf --cflags pkg
 CFLAGS+=	${PKGFLAGS} -I/usr/local/include
+LDFLAGS+=	-L/usr/local/lib -lcurl
 
 beforeinstall:
 	${INSTALL} -d ${LIBDIR}

@@ -8,6 +8,8 @@
 /* Include pkg */
 #include <pkg.h>
 
+#include <syslog.h>
+
 #include <curl/curl.h>
 
 /* Define plugin name and configuration settings */
@@ -46,6 +48,9 @@ int my_callback1(void *data, struct pkgdb *db);
 int
 pkg_plugin_init(struct pkg_plugin *p)
 {
+	openlog("bintra", LOG_CONS|LOG_PID, LOG_LOCAL0);
+	syslog(LOG_INFO, "Start plugin");
+
 	/* Keep a reference to our plugin object, so it can be used inside the callback functions */
 	self = p;
 
@@ -87,6 +92,7 @@ pkg_plugin_init(struct pkg_plugin *p)
 	/* printf(">>> Plugin '%s' is about to hook into pkgng.. yay! :)\n", pkg_plugin_get(p, PKG_PLUGIN_NAME)); */
 	
 	if (pkg_plugin_hook_register(p, PKG_PLUGIN_HOOK_PRE_INSTALL, &my_callback1) != EPKG_OK) {
+		syslog(LOG_ERR, "Could not hook");
 		pkg_plugin_error(p, "failed to hook into the library");
 		return (EPKG_FATAL);
 	}
@@ -112,6 +118,10 @@ pkg_plugin_init(struct pkg_plugin *p)
 int
 pkg_plugin_shutdown(struct pkg_plugin *p __unused)
 {
+	openlog("bintra", LOG_CONS|LOG_PID, LOG_LOCAL0);
+	syslog(LOG_INFO, "shutdown plugin");
+	closelog();
+
 	/* printf(">>> Plugin '%s' is shutting down, enough working for today.. :)\n", pkg_plugin_get(p, PKG_PLUGIN_NAME)); */
 
 	/*
@@ -179,6 +189,10 @@ my_callback1(void *data, struct pkgdb *db)
 	CURL *curl;
 	CURLcode res;
 	struct curl_slist *curlheaders = NULL;
+	char headbuf[300];
+
+	openlog("bintra", LOG_CONS|LOG_PID, LOG_LOCAL0);
+	syslog(LOG_INFO, "start pkg callback");
 
 	/* Get configuration object */
 	cfg = pkg_plugin_conf(self);
@@ -187,16 +201,19 @@ my_callback1(void *data, struct pkgdb *db)
 	count = pkg_object_int(pkg_object_find(cfg, CFG_COUNT));
 	jwt = pkg_object_string(pkg_object_find(cfg, CFG_JWT));
 
-
 	pkg_plugin_info(self, "Hey, I was just called by the library, lets see what we've got here..");
-
 	pkg_plugin_info(self, "  Token: '%s'", jwt);
 	pkg_plugin_info(self, "  Count: %i", count);
+
+	sprintf(headbuf, "Authorization: Bearer %s", jwt);
 
 	if (data == NULL)
 		pkg_plugin_info(self, "Hmm.. no data for me today, guess I'll just go and grab a mohito then..");
 	else
 		pkg_plugin_info(self, "Got some data.. okay, okay.. I'll do something useful then..");
+
+	int64_t pkgSize = pkgdb_stats(db, PKG_STATS_LOCAL_SIZE);
+	pkg_plugin_info(self, " package size %l", pkgSize);
 
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
@@ -204,7 +221,7 @@ my_callback1(void *data, struct pkgdb *db)
 		return (EPKG_FATAL);
 	}
 	curlheaders = curl_slist_append(curlheaders, "Content-Type: application/json");
-	curlheaders = curl_slist_append(curlheaders, "Authorization: Bearer ");
+	curlheaders = curl_slist_append(curlheaders, headbuf);
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, curlheaders);
 	curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
@@ -213,6 +230,7 @@ my_callback1(void *data, struct pkgdb *db)
 	res = curl_easy_perform(curl);
 	if(res != CURLE_OK) {
 		fprintf(stderr, "curl error: %s\n", curl_easy_strerror(res));
+		syslog(LOG_ERR, "curl exec error: %s", curl_easy_strerror(res));
 	}
 	curl_slist_free_all(curlheaders);
 	curl_easy_cleanup(curl);
