@@ -10,7 +10,7 @@
 /* Define plugin name and configuration settings */
 static const char PLUGIN_NAME[] = "bintra";
 static const char CFG_JWT[] = "JWT";
-static const char CFG_COUNT[] = "badcount";
+static const char CFG_COUNT[] = "BADCOUNT";
 
 /* Maintain a reference to ourself */
 static struct pkg_plugin *self;
