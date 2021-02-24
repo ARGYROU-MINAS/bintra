@@ -450,7 +450,7 @@ exports.isActiveUser = function(uname) {
 
     LoginModel.find({name: uname, status: "active"})
           .then(item => {
-                  console.info("Was OK:");
+                  console.info("Was OK");
                   resolve(true);
           })
           .catch(err => {

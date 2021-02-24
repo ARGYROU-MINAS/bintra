@@ -66,39 +66,25 @@ var options = {
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
 var app = expressAppConfig.getApp();
 
-// Initialize the Swagger middleware
-//swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
+app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
-  // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
-//  app.use(middleware.swaggerMetadata());
+app.use(serveStatic(path.join(__dirname, 'static')));
 
-  app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
-
-  app.use(serveStatic(path.join(__dirname, 'static')));
-
-  app.use("/feed.rss", bintrafeed.rss);
-  app.use("/feed.atom", bintrafeed.atom);
-
-/*  app.use(
-    middleware.swaggerSecurity({
-      //manage token function in the 'auth' module
-      Bearer: auth.verifyToken
-    })
-  );*/
-
-  // Validate Swagger requests
-//  app.use(middleware.swaggerValidator());
+app.use("/feed.rss", bintrafeed.rss);
+app.use("/feed.atom", bintrafeed.atom);
 
   // Filter all parameters known
 //  app.use(pfilter);
 
-  // Route validated requests to appropriate controller
-//  app.use(middleware.swaggerRouter(options));
-
-  // Serve the Swagger documents and Swagger UI
- /* app.use(middleware.swaggerUi({
-          url: "/api/swagger.yaml"
-  })); */
+  // Redirect root to docs UI
+  app.use('/', function doRedir(req, res, next) {
+    if(req.url != '/') {
+      next();
+    } else {
+      res.writeHead(301, {Location: '/docs/'});
+      res.end();
+    }
+  });
 
   // Error handlers
   app.use((err, req, res, next) => {
@@ -113,28 +99,15 @@ var app = expressAppConfig.getApp();
      res.end(err.message);
   });
 
-  /**
-   * Start the server
-   * @see DDATA-server-backend-002
-   */
-  var serverPort = process.env.BIND_PORT;
-  var serverHost = process.env.BIND_HOST;
-  console.log("Bind to %s : %d", serverHost, serverPort);
-  http.createServer(app).listen(serverPort, serverHost, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
-  });
-
-  // Redirect root to docs UI
-  app.use('/', function doRedir(req, res, next) {
-    if(req.url != '/') {
-      next();
-    } else {
-      res.writeHead(301, {Location: '/docs/'});
-      res.end();
-    }
-  });
-
-//});
+/**
+ * Start the server
+ */
+var serverPort = process.env.BIND_PORT;
+var serverHost = process.env.BIND_HOST;
+console.log("Bind to %s : %d", serverHost, serverPort);
+http.createServer(app).listen(serverPort, serverHost, function () {
+  console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+  console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+});
 
 module.exports = app; // for testing

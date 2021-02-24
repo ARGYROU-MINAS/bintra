@@ -30,6 +30,7 @@ paths:
       - default
       description: Login for a particular role from db
       operationId: loginPost
+      x-swagger-router-controller: Admins
       requestBody:
         description: Login data as html form
         required: true
@@ -58,7 +59,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
-      x-swagger-router-controller: Admins
   /package:
     get:
       tags:
@@ -69,6 +69,7 @@ paths:
         matches, or multiple matches with only one good and one or more
         faked entries.
       operationId: listPackage
+      x-swagger-router-controller: Users
       parameters:
       - name: packageName
         in: query
@@ -104,9 +105,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/PackageVariants'
         400:
-          description: bad input parameter(s)
-          content: {}
-      x-swagger-router-controller: Users
+          $ref: '#/components/responses/BadRequest'
     put:
       tags:
       - user
@@ -117,6 +116,7 @@ paths:
         values for further decision of the installer tool.
         A valid token is required for this action.
       operationId: validatePackage
+      x-swagger-router-controller: Users
       parameters:
       - name: packageName
         in: query
@@ -163,11 +163,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Users
+      - bearerAuth: [ admin, user ]
       x-security-scopes:
       - admin
       - user
@@ -178,6 +178,7 @@ paths:
       description: |
         Delete one entry
       operationId: deletePackage
+      x-swagger-router-controller: Admins
       parameters:
       - name: packageName
         in: query
@@ -216,8 +217,9 @@ paths:
           description: positive result we hope
           content: {}
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
         403:
           description: Access Denied
           content:
@@ -225,11 +227,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
-      - user
   /package/{id}:
     get:
       tags:
@@ -238,6 +238,7 @@ paths:
       description: |
         Return single package data
       operationId: listPackageSingle
+      x-swagger-router-controller: Users
       parameters:
       - name: id
         in: path
@@ -258,9 +259,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/PackageVariants'
         400:
-          description: bad input parameter(s)
-          content: {}
-      x-swagger-router-controller: Users
+          $ref: '#/components/responses/BadRequest'
     delete:
       tags:
       - admin
@@ -268,6 +267,7 @@ paths:
       description: |
         Delete one entry
       operationId: deletePackageById
+      x-swagger-router-controller: Admins
       parameters:
       - name: id
         in: path
@@ -283,8 +283,9 @@ paths:
           description: positive result we hope
           content: {}
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
         403:
           description: Access Denied
           content:
@@ -292,11 +293,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
-      - user
   /count:
     get:
       tags:
@@ -306,6 +305,7 @@ paths:
         By passing in the appropriate options, you can validate a
         package before installing it
       operationId: countPackage
+      x-swagger-router-controller: Users
       responses:
         200:
           description: positive result we hope
@@ -314,9 +314,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PackageCount'
         400:
-          description: bad input parameter(s)
-          content: {}
-      x-swagger-router-controller: Users
+          $ref: '#/components/responses/BadRequest'
   /packagesfull:
     get:
       tags:
@@ -325,6 +323,7 @@ paths:
       description: |
         Get all package data
       operationId: listPackagesFull
+      x-swagger-router-controller: Users
       parameters:
       - name: count
         in: query
@@ -339,13 +338,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Users
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
+
   /packages:
     get:
       tags:
@@ -354,6 +354,7 @@ paths:
       description: |
         Get all package data
       operationId: listPackages
+      x-swagger-router-controller: Users
       parameters:
       - name: count
         in: query
@@ -368,9 +369,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
-          content: {}
-      x-swagger-router-controller: Users
+          $ref: '#/components/responses/BadRequest'
     delete:
       tags:
       - admin
@@ -379,13 +378,15 @@ paths:
         By passing in the appropriate options, you can validate a
         package before installing it
       operationId: cleanupPackages
+      x-swagger-router-controller: Admins
       responses:
         200:
           description: positive result we hope
           content: {}
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
         403:
           description: Access Denied
           content:
@@ -393,11 +394,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
-      - user
+
   /user:
     get:
       tags:
@@ -406,6 +406,7 @@ paths:
       description: |
         Get all users data
       operationId: listUsers
+      x-swagger-router-controller: Admins
       responses:
         200:
           description: positive result we hope
@@ -414,11 +415,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserList'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
     post:
@@ -428,6 +429,7 @@ paths:
       description: |
         Create a new user and prepare opt in steps
       operationId: createUser
+      x-swagger-router-controller: Admins
       requestBody:
         content:
           '*/*':
@@ -442,15 +444,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin, api ]
       x-security-scopes:
       - admin
       - api
       x-codegen-request-body-name: user
+
   /user/{id}:
     get:
       tags:
@@ -459,6 +462,7 @@ paths:
       description: |
         Get all user data
       operationId: listUser
+      x-swagger-router-controller: Admins
       parameters:
       - name: id
         in: path
@@ -477,11 +481,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
     put:
@@ -491,6 +495,7 @@ paths:
       description: |
         Update status of a single user for optin etc
       operationId: putUserStatus
+      x-swagger-router-controller: Admins
       parameters:
       - name: id
         in: path
@@ -515,11 +520,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin, api ]
       x-security-scopes:
       - admin
       - api
@@ -530,6 +535,7 @@ paths:
       description: |
         Deletes the user entry
       operationId: deleteUser
+      x-swagger-router-controller: Admins
       parameters:
       - name: id
         in: path
@@ -548,11 +554,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
     patch:
@@ -562,6 +568,7 @@ paths:
       description: |
         Update fields for a user
       operationId: patchUser
+      x-swagger-router-controller: Admins
       parameters:
       - name: id
         in: path
@@ -586,14 +593,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: []
-      x-swagger-router-controller: Admins
+      - bearerAuth: [ admin ]
       x-security-scopes:
       - admin
       x-codegen-request-body-name: jpatch
+
   /token:
     get:
       tags:
@@ -602,6 +610,7 @@ paths:
       description: |
         Get meta data from valid JWT token like expiration date
       operationId: checkToken
+      x-swagger-router-controller: Users
       responses:
         200:
           description: positive result we hope
@@ -610,13 +619,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenItem'
         400:
-          description: bad input parameter(s)
-          content: {}
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [user]
-      x-swagger-router-controller: Users
+      - bearerAuth: [ user ]
       x-security-scopes:
       - user
+
+
 components:
   schemas:
     PatchRequest:
@@ -780,6 +791,19 @@ components:
       properties:
         message:
           type: string
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad Request, some parameter must be wrong
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
