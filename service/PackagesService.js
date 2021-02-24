@@ -46,17 +46,18 @@ function getUserObject(username) {
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
+ * @param {string} packageFamily - Architecture of the package
  * @param {string} packageHash - SHA hash of the package
  * @param {string} username - The user asking for this, used for creator
  * @returns String
  **/
-exports.validatePackage = function(packageName, packageVersion, packageArch, packageHash, username) {
+exports.validatePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash, username) {
   return new Promise(function(resolve, reject) {
     console.log("In validate service for " + username);
     var tsnow = new Date();
 
     // Does it exist already?
-    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash})
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily, hash: packageHash})
         .then(itemFound => {
             if(0 == itemFound.length) {
               console.log("Not exist yet");
@@ -67,11 +68,12 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 
                 var packageNew = new PackageModel({name: packageName, version: packageVersion,
                                                    creator: userObject,
-                                                   arch: packageArch, hash: packageHash, tscreated: tsnow, tsupdated: tsnow});
+                                                   arch: packageArch, family: packageFamily,
+		                                   hash: packageHash, tscreated: tsnow, tsupdated: tsnow});
                 packageNew.save()
                   .then(itemSaved => {
                       console.log("Added fresh entry");
-                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch})
+                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily})
                           .then(itemOthers => {
                               console.info("Found others");
                               resolve(itemOthers);
@@ -92,12 +94,12 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
               console.log("Did exist already");
 
               PackageModel.updateMany(
-	            {name: packageName, version: packageVersion, arch: packageArch, hash: packageHash},
+	            {name: packageName, version: packageVersion, arch: packageArch, family: packageFamily, hash: packageHash},
 	            { $inc: {count: 1}, $set: {tsupdated: tsnow} },
 	            { upsert: true })
                 .then(itemUpdated => {
                     console.log("Did update counter");
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch}).populate('creator')
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily}).populate('creator')
                         .then(itemOthers => {
                             console.info("Found others");
                             resolve(itemOthers);
@@ -128,12 +130,13 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
+ * @param {string} packageFamily - Family of the package
  * @returns String
  **/
-exports.listPackage = function(packageName, packageVersion, packageArch) {
+exports.listPackage = function(packageName, packageVersion, packageArch, packageFamily) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch}).populate('creator')
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily}).populate('creator')
           .then(item => {
                   console.info("Was OK");
                   resolve(item);
@@ -156,7 +159,7 @@ exports.listPackage = function(packageName, packageVersion, packageArch) {
 exports.listPackageSingle = function(packageId) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({_id: packageId}, {name: 1, version: 1, arch: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+    PackageModel.find({_id: packageId}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
           .then(item => {
                   console.info("Was OK");
                   resolve(item);
@@ -179,7 +182,7 @@ exports.listPackageSingle = function(packageId) {
 exports.listPackages = function(count) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({}, {name: 1, version: 1, arch: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+    PackageModel.find({}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
           .sort({tsupdated: -1})
           .limit(count)
           .then(item => {
@@ -487,15 +490,16 @@ exports.cleanupPackages = function() {
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
+ * @param {string} packageFamily - Family of the package
  * @param {string} packageHash - SHA hash of the package
  *
  * @returns String
  **/
-exports.deletePackage = function(packageName, packageVersion, packageArch, packageHash) {
+exports.deletePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash) {
   return new Promise(function(resolve, reject) {
     console.log("In cleanup service");
 
-    PackageModel.remove({name: packageName, version: packageVersion, arch: packageArch, hash: packageHash})
+    PackageModel.remove({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily, hash: packageHash})
           .then(item => {
                   console.info("Was OK");
                   resolve("OK");

@@ -38,12 +38,13 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
   var packageArch = req.swagger.params['packageArch'].value;
+  var packageFamily = req.swagger.params['packageFamily'].value;
   var packageHash = req.swagger.params['packageHash'].value;
   var username = req.auth.sub;
 
   eventEmitter.emit('apihit', req);
 
-  Service.validatePackage(packageName, packageVersion, packageArch, packageHash, username)
+  Service.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -61,10 +62,11 @@ module.exports.listPackage = function listPackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
   var packageArch = req.swagger.params['packageArch'].value;
+  var packageFamily = req.swagger.params['packageFamily'].value;
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackage(packageName, packageVersion, packageArch)
+  Service.listPackage(packageName, packageVersion, packageArch, packageFamily)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

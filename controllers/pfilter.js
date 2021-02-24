@@ -28,6 +28,7 @@ module.exports = function (req, res, next) {
                 case "packageName":
                 case "packageArch":
                 case "packageVersion":
+                case "packageFamily":
                     structure.value = cleanupString(structure.value);
                     break;
                 case "packageHash":

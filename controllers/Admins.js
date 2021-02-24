@@ -167,11 +167,12 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
   var packageName = req.swagger.params['packageName'].value;
   var packageVersion = req.swagger.params['packageVersion'].value;
   var packageArch = req.swagger.params['packageArch'].value;
+  var packageFamily = req.swagger.params['packageFamily'].value;
   var packageHash = req.swagger.params['packageHash'].value;
 
   eventEmitter.emit('apihit', req);
 
-  Service.deletePackage(packageName, packageVersion, packageArch, packageHash)
+  Service.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })

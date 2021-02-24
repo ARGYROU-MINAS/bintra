@@ -91,6 +91,13 @@ paths:
           required: true
           type: string
         - in: query
+          name: packageFamily
+          description: package family, like debian, etc.
+          required: true
+          type: string
+          enum:
+            - debian
+        - in: query
           name: packageHash
           description: SHA256 hash of downloaded file
           required: true
@@ -133,6 +140,11 @@ paths:
         - in: query
           name: packageArch
           description: package architecture from extracted meta info
+          required: true
+          type: string
+        - in: query
+          name: packageFamily
+          description: package Family, like debian, etc.
           required: true
           type: string
       responses:
@@ -178,6 +190,13 @@ paths:
           description: package architecture from extracted meta info
           required: true
           type: string
+        - in: query
+          name: packageFamily
+          description: package family like debian, etc.
+          required: true
+          type: string
+          enum:
+            - debian
       responses:
         200:
           description: positive result we hope
@@ -644,6 +663,7 @@ definitions:
       - name
       - version
       - arch
+      - family
       - tscreated
     properties:
       hash:
@@ -653,6 +673,8 @@ definitions:
       version:
         type: string
       arch:
+        type: string
+      family:
         type: string
       count:
         type: integer
@@ -673,6 +695,8 @@ definitions:
       packageVersion:
         type: string
       packageArch:
+        type: string
+      packageFamily:
         type: string
       packageHash:
         type: string

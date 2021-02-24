@@ -11,6 +11,7 @@ var PackageSchema = new Schema({
 	name: {type: String, required: true},
 	version: {type: String, required: true},
 	arch: {type: String, required: true},
+	family: {type: String, required: true},
 	hash: {type: String, required: true},
 	count: {type: Number, required: true, min: 1, default: 1},
 	creator: {
@@ -19,8 +20,8 @@ var PackageSchema = new Schema({
 	}
 });
 
-PackageSchema.index({name: 1, version: 1, arch: 1, hash: 1}, {unique: true});
-PackageSchema.index({name: 1, version: 1, arch: 1}, {unique: false});
+PackageSchema.index({name: 1, version: 1, arch: 1, family: 1, hash: 1}, {unique: true});
+PackageSchema.index({name: 1, version: 1, arch: 1, family: 1}, {unique: false});
 PackageSchema.index({tscreated: 1});
 PackageSchema.index({count: 1});
 

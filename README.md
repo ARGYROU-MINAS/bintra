@@ -17,3 +17,11 @@ NODE_ENV=develop npm start
     docker exec -it bintra-nodejs bash
     root@bfedf154d642:/usr/src/app# npm run adduser USER PASSWD
     ^C
+
+## update mongoDB
+
+Add new property to existing data, like *family* attribute:
+
+    mongo
+    use bintra
+    db.packagemodels.updateMany({}, {$set: {"family": "debian"}})
