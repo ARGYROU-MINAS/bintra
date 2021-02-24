@@ -16,7 +16,7 @@ require('custom-env').env(true);
 var app = require('connect')();
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
-var swaggerTools = require('swagger-tools');
+var oas3Tools = require('oas3-tools');
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
@@ -35,23 +35,42 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useInifiedTopology: true, us
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+function validate(request, scopes, schema) {
+    console.log("IN VALIDATE!!!");
+    // security stuff here
+    return true;
+}
+
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
 
 // swaggerRouter configuration
 var options = {
-  swaggerUi: path.join(__dirname, '/swagger.json'),
-  controllers: path.join(__dirname, './controllers'),
-  useStubs: process.env.NODE_ENV === 'development' // Conditionally turn on stubs (mock mode)
+    routing: {
+        controllers: path.join(__dirname, './controllers')
+    },
+    loggin: {
+        format: 'combined',
+        errorLimit: 400
+    },
+    openApiValidator: {
+	validateSecurity: {
+            handlers: {
+                bearerAuth: auth.verifyToken
+            }
+        }
+    }
 };
 
+var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
+var app = expressAppConfig.getApp();
 
 // Initialize the Swagger middleware
-swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
+//swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
-  app.use(middleware.swaggerMetadata());
+//  app.use(middleware.swaggerMetadata());
 
   app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
@@ -60,26 +79,26 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   app.use("/feed.rss", bintrafeed.rss);
   app.use("/feed.atom", bintrafeed.atom);
 
-  app.use(
+/*  app.use(
     middleware.swaggerSecurity({
       //manage token function in the 'auth' module
       Bearer: auth.verifyToken
     })
-  );
+  );*/
 
   // Validate Swagger requests
-  app.use(middleware.swaggerValidator());
+//  app.use(middleware.swaggerValidator());
 
   // Filter all parameters known
-  app.use(pfilter);
+//  app.use(pfilter);
 
   // Route validated requests to appropriate controller
-  app.use(middleware.swaggerRouter(options));
+//  app.use(middleware.swaggerRouter(options));
 
   // Serve the Swagger documents and Swagger UI
-  app.use(middleware.swaggerUi({
+ /* app.use(middleware.swaggerUi({
           url: "/api/swagger.yaml"
-  }));
+  })); */
 
   // Error handlers
   app.use((err, req, res, next) => {
@@ -116,6 +135,6 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
     }
   });
 
-});
+//});
 
 module.exports = app; // for testing

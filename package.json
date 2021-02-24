@@ -33,10 +33,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
+    "oas3-tools": "^2.2.2",
     "piwik-tracker": "^1.1.2",
     "serve-favicon": "^2.5.0",
-    "serve-static": "^1.14.1",
-    "swagger-tools": "^0.10.4"
+    "serve-static": "^1.14.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
