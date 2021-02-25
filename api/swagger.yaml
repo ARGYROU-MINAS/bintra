@@ -690,7 +690,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
       - bearerauth: [ ]
-        x-security-scopes:
+      x-security-scopes:
       - user
 
 
