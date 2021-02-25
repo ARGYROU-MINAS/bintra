@@ -57,7 +57,7 @@ var options = {
     openApiValidator: {
 	validateSecurity: {
             handlers: {
-                bearerAuth: auth.verifyToken
+                bearerauth: auth.verifyToken
             }
         }
     }

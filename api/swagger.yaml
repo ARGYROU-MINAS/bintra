@@ -167,7 +167,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin, user ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
       - user
@@ -227,7 +227,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
   /package/{id}:
@@ -293,7 +293,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
   /count:
@@ -342,7 +342,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
 
@@ -394,7 +394,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
 
@@ -419,7 +419,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
     post:
@@ -448,7 +448,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin, api ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
       - api
@@ -485,7 +485,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
     put:
@@ -524,7 +524,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin, api ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
       - api
@@ -558,7 +558,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
     patch:
@@ -597,7 +597,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ admin ]
+      - bearerauth: [ ]
       x-security-scopes:
       - admin
       x-codegen-request-body-name: jpatch
@@ -623,7 +623,7 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerAuth: [ user ]
+      - bearerauth: [ ]
       x-security-scopes:
       - user
 
@@ -805,7 +805,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   securitySchemes:
-    bearerAuth:
+    bearerauth:
       type: http
       scheme: bearer
       bearerFormat: JWT
