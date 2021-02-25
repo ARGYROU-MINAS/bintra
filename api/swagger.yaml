@@ -639,6 +639,35 @@ paths:
       - admin
       x-codegen-request-body-name: jpatch
 
+  /feed.{type}:
+    get:
+      tags:
+      - default
+      summary: Return feed of latest entries
+      description: |
+        Get all the latest entries in some RSS defined format type
+      operationId: bintraFeed
+      x-swagger-router-controller: Feeds
+      parameters:
+      - name: type
+        in: path
+        description: Type of feed
+        required: true
+        schema:
+          type: string
+          enum:
+            - rss
+            - atom
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/rss+xml:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+
   /token:
     get:
       tags:
@@ -661,8 +690,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
       - bearerauth: [ ]
-#        x-security-scopes:
-#      - user
+        x-security-scopes:
+      - user
 
 
 components:

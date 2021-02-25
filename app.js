@@ -13,7 +13,6 @@ var fs = require('fs'),
 
 require('custom-env').env(true);
 
-var app = require('connect')();
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
 var oas3Tools = require('oas3-tools');
@@ -22,8 +21,6 @@ var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
 var pfilter = require('./controllers/pfilter');
-
-var bintrafeed = require('./controllers/bintrafeed');
 
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
@@ -70,13 +67,7 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
 var app = expressAppConfig.getApp();
 
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
-
 app.use(serveStatic(path.join(__dirname, 'static')));
-
-app.use("/feed.rss", bintrafeed.rss);
-app.use("/feed.atom", bintrafeed.atom);
-
-app.all('*', auth.checkAuthentication);
 
   // Filter all parameters known
 //  app.use(pfilter);
