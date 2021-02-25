@@ -22,7 +22,7 @@ exports.checkAuthentication = function(req, res, next) {
   next();
 }
 
-exports.verifyToken = function(req, scopes, schema) {
+exports.verifyToken = async function(req, scopes, schema) {
   //these are the scopes/roles defined for the current endpoint
 //  var currentScopes = req.swagger.operation["x-security-scopes"];
   console.log("AUTH: Check for scopes:");
@@ -38,54 +38,39 @@ exports.verifyToken = function(req, scopes, schema) {
   if (token && token.indexOf("Bearer ") == 0) {
     var tokenString = token.split(" ")[1];
 
-    jwt.verify(tokenString, sharedSecret, function(
-      verificationError,
-      decodedToken
-    ) {
-	  console.log(decodedToken);
-      //check if the JWT was verified correctly
-      if (
-        verificationError == null &&
-        Array.isArray(scopes) &&
-        decodedToken &&
-        decodedToken.role
-      ) {
-	    console.log("User has role " + decodedToken.role + " in JWT");
-        // check if the role is valid for this endpoint
-        var roleMatch = scopes.indexOf(decodedToken.role) !== -1;
-        // check if the issuer matches
-        var issuerMatch = decodedToken.iss == issuer;
+    var decodedToken = jwt.verify(tokenString, sharedSecret);
+    console.log("Decoed token:");
+    console.log(decodedToken);
+    if(!decodedToken) {
+      console.error("Decode failed");
+      return false;
+    }
 
-        // you can add more verification checks for the
-        // token here if necessary, such as checking if
-        // the username belongs to an active user
-	console.log("Check if user is active:" + decodedToken.sub + "!");
-	Service.isActiveUser(decodedToken.sub).then(function (bRC) {
+    //check if the JWT was verified correctly
+    if (Array.isArray(scopes) && decodedToken.role) {
+      console.log("User has role " + decodedToken.role + " in JWT");
+      // check if the role is valid for this endpoint
+      var roleMatch = scopes.indexOf(decodedToken.role) !== -1;
+      // check if the issuer matches
+      var issuerMatch = decodedToken.iss == issuer;
 
-          if (roleMatch && issuerMatch) {
-            //add the token to the request so that we
-            //can access it in the endpoint code if necessary
-            req.auth = decodedToken;
-		 console.log("Add AUTH to request object");
-            //if there is no error, just return null in the callback
-            return true;
-          } else {
-            //return the error in the callback if there is one
-            return false;
-          }
-	})
-	.catch(function () {
-	  console.error("User not active");
-	  return false;
-	});
-      } else {
-        //return the error in the callback if the JWT was not verified
-        return false;
+      // you can add more verification checks for the
+      // token here if necessary, such as checking if
+      // the username belongs to an active user
+      console.log("Check if user is active: " + decodedToken.sub + "?");
+      var response = await Service.isActiveUser(decodedToken.sub);
+      console.log(response);
+      if(response) {
+        //add the token to the request so that we
+        //can access it in the endpoint code if necessary
+        req.auth = decodedToken;
+        console.log("Add AUTH to request object");
+        return true;
       }
-    });
-	  return true;
+      console.error("User not active");
+      return false;
+    }
   } else {
-    //return the error in the callback if the Authorization header doesn't have the correct format
     return false;
   }
 };
