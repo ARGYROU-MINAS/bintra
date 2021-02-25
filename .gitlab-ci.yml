@@ -85,6 +85,9 @@ pages:
   artifacts:
     paths:
     - public
+  only:
+    refs:
+      - master
 
 package:
   stage: deploy

@@ -12,15 +12,15 @@ function getInitialFeed() {
     id: "http://bintra.directory/",
     link: "http://bintra.directory/",
     language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-    image: "http://bintra.directory/image.png",
-    favicon: "http://bintra.directory/favicon.ico",
+    image: "https://bintra.directory/image.png",
+    favicon: "https://bintra.directory/favicon.ico",
     copyright: "All rights reserved 2021, Kai KRETSCHMANN",
     updated: new Date(),
     generator: "Feed for bintra", // optional, default = 'Feed for Node.js'
     feedLinks: {
-      json: "http://bintra.directory/feed.json",
-      rss: "http://bintra.directory/feed.rss",
-      atom: "http://bintra.directory/feed.atom"
+      json: "https://api.bintra.directory/v1/feed.json",
+      rss: "https://api.bintra.directory/v1/feed.rss",
+      atom: "https://api.bintra.directory/v1/feed.atom"
     },
     author: {
       name: "Kai KRETSCHMANN",
@@ -39,7 +39,7 @@ function getInitialFeed() {
   return myfeed;
 }
 
-module.exports.rss = function (req, res, next) {
+function feedRss (req, res, next) {
 	var rssfeed = getInitialFeed();
 
     Service.listPackages(maxFeedItems)
@@ -49,7 +49,7 @@ module.exports.rss = function (req, res, next) {
                 rssfeed.addItem({
 title: entry.name,
 id: entry._id,
-link: "http://api.bintra.directory/v1/package/" + myid,
+link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
 });
@@ -63,18 +63,17 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
         });
 };
 
-module.exports.atom = function (req, res, next) {
+function feedAtom(req, res, next) {
 	var atomfeed = getInitialFeed();
 
     Service.listPackages(maxFeedItems)
         .then(function (items) {
-            console.log("before loop");
             items.forEach(function(entry) {
                 var myid = entry._id;
                 atomfeed.addItem({
 title: entry.name,
 id: entry._id,
-link: "http://api.bintra.directory/v1/package/" + myid,
+link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
 });
@@ -87,3 +86,17 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
             return res.end("error" + payload);
         });
 };
+
+module.exports.bintraFeed = function bintraFeed (req, res, next, type) {
+    switch(type) {
+        case 'rss':
+            feedRss(req, res, next);
+            break;
+        case 'atom':
+            feedAtom(req, res, next);
+            break;
+        default:
+            console.error("Wrong type " + type);
+    }
+}
+

@@ -13,11 +13,11 @@ chai.use(chaiHttp);
 describe('server', () => {
 
 	describe('[BINTRA-2] GET home', () => {
-		it('[STEP-1] should redirect', (done) => {
+		it('[STEP-1] should crash', (done) => {
 		  request(server)
-		      .get('/')
+		      .get('/abc')
 		      .end((err, res) => {
-			    res.should.have.status(301);
+			    res.should.have.status(500);
 			    done();
 		        });
 		});

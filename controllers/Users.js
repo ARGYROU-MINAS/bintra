@@ -19,7 +19,9 @@ var Service = require('../service/PackagesService');
  * @public
  */
 module.exports.checkToken = function checkToken (req, res, next) {
+  console.log("In check");
   eventEmitter.emit('apihit', req);
+  console.log(req.auth);
 
   var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
   var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
@@ -34,12 +36,7 @@ module.exports.checkToken = function checkToken (req, res, next) {
  * Validate package, store information and return alternatives.
  * @public
  */
-module.exports.validatePackage = function validatePackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageArch = req.swagger.params['packageArch'].value;
-  var packageFamily = req.swagger.params['packageFamily'].value;
-  var packageHash = req.swagger.params['packageHash'].value;
+module.exports.validatePackage = function validatePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
   var username = req.auth.sub;
 
   eventEmitter.emit('apihit', req);
@@ -58,11 +55,7 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackage = function listPackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageArch = req.swagger.params['packageArch'].value;
-  var packageFamily = req.swagger.params['packageFamily'].value;
+module.exports.listPackage = function listPackage (req, res, next, packageName, packageVersion, packageArch, packageFamily) {
 
   eventEmitter.emit('apihit', req);
 
@@ -80,12 +73,11 @@ module.exports.listPackage = function listPackage (req, res, next) {
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackageSingle = function listPackage (req, res, next) {
-  var packageId = req.swagger.params['id'].value;
+module.exports.listPackageSingle = function listPackage (req, res, next, id) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackageSingle(packageId)
+  Service.listPackageSingle(id)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -99,8 +91,7 @@ module.exports.listPackageSingle = function listPackage (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackages = function listPackage (req, res, next) {
-  var count = req.swagger.params['count'].value;
+module.exports.listPackages = function listPackage (req, res, next, count) {
   if(!count) {
     count = 100;
   }
@@ -121,8 +112,7 @@ module.exports.listPackages = function listPackage (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackagesFull = function listPackage (req, res, next) {
-  var count = req.swagger.params['count'].value;
+module.exports.listPackagesFull = function listPackage (req, res, next, count) {
   if(!count) {
     count = 100;
   }
@@ -147,9 +137,6 @@ module.exports.countPackage = function countPackage (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  var a = req.headers['Authorize'];
-  console.log("Auth: " + a); 
-
   Service.countPackage()
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
@@ -157,4 +144,33 @@ module.exports.countPackage = function countPackage (req, res, next) {
     .catch(function (payload) {
       utils.writeJson(res, payload, 400);
     });
+};
+
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testDefault = function testDefault (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called default"};
+  utils.writeJson(res, payload, 200);
+};
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testAdmin = function testAdmin (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called admin"};
+  utils.writeJson(res, payload, 200);
 };

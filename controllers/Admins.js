@@ -66,12 +66,10 @@ module.exports.listUsers = function listUsers (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.deleteUser = function deleteUser (req, res, next) {
-  var idUser = req.swagger.params['id'].value;
-
+module.exports.deleteUser = function deleteUser (req, res, next, id) {
   eventEmitter.emit('apihit', req);
 
-  Service.deleteUser(idUser)
+  Service.deleteUser(id)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -85,13 +83,11 @@ module.exports.deleteUser = function deleteUser (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.putUserStatus = function putUserStatus (req, res, next) {
-  var idUser = req.swagger.params['id'].value;
-  var status = req.swagger.params['status'].value;
-
+module.exports.putUserStatus = function putUserStatus (req, res, next, status, id) {
   eventEmitter.emit('apihit', req);
+  console.log("putUserStatus " + id + "/" + status + "!");
 
-  Service.putUserStatus(idUser, status)
+  Service.putUserStatus(id, status)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -105,12 +101,10 @@ module.exports.putUserStatus = function putUserStatus (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listUser = function listUser (req, res, next) {
-  var idUser = req.swagger.params['id'].value;
-
+module.exports.listUser = function listUser (req, res, next, id) {
   eventEmitter.emit('apihit', req);
 
-  Service.listUser(idUser)
+  Service.listUser(id)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -124,9 +118,7 @@ module.exports.listUser = function listUser (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.createUser = function createUser (req, res, next) {
-  var user = req.swagger.params['user'].value;
-
+module.exports.createUser = function createUser (req, res, next, user) {
   eventEmitter.emit('apihit', req);
 
   Service.createUser(user)
@@ -143,13 +135,10 @@ module.exports.createUser = function createUser (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.patchUser = function patchUser (req, res, next) {
-  var idUser = req.swagger.params['id'].value;
-  var jpatch = req.swagger.params['jpatch'].value;
-
+module.exports.patchUser = function patchUser (req, res, next, id, jpatch) {
   eventEmitter.emit('apihit', req);
 
-  Service.patchUser(idUser, jpatch)
+  Service.patchUser(id, jpatch)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -163,12 +152,7 @@ module.exports.patchUser = function patchUser (req, res, next) {
  * Delete package with given package data. Permission required.
  * @public
  */
-module.exports.deletePackage = function deletePackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageArch = req.swagger.params['packageArch'].value;
-  var packageFamily = req.swagger.params['packageFamily'].value;
-  var packageHash = req.swagger.params['packageHash'].value;
+module.exports.deletePackage = function deletePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
 
   eventEmitter.emit('apihit', req);
 
@@ -186,12 +170,11 @@ module.exports.deletePackage = function deletePackage (req, res, next) {
  * Delete package with given package id. Permission required.
  * @public
  */
-module.exports.deletePackageById = function deletePackageById (req, res, next) {
-  var packageId = req.swagger.params['id'].value;
+module.exports.deletePackageById = function deletePackageById (req, res, next, id) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.deletePackageById(packageId)
+  Service.deletePackageById(id)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
