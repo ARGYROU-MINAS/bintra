@@ -8,26 +8,27 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.0
+  version: 1.0.1
 
 servers:
-- url: /v1
+  - url: http://192.168.0.249:8080/v1
+  - url: https://api.bintra.directory/v1
 
 tags:
-- name: default
-  description: Operations for all with or without token
-- name: user
-  description: Operations available to regular users and admins
-- name: admin
-  description: Operations available only to admin users
-- name: api
-  description: Operations for internal API use
+  - name: default
+    description: Operations for all with or without token
+  - name: user
+    description: Operations available to regular users and admins
+  - name: admin
+    description: Operations available only to admin users
+  - name: api
+    description: Operations for internal API use
 
 paths:
   /login:
     post:
       tags:
-      - default
+        - default
       description: Login for a particular role from db
       operationId: loginPost
       x-swagger-router-controller: Admins
@@ -398,6 +399,42 @@ paths:
       x-security-scopes:
       - admin
 
+  /test:
+    get:
+      tags:
+        - default
+      summary: check authentication
+      description: |
+        Some dummy function everyone can access
+      operationId: testDefault
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      tags:
+        - api
+      summary: check authentication
+      description: |
+        Some dummy function only admins can access
+      operationId: testAdmin
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      security:
+        - bearerauth: [ ]
+      x-security-scopes:
+        - admin
+
   /user:
     get:
       tags:
@@ -605,7 +642,7 @@ paths:
   /token:
     get:
       tags:
-      - user
+        - user
       summary: Validate token and return information
       description: |
         Get meta data from valid JWT token like expiration date
@@ -624,8 +661,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
       - bearerauth: [ ]
-      x-security-scopes:
-      - user
+#        x-security-scopes:
+#      - user
 
 
 components:
@@ -785,6 +822,11 @@ components:
       type: object
       properties:
         token:
+          type: string
+    Message:
+      type: object
+      properties:
+        message:
           type: string
     Error:
       type: object

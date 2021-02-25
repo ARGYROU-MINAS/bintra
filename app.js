@@ -38,7 +38,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 function validate(request, scopes, schema) {
     console.log("IN VALIDATE!!!");
     // security stuff here
-    return true;
+    return false;
 }
 
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
@@ -50,16 +50,19 @@ var options = {
     routing: {
         controllers: path.join(__dirname, './controllers')
     },
-    loggin: {
+    logging: {
         format: 'combined',
         errorLimit: 400
     },
     openApiValidator: {
-	validateSecurity: {
+	validateSecurity:
+	    {
             handlers: {
                 bearerauth: auth.verifyToken
             }
-        }
+        },
+        validateRequests: true,
+        validateResponses: false
     }
 };
 
@@ -72,6 +75,8 @@ app.use(serveStatic(path.join(__dirname, 'static')));
 
 app.use("/feed.rss", bintrafeed.rss);
 app.use("/feed.atom", bintrafeed.atom);
+
+app.all('*', auth.checkAuthentication);
 
   // Filter all parameters known
 //  app.use(pfilter);

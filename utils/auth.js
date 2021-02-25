@@ -17,10 +17,16 @@ var issuer = process.env.JWT_ISSUER;
 //endpoint is received
 //exports.verifyToken = function(req, authOrSecDef, token, callback) {
 
+exports.checkAuthentication = function(req, res, next) {
+  console.log("in auth.checkAutrhentication filter");
+  next();
+}
+
 exports.verifyToken = function(req, scopes, schema) {
   //these are the scopes/roles defined for the current endpoint
 //  var currentScopes = req.swagger.operation["x-security-scopes"];
   console.log("AUTH: Check for scopes:");
+
   console.log(scopes);
   console.log(schema);
   var token = req.headers.authorization;
@@ -77,6 +83,7 @@ exports.verifyToken = function(req, scopes, schema) {
         return false;
       }
     });
+	  return true;
   } else {
     //return the error in the callback if the Authorization header doesn't have the correct format
     return false;

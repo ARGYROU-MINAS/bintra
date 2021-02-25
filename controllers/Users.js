@@ -137,9 +137,6 @@ module.exports.countPackage = function countPackage (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  var a = req.headers['Authorize'];
-  console.log("Auth: " + a); 
-
   Service.countPackage()
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
@@ -147,4 +144,33 @@ module.exports.countPackage = function countPackage (req, res, next) {
     .catch(function (payload) {
       utils.writeJson(res, payload, 400);
     });
+};
+
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testDefault = function testDefault (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called default"};
+  utils.writeJson(res, payload, 200);
+};
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testAdmin = function testAdmin (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called admin"};
+  utils.writeJson(res, payload, 200);
 };
