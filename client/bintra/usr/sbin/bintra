@@ -27,7 +27,7 @@ while IFS='$\n' read -r line; do
   cp $line package.deb
   ar x package.deb
   ls -l
-  tar xf control.tar.xz
+  tar xf control.tar.?z
 
   packageName=$(cat control | grep "Package" | cut -d":" -f2- | xargs)
   packageVersion=$(cat control | grep "Version" | cut -d":" -f2- | xargs)
