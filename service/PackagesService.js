@@ -73,7 +73,8 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                 packageNew.save()
                   .then(itemSaved => {
                       console.log("Added fresh entry");
-                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily})
+                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
+		              {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
                           .then(itemOthers => {
                               console.info("Found others");
                               resolve(itemOthers);
@@ -99,7 +100,8 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 	            { upsert: true })
                 .then(itemUpdated => {
                     console.log("Did update counter");
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily}).populate('creator')
+                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
+		            {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
                         .then(itemOthers => {
                             console.info("Found others");
                             resolve(itemOthers);
