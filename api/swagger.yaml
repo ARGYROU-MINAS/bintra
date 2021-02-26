@@ -11,8 +11,8 @@ info:
   version: 1.0.1
 
 servers:
-  - url: http://192.168.0.249:8080/v1
   - url: https://api.bintra.directory/v1
+  - url: http://192.168.0.249:8080/v1
 
 tags:
   - name: default
