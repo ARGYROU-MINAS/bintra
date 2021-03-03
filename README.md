@@ -11,6 +11,7 @@ Use DPkg::Pre-Install-Pkgs to inject a precheck, run API calls to backend
 ## run local for testing
 
 NODE_ENV=develop npm start
+NODE_ENV=test npm test
 
 ## add user manually
 
