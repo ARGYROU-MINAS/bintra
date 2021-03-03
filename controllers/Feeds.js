@@ -72,16 +72,14 @@ function feedAtom(req, res, next) {
                 var myid = entry._id;
                 atomfeed.addItem({
 title: entry.name,
-id: entry._id,
 link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash,
-date: entry.tsupdated
+date: entry.tsupdated || new Date()
 });
             });
             res.writeHead(200, { "Content-Type": "application/rss+xml" });
-            var feeddata = atomfeed.atom1();
-            return res.end(feeddata);
+            return res.end(atomfeed.atom1());
         })
         .catch(function (payload) {
             console.error(payload);
