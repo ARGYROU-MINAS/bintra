@@ -9,6 +9,8 @@ echo MONGO_PASSWORD= >>.env.test
 echo MONGO_HOSTNAME=localhost >>.env.test
 echo MONGO_PORT=27017 >>.env.test
 echo MONGO_DB=bintra >>.env.test
+echo JWT_SECRET=SomeSecret >>.env.test
+echo JWT_ISSUER=127.0.0.1 >>.env.test
 
 echo "Content of .env.test"
 ls -la |grep .env
