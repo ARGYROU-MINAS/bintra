@@ -215,7 +215,7 @@ paths:
           schema:
             type: string
             enum:
-            - debian
+              - debian
       responses:
         200:
           description: positive result we hope
@@ -727,20 +727,20 @@ components:
         $ref: '#/components/schemas/PatchEntry'
     PatchEntry:
       required:
-      - op
-      - path
+        - op
+        - path
       type: object
       properties:
         op:
           type: string
           description: The operation
           enum:
-          - add
-          - remove
-          - replace
-          - move
-          - copy
-          - test
+            - add
+            - remove
+            - replace
+            - move
+            - copy
+            - test
         path:
           type: string
           description: A JSON-Pointer
@@ -753,9 +753,9 @@ components:
       description: A JSONPatch document as RFC 6902
     Registration:
       required:
-      - email
-      - password
-      - username
+        - email
+        - password
+        - username
       type: object
       properties:
         username:
@@ -771,8 +771,8 @@ components:
           example: me@example.com
     Authentication:
       required:
-      - password
-      - username
+        - password
+        - username
       type: object
       properties:
         username:
@@ -814,13 +814,13 @@ components:
           example: 2016-08-29T09:12:33.001Z
     PackageItem:
       required:
-      - arch
-      - count
-      - family
-      - hash
-      - name
-      - tscreated
-      - version
+        - arch
+        - count
+        - family
+        - hash
+        - name
+        - tscreated
+        - version
       type: object
       properties:
         hash:
@@ -866,7 +866,7 @@ components:
           example: 2016-08-29T09:12:33.001Z
     PackageCount:
       required:
-      - count
+        - count
       type: object
       properties:
         count:
