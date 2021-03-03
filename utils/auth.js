@@ -50,13 +50,6 @@ exports.verifyToken = async function(req, scopes, schema) {
     if (Array.isArray(scopes) && decodedToken.role) {
       console.log("User has role " + decodedToken.role + " in JWT");
 
-      // check if the role is valid for this endpoint
-      var roleMatch = scopes.indexOf(decodedToken.role) !== -1;
-      if(!roleMatch) {
-        console.error("role doesn't match");
-        return false;
-      }
-
       // check if the issuer matches
       var issuerMatch = decodedToken.iss == issuer;
       if(!issuerMatch) {

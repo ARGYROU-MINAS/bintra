@@ -17,6 +17,8 @@ var LoginModel = require('../models/login.js');
 
 const service = require('../service/PackagesService.js');
 
+var JWT;
+
 describe('User stuff', function() {
 	before(async () => {
 		console.log("run before");
@@ -35,7 +37,7 @@ describe('User stuff', function() {
 					done();
 				});
 		});
-	        it.skip('[STEP-] should get token', (done) => {
+	        it('[STEP-] should get token', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -43,18 +45,21 @@ describe('User stuff', function() {
                       .end((err, res) => {
                             res.should.have.status(200);
                             res.body.should.have.property('token');
+			    JWT = res.body.token;
+			    console.log(JWT);
                             done();
                         });
                 });
 	});
 
         context('[BINTRA-] Check default auth', () => {
-                it.skip('[STEP-] should get default', (done) => {
+                it('[STEP-] should get default', (done) => {
                   request(server)
                       .get('/v1/token')
+		      .set('Authorization', 'Bearer ' + JWT)
                       .end((err, res) => {
                             res.should.have.status(200);
-                            res.body.should.have.property('message', 'you called default');
+                            res.body.should.have.property('tsfrom');
                             done();
                         });
                 });
