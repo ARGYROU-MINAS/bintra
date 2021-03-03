@@ -1,0 +1,57 @@
+/**
+ * Test API
+ * @see DDATA-functional-API-numbers
+ */
+
+var chai = require('chai');
+var expect = chai.expect;
+var chaiAsPromised = require('chai-as-promised');
+let server = require('../app');
+let request = require('supertest');
+
+chai.use(chaiAsPromised);
+chai.use(require('chai-json-schema'));
+
+var PackageModel = require('../models/package.js');
+var LoginModel = require('../models/login.js');
+
+const service = require('../service/PackagesService.js');
+
+describe('User stuff', function() {
+	before(async () => {
+		console.log("run before");
+		await PackageModel.deleteMany({});
+		await LoginModel.deleteMany({});
+		var u = {username: 'max', email: 'test@example.com', password: 'xxx'};
+		await service.createUser(u);
+		await LoginModel.updateMany({}, { $set: {status: 'active' }});
+	});
+
+	context('[STEP-] login', function() {
+		it('Check user was created', (done) => {
+			LoginModel.find({})
+				.then(itemFound => {
+					console.log("Query logins worked, mount=" + itemFound.length);
+					done();
+				});
+		});
+	        it('[STEP-] should get token', (done) => {
+                  request(server)
+                      .post('/v1/login')
+                      .set('content-type', 'application/x-www-form-urlencoded')
+                      .send({username: 'max', password: 'xxx'})
+                      .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.have.property('token');
+                            done();
+                        });
+                });
+	});
+
+	after(async () => {
+		console.log("after run");
+		await PackageModel.deleteMany({});
+                await LoginModel.deleteMany({});
+	});
+});
+
