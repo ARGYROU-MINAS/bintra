@@ -48,6 +48,18 @@ describe('User stuff', function() {
                 });
 	});
 
+        context('[BINTRA-] Check default auth', () => {
+                it('[STEP-] should get default', (done) => {
+                  request(server)
+                      .get('/v1/token')
+                      .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.have.property('message', 'you called default');
+                            done();
+                        });
+                });
+        });
+
 	after(async () => {
 		console.log("after run");
 		await PackageModel.deleteMany({});
