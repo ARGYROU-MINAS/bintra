@@ -22,4 +22,30 @@ describe('server', () => {
 		        });
 		});
 	});
+
+	describe('[BINTRA-] Check default auth', () => {
+                it('[STEP-] should get default', (done) => {
+                  request(server)
+                      .get('/v1/test')
+                      .end((err, res) => {
+                            res.should.have.status(200);
+			    res.body.should.have.property('message', 'you called default');
+                            done();
+                        });
+                });
+        });
+
+	describe('[BINTRA-] Check wrong login post', () => {
+                it('[STEP-] should get error', (done) => {
+                  request(server)
+                      .post('/v1/login')
+		      .set('content-type', 'application/x-www-form-urlencoded')
+		      .send({username: 'max', password: 'nono'})
+                      .end((err, res) => {
+                            res.should.have.status(403);
+                            res.body.should.have.property('message', 'Error: Credentials incorrect');
+                            done();
+                        });
+                });
+        });
 });
