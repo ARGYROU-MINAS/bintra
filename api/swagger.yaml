@@ -1,3 +1,5 @@
+---
+
 openapi: 3.0.1
 
 info:
@@ -63,7 +65,7 @@ paths:
   /package:
     get:
       tags:
-      - default
+        - default
       summary: get data for a package
       description: |
         Return no match at all, a single match with a high count for good
@@ -72,30 +74,30 @@ paths:
       operationId: listPackage
       x-swagger-router-controller: Users
       parameters:
-      - name: packageName
-        in: query
-        description: package name from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageVersion
-        in: query
-        description: package version from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageArch
-        in: query
-        description: package architecture from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageFamily
-        in: query
-        description: package Family, like debian, etc.
-        required: true
-        schema:
-          type: string
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package Family, like debian, etc.
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: single good result we hope
@@ -109,7 +111,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
     put:
       tags:
-      - user
+        - user
       summary: validates package info
       description: |
         Add new package entry or increment an existing one.
@@ -119,38 +121,38 @@ paths:
       operationId: validatePackage
       x-swagger-router-controller: Users
       parameters:
-      - name: packageName
-        in: query
-        description: package name from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageVersion
-        in: query
-        description: package version from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageArch
-        in: query
-        description: package architecture from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageFamily
-        in: query
-        description: package family, like debian, etc.
-        required: true
-        schema:
-          type: string
-          enum:
-          - debian
-      - name: packageHash
-        in: query
-        description: SHA256 hash of downloaded file
-        required: true
-        schema:
-          type: string
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family, like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+              - debian
+        - name: packageHash
+          in: query
+          description: SHA256 hash of downloaded file
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: |
@@ -168,51 +170,52 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
-      - user
+        - admin
+        - user
+
     delete:
       tags:
-      - admin
+        - admin
       summary: delete one package
       description: |
         Delete one entry
       operationId: deletePackage
       x-swagger-router-controller: Admins
       parameters:
-      - name: packageName
-        in: query
-        description: package name from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageVersion
-        in: query
-        description: package version from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageHash
-        in: query
-        description: SHA256 hash of downloaded file
-        required: true
-        schema:
-          type: string
-      - name: packageArch
-        in: query
-        description: package architecture from extracted meta info
-        required: true
-        schema:
-          type: string
-      - name: packageFamily
-        in: query
-        description: package family like debian, etc.
-        required: true
-        schema:
-          type: string
-          enum:
-          - debian
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageHash
+          in: query
+          description: SHA256 hash of downloaded file
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+            - debian
       responses:
         200:
           description: positive result we hope
@@ -228,28 +231,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
   /package/{id}:
     get:
       tags:
-      - default
+        - default
       summary: get data for a package
       description: |
         Return single package data
       operationId: listPackageSingle
       x-swagger-router-controller: Users
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: single good result we hope
@@ -261,24 +265,25 @@ paths:
                   $ref: '#/components/schemas/PackageVariants'
         400:
           $ref: '#/components/responses/BadRequest'
+
     delete:
       tags:
-      - admin
+        - admin
       summary: delete one package by ID
       description: |
         Delete one entry
       operationId: deletePackageById
       x-swagger-router-controller: Admins
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -294,13 +299,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
+
   /count:
     get:
       tags:
-      - api
+        - api
       summary: return number of all entries
       description: |
         By passing in the appropriate options, you can validate a
@@ -316,21 +323,23 @@ paths:
                 $ref: '#/components/schemas/PackageCount'
         400:
           $ref: '#/components/responses/BadRequest'
+
+
   /packagesfull:
     get:
       tags:
-      - admin
+        - admin
       summary: return all entries with all fields
       description: |
         Get all package data
       operationId: listPackagesFull
       x-swagger-router-controller: Users
       parameters:
-      - name: count
-        in: query
-        description: Limit number of entries
-        schema:
-          type: number
+        - name: count
+          in: query
+          description: Limit number of entries
+          schema:
+            type: number
       responses:
         200:
           description: positive result we hope
@@ -343,25 +352,26 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
 
   /packages:
     get:
       tags:
-      - default
+        - default
       summary: return all entries
       description: |
         Get all package data
       operationId: listPackages
       x-swagger-router-controller: Users
       parameters:
-      - name: count
-        in: query
-        description: Limit number of entries
-        schema:
-          type: number
+        - name: count
+          in: query
+          description: Limit number of entries
+          schema:
+            type: number
       responses:
         200:
           description: positive result we hope
@@ -371,9 +381,10 @@ paths:
                 $ref: '#/components/schemas/PackageItem'
         400:
           $ref: '#/components/responses/BadRequest'
+
     delete:
       tags:
-      - admin
+        - admin
       summary: delete all packages
       description: |
         By passing in the appropriate options, you can validate a
@@ -395,9 +406,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
 
   /test:
     get:
@@ -415,6 +427,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+
     delete:
       tags:
         - api
@@ -435,10 +448,11 @@ paths:
       x-security-scopes:
         - admin
 
+
   /user:
     get:
       tags:
-      - admin
+        - admin
       summary: return all entries
       description: |
         Get all users data
@@ -456,12 +470,13 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
     post:
       tags:
-      - api
+        - api
       summary: create a user
       description: |
         Create a new user and prepare opt in steps
@@ -485,31 +500,32 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
-      - api
+        - admin
+        - api
       x-codegen-request-body-name: user
+
 
   /user/{id}:
     get:
       tags:
-      - admin
+        - admin
       summary: return the entries
       description: |
         Get all user data
       operationId: listUser
       x-swagger-router-controller: Admins
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -522,33 +538,34 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
     put:
       tags:
-      - api
+        - api
       summary: update user status
       description: |
         Update status of a single user for optin etc
       operationId: putUserStatus
       x-swagger-router-controller: Admins
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
-      - name: status
-        in: query
-        description: New status enum value
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
+        - name: status
+          in: query
+          description: New status enum value
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -561,28 +578,29 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
-      - api
+        - admin
+        - api
+
     delete:
       tags:
-      - admin
+        - admin
       summary: delete the user
       description: |
         Deletes the user entry
       operationId: deleteUser
       x-swagger-router-controller: Admins
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -595,27 +613,28 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
+
     patch:
       tags:
-      - admin
+        - admin
       summary: update fields
       description: |
         Update fields for a user
       operationId: patchUser
       x-swagger-router-controller: Admins
       parameters:
-      - name: id
-        in: path
-        description: Package ID (24 hex chars)
-        required: true
-        schema:
-          maxLength: 24
-          minLength: 24
-          pattern: ^[a-fA-F0-9]{24}$
-          type: string
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       requestBody:
         content:
           '*/*':
@@ -634,31 +653,32 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - admin
+        - admin
       x-codegen-request-body-name: jpatch
+
 
   /feed.{type}:
     get:
       tags:
-      - default
+        - default
       summary: Return feed of latest entries
       description: |
         Get all the latest entries in some RSS defined format type
       operationId: bintraFeed
       x-swagger-router-controller: Feeds
       parameters:
-      - name: type
-        in: path
-        description: Type of feed
-        required: true
-        schema:
-          type: string
-          enum:
-            - rss
-            - atom
-            - json
+        - name: type
+          in: path
+          description: Type of feed
+          required: true
+          schema:
+            type: string
+            enum:
+              - rss
+              - atom
+              - json
       responses:
         200:
           description: positive result we hope
@@ -671,6 +691,7 @@ paths:
                 type: string
         400:
           $ref: '#/components/responses/BadRequest'
+
 
   /token:
     get:
@@ -693,9 +714,9 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
       security:
-      - bearerauth: [ ]
+        - bearerauth: [ ]
       x-security-scopes:
-      - user
+        - user
 
 
 components:
