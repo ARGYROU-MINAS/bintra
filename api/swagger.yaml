@@ -658,11 +658,15 @@ paths:
           enum:
             - rss
             - atom
+            - json
       responses:
         200:
           description: positive result we hope
           content:
             application/rss+xml:
+              schema:
+                type: string
+            application/json:
               schema:
                 type: string
         400:

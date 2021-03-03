@@ -9,8 +9,8 @@ function getInitialFeed() {
   const myfeed = new Feed({
     title: "Binary Transparency Directory",
     description: "Feed for hash code monitoring",
-    id: "http://bintra.directory/",
-    link: "http://bintra.directory/",
+    id: "https://bintra.directory/",
+    link: "https://bintra.directory/",
     language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
     image: "https://bintra.directory/image.png",
     favicon: "https://bintra.directory/favicon.ico",
@@ -75,11 +75,38 @@ title: entry.name,
 id: entry._id,
 link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
-content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
+content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash,
+date: entry.tsupdated
 });
             });
             res.writeHead(200, { "Content-Type": "application/rss+xml" });
-            return res.end(atomfeed.atom1());
+            var feeddata = atomfeed.atom1();
+            return res.end(feeddata);
+        })
+        .catch(function (payload) {
+            console.error(payload);
+            res.writeHead(500, { "Content-Type": "text/plain" });
+            return res.end("error" + payload);
+        });
+};
+
+function feedJson(req, res, next) {
+        var jsonfeed = getInitialFeed();
+
+    Service.listPackages(maxFeedItems)
+        .then(function (items) {
+            items.forEach(function(entry) {
+                var myid = entry._id;
+                jsonfeed.addItem({
+title: entry.name,
+id: entry._id,
+link: "https://api.bintra.directory/v1/package/" + myid,
+description: entry.name,
+content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
+});
+            });
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(jsonfeed.json1());
         })
         .catch(function (payload) {
             res.writeHead(500, { "Content-Type": "text/plain" });
@@ -94,6 +121,9 @@ module.exports.bintraFeed = function bintraFeed (req, res, next, type) {
             break;
         case 'atom':
             feedAtom(req, res, next);
+            break;
+        case 'json':
+            feedJson(req, res, next);
             break;
         default:
             console.error("Wrong type " + type);
