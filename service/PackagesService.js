@@ -348,7 +348,7 @@ exports.deleteUser = function(idUser) {
 			  console.log(userDoc);
 			  userDoc.status = "deleted";
 			  console.log(userDoc);
-                          userDoc.save().then(item => {
+                          userDoc.save().then(itemSave => {
 		            console.log("Updated item saved");
                             resolve(userDoc);
 			  })
@@ -394,8 +394,8 @@ exports.createUser = function(user) {
                   console.info("Was OK");
                   resolve(u);
           })
-          .catch(err => {
-                  console.error("Not OK: ", err);
+          .catch(errSave => {
+                  console.error("Not OK: ", errSave);
                   reject("bahh");
           });
     });
