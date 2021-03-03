@@ -13,3 +13,5 @@ echo MONGO_DB=bintra >>.env.test
 echo "Content of .env.test"
 ls -la |grep .env
 cat .env.test
+
+echo "NODE_ENV is ${NODE_ENV}"
