@@ -61,7 +61,7 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
             res.writeHead(500, { "Content-Type": "text/plain" });
             return res.end("error" + payload);
         });
-};
+}
 
 function feedAtom(req, res, next) {
 	var atomfeed = getInitialFeed();
@@ -86,7 +86,7 @@ date: entry.tsupdated || new Date()
             res.writeHead(500, { "Content-Type": "text/plain" });
             return res.end("error" + payload);
         });
-};
+}
 
 function feedJson(req, res, next) {
         var jsonfeed = getInitialFeed();
@@ -110,7 +110,7 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
             res.writeHead(500, { "Content-Type": "text/plain" });
             return res.end("error" + payload);
         });
-};
+}
 
 module.exports.bintraFeed = function bintraFeed (req, res, next, type) {
     switch(type) {
