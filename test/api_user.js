@@ -35,7 +35,7 @@ describe('User stuff', function() {
 					done();
 				});
 		});
-	        it('[STEP-] should get token', (done) => {
+	        it.skip('[STEP-] should get token', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -49,7 +49,7 @@ describe('User stuff', function() {
 	});
 
         context('[BINTRA-] Check default auth', () => {
-                it('[STEP-] should get default', (done) => {
+                it.skip('[STEP-] should get default', (done) => {
                   request(server)
                       .get('/v1/token')
                       .end((err, res) => {
