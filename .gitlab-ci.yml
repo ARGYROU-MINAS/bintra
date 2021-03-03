@@ -41,12 +41,14 @@ jsdocs:
 unittest:
   stage: test
   image: $CI_REGISTRY/kai/bintra:fat
+  variables:
+    NODE_ENV: test
   before_script:
   - /etc/init.d/mongodb start
   - npm install
   - ./setup_env_test.sh
   script:
-  - npm test
+  - test npm test
   - npm run coverage
   - npm run sona
   coverage: '/Statements\s+:\s+(\d+\.\d+)%/'
