@@ -40,10 +40,15 @@ describe('getDefault', function() {
                         var result = await service.listPackages();
                         return expect(result).to.have.length(1);
                 });
+		it('[STEP-] get package by values', async () => {
+                        var result = await service.listPackage('theName', 'theVersion', 'theArchitecture', 'theFamily');
+                        return expect(result).to.have.length(1);
+                });
         });
 
-	after(function() {
+	after(async () => {
 		console.log("after run");
+		await PackageModel.deleteMany({});
 	});
 });
 
