@@ -87,6 +87,13 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
+		it('Add again package in users name', (done) => {
+                        service.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
+                                .then(itemFound => {
+                                        itemFound.should.have.length(1);
+                                        done();
+                                });
+                });
         });
 
 	context('Destroy user', () => {
