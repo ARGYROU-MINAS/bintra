@@ -12,7 +12,7 @@ Use DPkg::Pre-Install-Pkgs to inject a precheck, run API calls to backend
 
 Create in /etc/apt/sources.list.d/bintra.list with
 
-    deb https://nexus.myocastor.de/repository/bintra focal main
+    deb [arch=all] https://nexus.myocastor.de/repository/bintra focal main
 
 Add perhaps gopg key
 
