@@ -80,7 +80,7 @@ describe('User stuff', function() {
                 });
         });
 
-	/*context('Destroy user', () => {
+	context('Destroy user', () => {
 		var idUser;
 		it('List users once more', (done) => {
                         service.listUsers()
@@ -90,15 +90,22 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
-		it('Put user status', (done) => {
+	/*	it('Put user status', (done) => {
 			console.log('set user ' + idUser + ' to disabled');
                         service.putUserStatus(idUser, 'disabled')
                                 .then(itemFound => {
                                         itemFound.should.have.property('status', 'disabled');
                                         done();
                                 });
+                });*/
+		 it('Delete user', (done) => {
+                        service.deleteUser(idUser)
+                                .then(itemFound => {
+                                        itemFound.should.have.property('status', 'deleted');
+                                        done();
+                                });
                 });
-	}); */
+	});
 
 	after(async () => {
 		console.log("after run");
