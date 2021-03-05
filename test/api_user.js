@@ -50,6 +50,21 @@ describe('User stuff', function() {
                             done();
                         });
                 });
+		it('List users', (done) => {
+                        service.listUsers()
+                                .then(itemFound => {
+					itemFound.should.have.length(1);
+					idUser = itemFound[0]._id;
+                                        done();
+                                });
+                });
+		it('List user', (done) => {
+                        service.listUser(idUser)
+                                .then(itemFound => {
+                                        itemFound.should.have.property('email');
+                                        done();
+                                });
+                });
 	});
 
         context('[BINTRA-] Check default auth', () => {
@@ -64,6 +79,26 @@ describe('User stuff', function() {
                         });
                 });
         });
+
+	/*context('Destroy user', () => {
+		var idUser;
+		it('List users once more', (done) => {
+                        service.listUsers()
+                                .then(itemFound => {
+                                        itemFound.should.have.length(1);
+                                        idUser = itemFound[0]._id;
+                                        done();
+                                });
+                });
+		it('Put user status', (done) => {
+			console.log('set user ' + idUser + ' to disabled');
+                        service.putUserStatus(idUser, 'disabled')
+                                .then(itemFound => {
+                                        itemFound.should.have.property('status', 'disabled');
+                                        done();
+                                });
+                });
+	}); */
 
 	after(async () => {
 		console.log("after run");
