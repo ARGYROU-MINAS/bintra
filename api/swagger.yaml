@@ -370,8 +370,32 @@ paths:
         - name: count
           in: query
           description: Limit number of entries
+          required: false
           schema:
             type: number
+            default: 10
+        - name: sort
+          in: query
+          description: Sort by which property
+          required: false
+          schema:
+            type: string
+            enum:
+              - tsupdated
+              - tscreated
+              - count
+              - name
+            default: tsupdated
+        - name: direction
+          in: query
+          description: Sort up or down
+          required: false
+          schema:
+            type: string
+            enum:
+              - up
+              - down
+            default: down
       responses:
         200:
           description: positive result we hope

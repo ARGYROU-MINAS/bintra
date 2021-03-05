@@ -8,6 +8,14 @@ https://unix.stackexchange.com/questions/401126/run-a-command-before-after-ubunt
 
 Use DPkg::Pre-Install-Pkgs to inject a precheck, run API calls to backend
 
+## Use own debian apt package repo
+
+Create in /etc/apt/sources.list.d/bintra.list with
+
+    deb https://nexus.myocastor.de/repository/bintra focal main
+
+Add perhaps gopg key
+
 ## run local for testing
 
 NODE_ENV=develop npm start

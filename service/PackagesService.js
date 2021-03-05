@@ -178,14 +178,20 @@ exports.listPackageSingle = function(packageId) {
  * List all packages.
  * @public
  *
- * @param {string} count - Limit replies
+ * @param {number} count - Limit replies
+ * @param {string} sort - Sort by property
+ * @param {string} direction - Sort up or down
  * @returns String
  **/
-exports.listPackages = function(count) {
+exports.listPackages = function(count, sort, direction) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
+
+    var sdir = -1;
+    if('up' == direction) sdir = 1;
+
     PackageModel.find({}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
-          .sort({tsupdated: -1})
+          .sort({[sort]: sdir})
           .limit(count)
           .then(item => {
                   console.info("Was OK");
