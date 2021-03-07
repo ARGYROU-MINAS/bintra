@@ -29,6 +29,7 @@ require('./subscribers/matomo');
 const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
 console.log(mongoHost + mongoUrl);
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
