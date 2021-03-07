@@ -8,9 +8,7 @@ services:
     restart: unless-stopped
     env_file: .env.docker
     environment:
-      - MONGO_INITDB_DATABASE=$MONGO_DB
-      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGO_INITDB_DATABASE=bintra
     volumes:
       - dbdata:/data/db
     networks:
@@ -28,11 +26,7 @@ services:
     env_file: .env.docker
     environment:
       - NODE_ENV=docker
-      - MONGO_USERNAME=$MONGO_USERNAME
-      - MONGO_PASSWORD=$MONGO_PASSWORD
       - MONGO_HOSTNAME=database
-      - MONGO_PORT=$MONGO_PORT
-      - MONGO_DB=$MONGO_DB
     ports:
       - "8087:8080"
     volumes:
