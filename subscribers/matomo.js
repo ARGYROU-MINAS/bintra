@@ -8,7 +8,7 @@ var piwik = null;
 if(process.env.MATOMO_ID) {
   piwik = new PiwikTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
 }
-var baseUrl = 'https://bintra.directory';
+var baseUrl = 'https://api.bintra.directory';
 
 /**
  * @function
