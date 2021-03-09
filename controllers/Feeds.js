@@ -4,6 +4,8 @@ var Service = require('../service/PackagesService');
 
 const Feed = require("feed").Feed;
 const maxFeedItems = 25;
+const sortItemFeed = 'tsupdated';
+const sortDirectionFeed = 'down';
 
 function getInitialFeed() {
   const myfeed = new Feed({
@@ -42,7 +44,7 @@ function getInitialFeed() {
 function feedRss (req, res, next) {
 	var rssfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems)
+    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -51,6 +53,7 @@ title: entry.name,
 id: entry._id,
 link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
+date: entry.tsupdated || new Date(),
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
 });
             });
@@ -66,7 +69,7 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
 function feedAtom(req, res, next) {
 	var atomfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems)
+    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -91,7 +94,7 @@ date: entry.tsupdated || new Date()
 function feedJson(req, res, next) {
         var jsonfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems)
+    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -100,6 +103,7 @@ title: entry.name,
 id: entry._id,
 link: "https://api.bintra.directory/v1/package/" + myid,
 description: entry.name,
+date: entry.tsupdated || new Date(),
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
 });
             });
