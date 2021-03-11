@@ -13,6 +13,11 @@ services:
       - dbdata:/data/db
     networks:
       - bintra-network
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/bintra --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
 
   nodejs:
     build:
@@ -35,6 +40,11 @@ services:
     networks:
       - bintra-network
     command: npm start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/docs/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 networks:
   bintra-network:
