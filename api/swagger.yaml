@@ -235,7 +235,10 @@ paths:
       x-security-scopes:
         - admin
 
+
   /package/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
     get:
       tags:
         - default
@@ -244,16 +247,6 @@ paths:
         Return single package data
       operationId: listPackageSingle
       x-swagger-router-controller: Users
-      parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
       responses:
         200:
           description: single good result we hope
@@ -274,16 +267,6 @@ paths:
         Delete one entry
       operationId: deletePackageById
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
       responses:
         200:
           description: positive result we hope
@@ -744,6 +727,18 @@ paths:
 
 
 components:
+  parameters:
+    idParam:
+      in: path
+      name: id
+      required: true
+      description: Package ID (24 hex chars)
+      schema:
+        maxLength: 24
+        minLength: 24
+        pattern: ^[a-fA-F0-9]{24}$
+        type: string
+
   schemas:
     PatchRequest:
       type: array
