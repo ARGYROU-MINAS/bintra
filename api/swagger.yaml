@@ -74,10 +74,30 @@ paths:
       operationId: listPackage
       x-swagger-router-controller: Users
       parameters:
-        - $ref: '#/components/parameters/packageName'
-        - $ref: '#/components/parameters/packageVersion'
-        - $ref: '#/components/parameters/packageArch'
-        - $ref: '#/components/parameters/packageFamily'
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package Family, like debian, etc.
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: single good result we hope
@@ -89,7 +109,6 @@ paths:
                   $ref: '#/components/schemas/PackageVariants'
         400:
           $ref: '#/components/responses/BadRequest'
-
     put:
       tags:
         - user
@@ -102,11 +121,38 @@ paths:
       operationId: validatePackage
       x-swagger-router-controller: Users
       parameters:
-        - $ref: '#/components/parameters/packageName'
-        - $ref: '#/components/parameters/packageVersion'
-        - $ref: '#/components/parameters/packageArch'
-        - $ref: '#/components/parameters/packageFamily'
-        - $ref: '#/components/parameters/packageHash'
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family, like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+              - debian
+        - name: packageHash
+          in: query
+          description: SHA256 hash of downloaded file
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: |
@@ -138,11 +184,38 @@ paths:
       operationId: deletePackage
       x-swagger-router-controller: Admins
       parameters:
-        - $ref: '#/components/parameters/packageName'
-        - $ref: '#/components/parameters/packageVersion'
-        - $ref: '#/components/parameters/packageHash'
-        - $ref: '#/components/parameters/packageArch'
-        - $ref: '#/components/parameters/packageFamily'
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageHash
+          in: query
+          description: SHA256 hash of downloaded file
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+              - debian
       responses:
         200:
           description: positive result we hope
@@ -442,9 +515,6 @@ paths:
 
 
   /user/{id}:
-    parameters:
-      - $ref: '#/components/parameters/idParam'
-
     get:
       tags:
         - admin
@@ -453,6 +523,16 @@ paths:
         Get all user data
       operationId: listUser
       x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -478,6 +558,15 @@ paths:
       operationId: putUserStatus
       x-swagger-router-controller: Admins
       parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
         - name: status
           in: query
           description: New status enum value
@@ -509,6 +598,16 @@ paths:
         Deletes the user entry
       operationId: deleteUser
       x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       responses:
         200:
           description: positive result we hope
@@ -533,6 +632,16 @@ paths:
         Update fields for a user
       operationId: patchUser
       x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
       requestBody:
         content:
           '*/*':
@@ -623,58 +732,12 @@ components:
       in: path
       name: id
       required: true
-      description: Unique object ID (24 hex chars)
-      examples:
-        hexid:
-          summary: example of a unique db id
-          value: 604995db6b798d003538fed3
+      description: Package ID (24 hex chars)
       schema:
-        type: string
-        minLength: 24
         maxLength: 24
+        minLength: 24
         pattern: ^[a-fA-F0-9]{24}$
-
-    packageName:
-      in: query
-      name: packageName
-      required: true
-      description: The name of the package from its control structure
-      schema:
         type: string
-    packageVersion:
-      in: query
-      name: packageVersion
-      required: true
-      description: The version of the package from its control structure
-      schema:
-        type: string
-    packageHash:
-      in: query
-      name: packageHash
-      required: true
-      description: The sha256 hash in 64 hex chars of the package
-      schema:
-        type: string
-        minLength: 64
-        maxLength: 64
-        pattern: ^[a-fA-F0-9]{64}$
-    packageArch:
-      in: query
-      name: packageArch
-      required: true
-      description: The architecture of the package from its control structure
-      schema:
-        type: string
-    packageFamily:
-      in: query
-      name: packageFamily
-      required: true
-      description: The family of the package type
-      schema:
-        type: string
-        enum:
-          - debian
-   
 
   schemas:
     PatchRequest:
