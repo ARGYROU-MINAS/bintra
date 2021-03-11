@@ -515,6 +515,9 @@ paths:
 
 
   /user/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+
     get:
       tags:
         - admin
@@ -523,16 +526,6 @@ paths:
         Get all user data
       operationId: listUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
       responses:
         200:
           description: positive result we hope
@@ -558,15 +551,6 @@ paths:
       operationId: putUserStatus
       x-swagger-router-controller: Admins
       parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
         - name: status
           in: query
           description: New status enum value
@@ -598,16 +582,6 @@ paths:
         Deletes the user entry
       operationId: deleteUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
       responses:
         200:
           description: positive result we hope
@@ -632,16 +606,6 @@ paths:
         Update fields for a user
       operationId: patchUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          description: Package ID (24 hex chars)
-          required: true
-          schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
       requestBody:
         content:
           '*/*':
@@ -732,7 +696,11 @@ components:
       in: path
       name: id
       required: true
-      description: Package ID (24 hex chars)
+      description: Unique object ID (24 hex chars)
+      examples:
+        hexid:
+          summary: example of a unique db id
+          value: 604995db6b798d003538fed3
       schema:
         maxLength: 24
         minLength: 24
