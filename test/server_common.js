@@ -48,4 +48,18 @@ describe('server', () => {
                         });
                 });
         });
+
+	describe('[BINTRA-] Check search api', () => {
+                it('[STEP-] should get at least empty reply', (done) => {
+                  request(server)
+                      .post('/v1/search')
+                      .set('content-type', 'application/json')
+		      .expect('Content-Type', /json/)
+                      .send({packageName: 'a*'})
+                      .end((err, res) => {
+                            res.should.have.status(200);
+                            done();
+                        });
+                });
+        });
 });
