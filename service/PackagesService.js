@@ -304,6 +304,70 @@ exports.listUser = function(idUser) {
   });
 }
 
+
+/**
+ * @method
+ * Validate the package.
+ * @public
+ *
+ * @returns String
+ **/
+exports.searchPackages = function(jsearch) {
+  return new Promise(function(resolve, reject) {
+    console.log("In search packages service");
+
+    const count=100;
+    const queryObj = {};
+
+    if(jsearch.hasOwnProperty('packageName')) {
+      if(jsearch.packageName.endsWith("*")) {
+        queryObj['name'] = new RegExp('^' + jsearch.packageName.replace("*", ""), 'i');
+      } else {
+        queryObj['name'] = jsearch.packageName;
+      }
+    }
+
+    if(jsearch.hasOwnProperty('packageVersion')) {
+      if(jsearch.packageVersion.endsWith("*")) {
+        queryObj['version'] = new RegExp('^' + jsearch.packageVersion.replace("*", ""), 'i');
+      } else {
+        queryObj['version'] = jsearch.packageVersion;
+      }
+    }
+
+    if(jsearch.hasOwnProperty('packageArch')) {
+      queryObj['arch'] = jsearch.packageArch;
+    }
+    if(jsearch.hasOwnProperty('packageFamily')) {
+      queryObj['family'] = jsearch.packageFamily;
+    }
+    if(jsearch.hasOwnProperty('packageHash')) {
+      queryObj['hash'] = jsearch.packageHash;
+    }
+    if(jsearch.hasOwnProperty('count')) {
+      queryObj['count'] = jsearch.count;
+    }
+    if(jsearch.hasOwnProperty('tscreated')) {
+      queryObj['tscreated'] = jsearch.tscreated;
+    }
+    if(jsearch.hasOwnProperty('tsupdated')) {
+      queryObj['tsupdated'] = jsearch.tsupdated;
+    }
+//console.log(queryObj);
+    PackageModel.find(queryObj, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+          .sort({name: 1})
+          .limit(count)
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
 /**
  * @method
  * Validate the package.

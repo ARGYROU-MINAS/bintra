@@ -109,6 +109,7 @@ paths:
                   $ref: '#/components/schemas/PackageVariants'
         400:
           $ref: '#/components/responses/BadRequest'
+
     put:
       tags:
         - user
@@ -666,6 +667,32 @@ paths:
       x-codegen-request-body-name: jpatch
 
 
+  /search:
+    post:
+      tags:
+        - default
+      summary: search entries by any combination
+      description: Search package data by one or more attributes
+      operationId: searchPackages
+      x-swagger-router-controller: Admins
+      x-codegen-request-body-name: jsearch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+          200:
+            description: positive result we hope
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PackageItem'
+          400:
+            $ref: '#/components/responses/BadRequest'
+
+
   /feed.{type}:
     get:
       tags:
@@ -740,6 +767,30 @@ components:
         type: string
 
   schemas:
+    SearchRequest:
+      type: object
+      properties:
+        packageName:
+          type: string
+        packageVersion:
+          type: string
+        packageArch:
+          type: string
+        packageFamily:
+          type: string
+        packageHash:
+          type: string
+        count:
+          type: number
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        tsupdated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+
     PatchRequest:
       type: array
       items:
@@ -906,6 +957,7 @@ components:
       properties:
         message:
           type: string
+
   responses:
     Unauthorized:
       description: Unauthorized
@@ -919,6 +971,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+
   securitySchemes:
     bearerauth:
       type: http

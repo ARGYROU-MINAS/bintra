@@ -135,6 +135,23 @@ module.exports.createUser = function createUser (req, res, next, user) {
  * List all packages and variations.
  * @public
  */
+module.exports.searchPackages = function searchPackages (req, res, next, jsearch) {
+  eventEmitter.emit('apihit', req);
+
+  Service.searchPackages(jsearch)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
 module.exports.patchUser = function patchUser (req, res, next, id, jpatch) {
   eventEmitter.emit('apihit', req);
 
