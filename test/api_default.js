@@ -44,6 +44,14 @@ describe('getDefault', function() {
                         var result = await service.listPackage('theName', 'theVersion', 'theArchitecture', 'theFamily');
                         return expect(result).to.have.length(1);
                 });
+		it('[STEP-] search packages by name', async () => {
+                        var result = await service.searchPackages({ packageName: 'theName' });
+                        return expect(result).to.have.length(1);
+                });
+		it('[STEP-] search packages by wildcard name', async () => {
+                        var result = await service.searchPackages({ packageName: 'the*' });
+                        return expect(result).to.have.length(1);
+                });
         });
 
 	after(async () => {
