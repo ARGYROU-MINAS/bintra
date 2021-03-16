@@ -16,6 +16,8 @@ var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
 
+var eventEmitter = require('../utils/eventer').em;
+
 
 /**
  * Helper function
@@ -73,6 +75,8 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                 packageNew.save()
                   .then(itemSaved => {
                       console.log("Added fresh entry");
+                      eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, true);
+
                       PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
 		              {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
                           .then(itemOthers => {
@@ -100,6 +104,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 	            { upsert: true })
                 .then(itemUpdated => {
                     console.log("Did update counter");
+                    eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, false);
                     PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
 		            {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
                         .then(itemOthers => {

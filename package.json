@@ -31,6 +31,7 @@
     "js-yaml": "^3.3.0",
     "json-patch": "^0.7.0",
     "jsonwebtoken": "^8.5.1",
+    "mastodon": "^1.2.2",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
     "oas3-tools": "^2.2.2",

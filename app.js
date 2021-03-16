@@ -25,6 +25,7 @@ var pfilter = require('./controllers/pfilter');
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
+require('./subscribers/toot');
 
 const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
 console.log(mongoHost + mongoUrl);
