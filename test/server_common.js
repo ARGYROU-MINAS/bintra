@@ -21,6 +21,14 @@ describe('server', () => {
 			    done();
 		        });
 		});
+		it('[STEP-] should redirect', (done) => {
+                  request(server)
+                      .get('/')
+                      .end((err, res) => {
+                            res.should.have.status(301);
+                            done();
+                        });
+                });
 	});
 
 	describe('[BINTRA-] Check default auth', () => {
