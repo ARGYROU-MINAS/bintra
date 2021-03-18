@@ -683,14 +683,14 @@ paths:
               $ref: '#/components/schemas/SearchRequest'
         required: true
       responses:
-          200:
-            description: positive result we hope
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/PackageItem'
-          400:
-            $ref: '#/components/responses/BadRequest'
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
 
 
   /feed.{type}:
