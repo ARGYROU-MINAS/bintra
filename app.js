@@ -15,10 +15,11 @@ require('custom-env').env(true);
 
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
-var oas3Tools = require('oas3-tools');
+var oas3Tools = require('./myoas/'); //require('oas3-tools');
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
+const express = require("express");
 
 var pfilter = require('./controllers/pfilter');
 
@@ -34,11 +35,20 @@ mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-function validate(request, scopes, schema) {
-    console.log("IN VALIDATE!!!");
-    // security stuff here
-    return false;
-}
+var app = express();
+
+// Redirect root to docs UI
+app.use('/', function doRedir(req, res, next) {
+  if(req.url != '/') {
+    next();
+  } else {
+    res.writeHead(301, {Location: '/docs/'});
+    res.end();
+  }
+});
+
+app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
+app.use(serveStatic(path.join(__dirname, 'static')));
 
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
@@ -53,6 +63,7 @@ var options = {
         format: 'combined',
         errorLimit: 400
     },
+    theapp: app,
     openApiValidator: {
 	validateSecurity:
 	    {
@@ -65,24 +76,11 @@ var options = {
     }
 };
 
+// Filter all parameters known
+app.use(pfilter);
+
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
-var app = expressAppConfig.getApp();
-
-app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
-app.use(serveStatic(path.join(__dirname, 'static')));
-
-  // Filter all parameters known
-//  app.use(pfilter);
-
-  // Redirect root to docs UI
-  app.use('/', function doRedir(req, res, next) {
-    if(req.url != '/') {
-      next();
-    } else {
-      res.writeHead(301, {Location: '/docs/'});
-      res.end();
-    }
-  });
+//var app = expressAppConfig.getApp();
 
   // Error handlers
   app.use((err, req, res, next) => {

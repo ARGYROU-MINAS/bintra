@@ -43,4 +43,9 @@ Add new property to existing data, like *family* attribute:
 
     docker-compose exec -T database mongorestore --archive --gzip < dump_xxx.gz
 
+## adapt oas3 middleware
+
+Copies the oas3-tools dist folder to own location in the project and changed the app object handling.
+Still leaving the packages.json oas3 reference to keep dependencies.
+Bloody fix until the main module has support for own app modifications included.
 

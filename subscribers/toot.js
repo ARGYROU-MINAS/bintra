@@ -13,6 +13,7 @@ var M = new Masto({
 var baseUrl = 'https://api.bintra.directory';
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
+  if(process.env.TOOTAUTH == "XXX") return;
   console.debug("In toot subscriber");
 
   var t;
