@@ -1,6 +1,8 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
+var PackageModel = require('../models/package.js');
+
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -13,6 +15,13 @@ chai.use(chaiHttp);
 describe('server', () => {
 
 	describe('[BINTRA-] GET feeds', () => {
+		 before(async () => {
+                        var tsnow = new Date();
+                        var packageNew = new PackageModel({name: 'theName', version: 'theVersion',
+                                                   arch: 'theArchitecture', family: 'theFamily',
+                                                   hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
+                        await packageNew.save();
+                });
 		it('[STEP-] get rss', (done) => {
 		  request(server)
 		      .get('/v1/feed.rss')
@@ -41,4 +50,9 @@ describe('server', () => {
                         });
                 });
 	});
+
+	after(async () => {
+                console.log("after run");
+                await PackageModel.deleteMany({});
+        });
 });
