@@ -351,6 +351,13 @@ paths:
       operationId: listPackages
       x-swagger-router-controller: Users
       parameters:
+        - name: skip
+          in: query
+          description: Skip entries before listing
+          required: false
+          schema:
+            type: number
+            default: 0
         - name: count
           in: query
           description: Limit number of entries

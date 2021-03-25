@@ -91,12 +91,12 @@ module.exports.listPackageSingle = function listPackage (req, res, next, id) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackages = function listPackage (req, res, next, count, sort, direction) {
-  console.log("listPackages called with" + count + ", " + sort + ", " + direction);
+module.exports.listPackages = function listPackage (req, res, next, skip, count, sort, direction) {
+  console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction);
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackages(count, sort, direction)
+  Service.listPackages(skip, count, sort, direction)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

@@ -44,7 +44,7 @@ function getInitialFeed() {
 function feedRss (req, res, next) {
 	var rssfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
+    Service.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -69,7 +69,7 @@ content: "Archive " + entry.name + ", version " + entry.version + " for " + entr
 function feedAtom(req, res, next) {
 	var atomfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
+    Service.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -94,7 +94,7 @@ date: entry.tsupdated || new Date()
 function feedJson(req, res, next) {
         var jsonfeed = getInitialFeed();
 
-    Service.listPackages(maxFeedItems, sortItemFeed, sortDirectionFeed)
+    Service.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
         .then(function (items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
