@@ -341,6 +341,57 @@ paths:
         - admin
 
 
+  /tableview:
+    get:
+      tags:
+        - default
+      summary: return paginated results for viewer UI
+      description: |
+        Get all package data in a paged way
+      operationId: listPagePackages
+      x-swagger-router-controller: Users
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Entries per page
+          required: true
+          schema:
+            type: number
+        - name: sorters
+          in: query
+          description: Sort by which property
+          required: false
+          schema:
+            type: string
+            enum:
+              - tsupdated
+              - tscreated
+              - count
+              - name
+            default: tsupdated
+        - name: filter
+          in: query
+          description: filter for
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagedata'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+
   /packages:
     get:
       tags:
@@ -872,6 +923,18 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
+    Pagedata:
+      type: object
+      properties:
+        last_page:
+          type: number
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageItem'
+
+
     UserList:
       type: array
       items:

@@ -216,6 +216,46 @@ exports.listPackages = function(skip, count, sort, direction) {
  * List all packages.
  * @public
  *
+ * @param {number} skip - Skip first replies
+ * @param {number} count - Limit replies
+ * @param {string} sort - Sort by property
+ * @param {string} direction - Sort up or down
+ * @returns String
+ **/
+exports.listPagePackages = function(page, size, sorters, filter) {
+  return new Promise(function(resolve, reject) {
+    console.log("In listpage service");
+
+    var sdir = -1;
+    var iSkip = (page - 1) * size;
+    console.log("skip=" + iSkip + ", amount=" + size);
+
+    PackageModel.countDocuments({}, function(err, count) {
+      console.info("All entries: " + count);
+
+      PackageModel.find({}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+          .sort({[sorters]: sdir})
+          .limit(size)
+          .skip(iSkip)
+          .then(item => {
+                  console.info("Was OK");
+                  var iPages = Math.ceil(count / size);
+                  var resp = {last_page: iPages, data: item };
+                  resolve(resp);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+    });
+  });
+}
+
+/**
+ * @method
+ * List all packages.
+ * @public
+ *
  * @param {string} count - Limit replies
  * @returns String
  **/

@@ -110,6 +110,25 @@ module.exports.listPackages = function listPackage (req, res, next, skip, count,
  * List all packages and variations.
  * @public
  */
+module.exports.listPagePackages = function listPagePackage (req, res, next, page, size, sorters, filter) {
+  console.log("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
+
+  eventEmitter.emit('apihit', req);
+
+  Service.listPagePackages(page, size, sorters, filter)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
 module.exports.listPackagesFull = function listPackage (req, res, next, count) {
   if(!count) {
     count = 100;
