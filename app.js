@@ -63,9 +63,7 @@ app.use('/', function doRedir(req, res, next) {
   }
 });
 
-app.get('/feed.rss', (req, res) => res.redirect('/v1/feed.rss'));
-app.get('/feed.atom', (req, res) => res.redirect('/v1/feed.atom'));
-app.get('/feed.json', (req, res) => res.redirect('/v1/feed.json'));
+app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
 
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(serveStatic(path.join(__dirname, 'static')));
