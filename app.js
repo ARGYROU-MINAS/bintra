@@ -20,6 +20,7 @@ var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 const express = require("express");
+const cors = require("cors");
 
 var pfilter = require('./controllers/pfilter');
 
@@ -36,6 +37,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var app = express();
+app.use(cors());
 
 // Redirect root to docs UI
 app.use('/', function doRedir(req, res, next) {
