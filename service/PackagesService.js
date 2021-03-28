@@ -243,8 +243,8 @@ exports.listPagePackages = function(page, size, sorters, filter) {
                   var resp = {last_page: iPages, data: item };
                   resolve(resp);
           })
-          .catch(err => {
-                  console.error("Not OK: ", err);
+          .catch(err2 => {
+                  console.error("Not OK: ", err2);
                   reject("bahh");
           });
     });
