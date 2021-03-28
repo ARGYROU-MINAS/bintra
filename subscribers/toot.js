@@ -22,7 +22,6 @@ eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, p
   } else {
     console.log('Skip checks for now');
     return;
-    t = 'Validate ' + packageName + ' (' + packageVersion + ') for ' + packageArch;
   }
 
   t = t + ' #binarytransparency';
