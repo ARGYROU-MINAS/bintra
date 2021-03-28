@@ -36,8 +36,22 @@ mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// default CORS domain
+const corsWhitelist = ['api.bintra.directory', 'bintra.directory'];
+var corsOptions = {
+  origin: function(origin, callback) {
+      console.log("cors check on " + origin);
+      if(corsWhitelist.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+};
+
 var app = express();
-app.use(cors());
+
+app.use(cors(corsOptions));
 
 // Redirect root to docs UI
 app.use('/', function doRedir(req, res, next) {
