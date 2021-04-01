@@ -900,19 +900,6 @@ components:
           type: string
           format: email
           example: me@example.com
-    Authentication:
-      required:
-        - password
-        - username
-      type: object
-      properties:
-        username:
-          type: string
-          example: username
-        password:
-          type: string
-          format: password
-          example: password
     TokenItem:
       type: object
       properties:
