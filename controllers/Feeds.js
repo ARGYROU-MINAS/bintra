@@ -50,8 +50,8 @@ function feedRss (req, res, next) {
                 var myid = entry._id;
                 rssfeed.addItem({
 title: entry.name,
-id: entry._id,
-link: "https://api.bintra.directory/v1/package/" + myid,
+id: "https://api.bintra.directory/v1/package/" + myid,
+link: "https://bintra.directory/details/?id=" + myid,
 description: entry.name,
 date: entry.tsupdated || new Date(),
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
