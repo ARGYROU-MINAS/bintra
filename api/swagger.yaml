@@ -323,7 +323,8 @@ paths:
           in: query
           description: Limit number of entries
           schema:
-            type: number
+            type: integer
+            minimum: 1
       responses:
         200:
           description: positive result we hope
@@ -407,14 +408,16 @@ paths:
           description: Skip entries before listing
           required: false
           schema:
-            type: number
+            type: integer
+            minimum: 0
             default: 0
         - name: count
           in: query
           description: Limit number of entries
           required: false
           schema:
-            type: number
+            type: integer
+            minimum: 1
             default: 10
         - name: sort
           in: query
@@ -839,7 +842,7 @@ components:
         packageHash:
           type: string
         count:
-          type: number
+          type: integer
         tscreated:
           type: string
           format: date-time
