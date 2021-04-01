@@ -1,4 +1,4 @@
-FROM node:12 as builder
+FROM node:14 as builder
 
 RUN apt update && apt install -y vim
 
@@ -12,7 +12,7 @@ COPY package*.json ./
 
 RUN npm ci
 
-FROM node:12
+FROM node:14
 USER node
 WORKDIR /usr/src/app
 COPY --from=builder tmp/node_modules node_modules
