@@ -6,7 +6,7 @@ FROM node:12 as builder
 COPY package*.json ./
 
 RUN apt update && apt install -y vim
-RUN npm install
+RUN npm ci
 
 FROM node:12
 WORKDIR /usr/src/app
