@@ -79,7 +79,11 @@ module.exports.listPackageSingle = function listPackage (req, res, next, id) {
 
   Service.listPackageSingle(id)
     .then(function (payload) {
-      utils.writeJson(res, payload, 200);
+      if(null == payload) {
+        utils.writeJson(res, {message: 'Not found'}, 404);
+      } else {
+        utils.writeJson(res, payload, 200);
+      }
     })
     .catch(function (payload) {
       utils.writeJson(res, payload, 400);

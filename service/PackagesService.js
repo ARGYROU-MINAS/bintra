@@ -40,6 +40,21 @@ function getUserObject(username) {
   });
 }
 
+function renameAttributes(item) {
+    var r = {
+        id: item._id,
+        packageName: item.name,
+        packageVersion: item.version,
+        packageArch: item.arch,
+        packageFamily: item.family,
+        packageHash: item.hash,
+        count: item.count,
+        creationDate: item.tscreated
+    };
+    return r;
+}
+
+
 /**
  * @method
  * Validate the package.
@@ -143,10 +158,14 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 exports.listPackage = function(packageName, packageVersion, packageArch, packageFamily) {
   return new Promise(function(resolve, reject) {
     console.log("In list service");
-    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily}).populate('creator')
+    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
           .then(item => {
                   console.info("Was OK");
-                  resolve(item);
+		  var r = [];
+		  item.forEach(function(value) {
+			  r.push(renameAttributes(value));
+		  });
+                  resolve(r);
           })
           .catch(err => {
                   console.error("Not OK: ", err);
@@ -169,7 +188,12 @@ exports.listPackageSingle = function(packageId) {
     PackageModel.find({_id: packageId}, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
           .then(item => {
                   console.info("Was OK");
-                  resolve(item);
+		  if(item.length > 0) {
+                        var r = renameAttributes(item[0]);
+                        resolve(r);
+                  } else {
+                        resolve(null);
+                  }
           })
           .catch(err => {
                   console.error("Not OK: ", err);

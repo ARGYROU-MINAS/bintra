@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.1
+  version: 1.0.2
 
 servers:
   - url: https://api.bintra.directory/v1
@@ -254,11 +254,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PackageVariants'
+                type: object
+                $ref: '#/components/schemas/PackageVariants'
         400:
           $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
 
     delete:
       tags:
@@ -331,7 +332,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PackageItem'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageItem'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -1027,6 +1030,12 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Bad Request, some parameter must be wrong
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Bad Request, nothing found for this data
       content:
         application/json:
           schema:
