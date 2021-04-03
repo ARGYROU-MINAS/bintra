@@ -20,7 +20,7 @@ var eventEmitter = require('../utils/eventer').em;
 
 
 /**
- * Helper function
+ * Helper functions
  */
 function getUserObject(username) {
   return new Promise(function(resolve, reject) {
@@ -146,14 +146,14 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
 
 /**
  * @method
- * Validate the package.
+ * List package data for given combination.
  * @public
  *
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
  * @param {string} packageFamily - Family of the package
- * @returns String
+ * @returns array of entries
  **/
 exports.listPackage = function(packageName, packageVersion, packageArch, packageFamily) {
   return new Promise(function(resolve, reject) {
@@ -176,11 +176,11 @@ exports.listPackage = function(packageName, packageVersion, packageArch, package
 
 /**
  * @method
- * Validate the package.
+ * List data for a single package.
  * @public
  *
  * @param {string} packageId - ID of the package
- * @returns String
+ * @returns object with entry data
  **/
 exports.listPackageSingle = function(packageId) {
   return new Promise(function(resolve, reject) {
@@ -204,14 +204,14 @@ exports.listPackageSingle = function(packageId) {
 
 /**
  * @method
- * List all packages.
+ * List all packages with maximum amount and entries to skip.
  * @public
  *
  * @param {number} skip - Skip first replies
  * @param {number} count - Limit replies
  * @param {string} sort - Sort by property
  * @param {string} direction - Sort up or down
- * @returns String
+ * @returns array of entries
  **/
 exports.listPackages = function(skip, count, sort, direction) {
   return new Promise(function(resolve, reject) {
@@ -237,14 +237,14 @@ exports.listPackages = function(skip, count, sort, direction) {
 
 /**
  * @method
- * List all packages.
+ * List all packages, optimized for UI pagination.
  * @public
  *
- * @param {number} skip - Skip first replies
- * @param {number} count - Limit replies
- * @param {string} sort - Sort by property
- * @param {string} direction - Sort up or down
- * @returns String
+ * @param {number} page - Skip first replies
+ * @param {number} size - Limit replies
+ * @param {string} sorters - Sort by property
+ * @param {string} filter - optional filter
+ * @returns array of entries and number of possible pages with given size value
  **/
 exports.listPagePackages = function(page, size, sorters, filter) {
   return new Promise(function(resolve, reject) {
@@ -277,11 +277,11 @@ exports.listPagePackages = function(page, size, sorters, filter) {
 
 /**
  * @method
- * List all packages.
+ * List all packages including personal data for admin usage.
  * @public
  *
  * @param {string} count - Limit replies
- * @returns String
+ * @returns array of entries
  **/
 exports.listPackagesFull = function(count) {
   return new Promise(function(resolve, reject) {
@@ -303,10 +303,10 @@ exports.listPackagesFull = function(count) {
 
 /**
  * @method
- * Validate the package.
+ * List all registered users.
  * @public
  *
- * @returns String
+ * @returns array of user entries
  **/
 exports.listUsers = function() {
   return new Promise(function(resolve, reject) {
@@ -326,10 +326,12 @@ exports.listUsers = function() {
 
 /**
  * @method
- * Validate the package.
+ * Update user entry with new status
  * @public
+ * @param {string} id - user id in database
+ * @param {string} newStatus - user status to change to
  *
- * @returns String
+ * @returns updates user object
  **/
 exports.putUserStatus = function(id, newStatus) {
   return new Promise(function(resolve, reject) {
@@ -350,10 +352,11 @@ exports.putUserStatus = function(id, newStatus) {
 
 /**
  * @method
- * Validate the package.
+ * Show userdata of given id.
  * @public
+ * @param {string} id - user id in database
  *
- * @returns String
+ * @returns object with user data
  **/
 exports.listUser = function(idUser) {
   return new Promise(function(resolve, reject) {
@@ -378,10 +381,11 @@ exports.listUser = function(idUser) {
 
 /**
  * @method
- * Validate the package.
+ * Search for packages by given query
  * @public
+ * @param {string} jsearch - json query
  *
- * @returns String
+ * @returns array of entries
  **/
 exports.searchPackages = function(jsearch) {
   return new Promise(function(resolve, reject) {
@@ -424,7 +428,6 @@ exports.searchPackages = function(jsearch) {
     if(jsearch.hasOwnProperty('tsupdated')) {
       queryObj['tsupdated'] = jsearch.tsupdated;
     }
-//console.log(queryObj);
     PackageModel.find(queryObj, {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
           .sort({name: 1})
           .limit(count)
@@ -441,10 +444,12 @@ exports.searchPackages = function(jsearch) {
 
 /**
  * @method
- * Validate the package.
+ * Change user data by json patch request
  * @public
+ * @param {string} idUser - id of user in database
+ * @param {string} jpatch - json patch data
  *
- * @returns String
+ * @returns object of updated user data
  **/
 exports.patchUser = function(idUser, jpatch) {
   return new Promise(function(resolve, reject) {
@@ -471,10 +476,11 @@ exports.patchUser = function(idUser, jpatch) {
 
 /**
  * @method
- * Validate the package.
+ * Delete one user from database.
  * @public
+ * @param {string} idUser - the id of the user object
  *
- * @returns String
+ * @returns object of user entry for the very last time
  **/
 exports.deleteUser = function(idUser) {
   return new Promise(function(resolve, reject) {
@@ -510,10 +516,11 @@ exports.deleteUser = function(idUser) {
 
 /**
  * @method
- * Validate the package.
+ * Creates an user entry in database.
  * @public
+ * @param {string} user - json user object
  *
- * @returns String
+ * @returns object of created user
  **/
 exports.createUser = function(user) {
   return new Promise(function(resolve, reject) {
@@ -545,10 +552,12 @@ exports.createUser = function(user) {
 
 /**
  * @method
- * Validate the package.
+ * Check login data for user.
  * @public
+ * @param {string} name - user name
+ * @param {string} passwd - clear text password from web form
  *
- * @returns boolean
+ * @returns object of athenticated user
  **/
 exports.checkUser = function(name, passwd) {
   return new Promise(function(resolve, reject) {
@@ -582,8 +591,9 @@ exports.checkUser = function(name, passwd) {
 
 /**
  * @method
- * Validate the package.
+ * Check if user is activated.
  * @public
+ * @param {string} uname - user login name
  *
  * @returns boolean
  **/
@@ -610,10 +620,9 @@ exports.isActiveUser = function(uname) {
 
 /**
  * @method
- * Validate the package.
+ * Delete all package data, used for CI tests on development.
  * @public
  *
- * @returns String
  **/
 exports.cleanupPackages = function() {
   return new Promise(function(resolve, reject) {
@@ -633,7 +642,7 @@ exports.cleanupPackages = function() {
 
 /**
  * @method
- * Validate the package.
+ * Delete a single package from database.
  * @public
  * @param {string} packageName - Name of the package
  * @param {string} packageVersion - Version of the package
@@ -641,7 +650,6 @@ exports.cleanupPackages = function() {
  * @param {string} packageFamily - Family of the package
  * @param {string} packageHash - SHA hash of the package
  *
- * @returns String
  **/
 exports.deletePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash) {
   return new Promise(function(resolve, reject) {
@@ -661,11 +669,10 @@ exports.deletePackage = function(packageName, packageVersion, packageArch, packa
 
 /**
  * @method
- * Validate the package.
+ * Delete a single package from database.
  * @public
  * @param {string} packageId - ID of the package
  *
- * @returns String
  **/
 exports.deletePackageById = function(packageId) {
   return new Promise(function(resolve, reject) {
@@ -685,10 +692,10 @@ exports.deletePackageById = function(packageId) {
 
 /**
  * @method
- * Validate the package.
+ * Count number of entries in database.
  * @public
  *
- * @returns String
+ * @returns object with count attribute
  **/
 exports.countPackage = function() {
   return new Promise(function(resolve, reject) {
