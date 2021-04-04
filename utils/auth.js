@@ -4,7 +4,7 @@ var LoginModel = require('../models/login.js');
 const bcrypt = require ('bcrypt');
 const saltRounds = 10;
 
-var Service = require('../service/PackagesService');
+var UsersService = require('../service/UsersService');
 
 var jwt = require("jsonwebtoken");
 require('custom-env').env(true);
@@ -61,7 +61,7 @@ exports.verifyToken = async function(req, scopes, schema) {
       // token here if necessary, such as checking if
       // the username belongs to an active user
       console.log("Check if user is active: " + decodedToken.sub + "?");
-      var response = await Service.isActiveUser(decodedToken.sub);
+      var response = await UsersService.isActiveUser(decodedToken.sub);
       console.log(response);
       if(response) {
         //add the token to the request so that we

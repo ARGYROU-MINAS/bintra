@@ -15,7 +15,8 @@ chai.use(require('chai-json-schema'));
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 
-const service = require('../service/PackagesService.js');
+const UsersService = require('../service/UsersService.js');
+const PackagesService = require('../service/PackagesService.js');
 
 var JWT;
 
@@ -25,7 +26,7 @@ describe('User stuff', function() {
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
 		var u = {username: 'max', email: 'test@example.com', password: 'xxx'};
-		await service.createUser(u);
+		await UsersService.createUser(u);
 		await LoginModel.updateMany({}, { $set: {status: 'active' }});
 	});
 
@@ -51,7 +52,7 @@ describe('User stuff', function() {
                         });
                 });
 		it('List users', (done) => {
-                        service.listUsers()
+                        UsersService.listUsers()
                                 .then(itemFound => {
 					itemFound.should.have.length(1);
 					idUser = itemFound[0]._id;
@@ -59,7 +60,7 @@ describe('User stuff', function() {
                                 });
                 });
 		it('List user', (done) => {
-                        service.listUser(idUser)
+                        UsersService.listUser(idUser)
                                 .then(itemFound => {
                                         itemFound.should.have.property('email');
                                         done();
@@ -79,7 +80,7 @@ describe('User stuff', function() {
                         });
                 });
 		it('Add package in users name', (done) => {
-                        service.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
+                        PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
 					//var oneItem = itemFound[0];
@@ -88,7 +89,7 @@ describe('User stuff', function() {
                                 });
                 });
 		it('Add again package in users name', (done) => {
-                        service.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
+                        PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
                                         done();
@@ -99,7 +100,7 @@ describe('User stuff', function() {
 	context('Destroy user', () => {
 		var idUser;
 		it('List users once more', (done) => {
-                        service.listUsers()
+                        UsersService.listUsers()
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
                                         idUser = itemFound[0]._id;
@@ -108,14 +109,14 @@ describe('User stuff', function() {
                 });
 	/*	it('Put user status', (done) => {
 			console.log('set user ' + idUser + ' to disabled');
-                        service.putUserStatus(idUser, 'disabled')
+                        UsersService.putUserStatus(idUser, 'disabled')
                                 .then(itemFound => {
                                         itemFound.should.have.property('status', 'disabled');
                                         done();
                                 });
                 });*/
 		 it('Delete user', (done) => {
-                        service.deleteUser(idUser)
+                        UsersService.deleteUser(idUser)
                                 .then(itemFound => {
                                         itemFound.should.have.property('status', 'deleted');
                                         done();

@@ -10,7 +10,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
-const service = require('../service/PackagesService.js');
+const PackagesService = require('../service/PackagesService.js');
 
 describe('getCount', function() {
 
@@ -27,7 +27,7 @@ describe('getCount', function() {
 					}
 				}
 			};
-			var result = await service.countPackage();
+			var result = await PackagesService.countPackage();
 			return expect(result).to.be.jsonSchema(countSchema);
 		});
 	})

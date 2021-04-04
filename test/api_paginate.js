@@ -13,7 +13,7 @@ chai.use(require('chai-json-schema'));
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 
-const service = require('../service/PackagesService.js');
+const PackageService = require('../service/PackagesService.js');
 
 describe('Paginate', function() {
 	before(async () => {
@@ -35,23 +35,23 @@ describe('Paginate', function() {
                         await packageNew.save();
         	});
                 it('[STEP-] should have two reply', async () => {
-                        var result = await service.listPackages();
+                        var result = await PackageService.listPackages();
                         return expect(result).to.have.length(2);
                 });
 		it('[STEP-] get package start window', async () => {
-                        var result = await service.listPackages(0, 2, 'tsupdated', 'up');
+                        var result = await PackageService.listPackages(0, 2, 'tsupdated', 'up');
                         return expect(result).to.have.length(2);
                 });
 		it('[STEP-] get package start window small', async () => {
-                        var result = await service.listPackages(0, 1, 'tsupdated', 'up');
+                        var result = await PackageService.listPackages(0, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] get package next window small', async () => {
-                        var result = await service.listPackages(1, 1, 'tsupdated', 'up');
+                        var result = await PackageService.listPackages(1, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] get package empty window', async () => {
-                        var result = await service.listPackages(2, 1, 'tsupdated', 'up');
+                        var result = await PackageService.listPackages(2, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(0);
                 });
         });

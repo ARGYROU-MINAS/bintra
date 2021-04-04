@@ -10,7 +10,8 @@
 var dateFormat = require("dateformat");
 var utils = require('../utils/writer.js');
 var eventEmitter = require('../utils/eventer').em;
-var Service = require('../service/PackagesService');
+var PackagesService = require('../service/PackagesService');
+var UsersService = require('../service/UsersService');
 
 
 /**
@@ -41,7 +42,7 @@ module.exports.validatePackage = function validatePackage (req, res, next, packa
 
   eventEmitter.emit('apihit', req);
 
-  Service.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
+  PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -59,7 +60,7 @@ module.exports.listPackage = function listPackage (req, res, next, packageName, 
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackage(packageName, packageVersion, packageArch, packageFamily)
+  PackagesService.listPackage(packageName, packageVersion, packageArch, packageFamily)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -77,7 +78,7 @@ module.exports.listPackageSingle = function listPackage (req, res, next, id) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackageSingle(id)
+  PackagesService.listPackageSingle(id)
     .then(function (payload) {
       if(null == payload) {
         utils.writeJson(res, {message: 'Not found'}, 404);
@@ -100,7 +101,7 @@ module.exports.listPackages = function listPackage (req, res, next, skip, count,
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackages(skip, count, sort, direction)
+  PackagesService.listPackages(skip, count, sort, direction)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -119,7 +120,7 @@ module.exports.listPagePackages = function listPagePackage (req, res, next, page
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPagePackages(page, size, sorters, filter)
+  PackagesService.listPagePackages(page, size, sorters, filter)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -140,7 +141,7 @@ module.exports.listPackagesFull = function listPackage (req, res, next, count) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackagesFull(count)
+  PackagesService.listPackagesFull(count)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -158,7 +159,7 @@ module.exports.countPackage = function countPackage (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.countPackage()
+  PackagesService.countPackage()
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

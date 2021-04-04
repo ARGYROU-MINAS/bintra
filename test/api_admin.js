@@ -13,7 +13,7 @@ chai.use(require('chai-json-schema'));
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 
-const service = require('../service/PackagesService.js');
+const PackagesService = require('../service/PackagesService.js');
 
 describe('getDefault', function() {
 	before(async () => {
@@ -30,8 +30,8 @@ describe('getDefault', function() {
                 	await packageNew.save();
         	});
                 it('[STEP-] should have one reply', async () => {
-                        await service.cleanupPackages();
-			var result = await service.listPackages();
+                        await PackagesService.cleanupPackages();
+			var result = await PackagesService.listPackages();
 			return expect(result).to.have.length(0);
                 });
         });
@@ -46,11 +46,11 @@ describe('getDefault', function() {
                         await packageNew.save();
                 });
                 it('[STEP-] should have one reply', async () => {
-                        var result = await service.listPackages();
+                        var result = await PackagesService.listPackages();
 			var theID = result[0]._id;
 			console.log("ID=" + theID);
-			await service.deletePackageById(theID);
-			result = await service.listPackages();
+			await PackagesService.deletePackageById(theID);
+			result = await PackagesService.listPackages();
                         return expect(result).to.have.length(0);
                 });
         });
@@ -65,7 +65,7 @@ describe('getDefault', function() {
                         await packageNew.save();
                 });
                 it('[STEP-] packagesFull', async () => {
-                        var result = await service.listPackagesFull(111);
+                        var result = await PackagesService.listPackagesFull(111);
                         return expect(result).to.have.length(1);
                 });
         });

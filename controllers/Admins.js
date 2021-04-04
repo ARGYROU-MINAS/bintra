@@ -9,7 +9,8 @@
 
 var utils = require('../utils/writer.js');
 var eventEmitter = require('../utils/eventer').em;
-var Service = require('../service/PackagesService');
+var PackagesService = require('../service/PackagesService');
+var UsersService = require('../service/UsersService');
 var auth = require("../utils/auth");
 
 
@@ -26,7 +27,7 @@ module.exports.loginPost = function loginPost(args, res, next) {
 
   //eventEmitter.emit('apihit', req);
 
-  Service.checkUser(username, password)
+  UsersService.checkUser(username, password)
     .then(function (useritem) {
 	  console.log("User found: " + useritem);
       var myRole = useritem.role;
@@ -52,7 +53,7 @@ module.exports.listUsers = function listUsers (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listUsers()
+  UsersService.listUsers()
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -69,7 +70,7 @@ module.exports.listUsers = function listUsers (req, res, next) {
 module.exports.deleteUser = function deleteUser (req, res, next, id) {
   eventEmitter.emit('apihit', req);
 
-  Service.deleteUser(id)
+  UsersService.deleteUser(id)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -87,7 +88,7 @@ module.exports.putUserStatus = function putUserStatus (req, res, next, status, i
   eventEmitter.emit('apihit', req);
   console.log("putUserStatus " + id + "/" + status + "!");
 
-  Service.putUserStatus(id, status)
+  UsersService.putUserStatus(id, status)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -104,7 +105,7 @@ module.exports.putUserStatus = function putUserStatus (req, res, next, status, i
 module.exports.listUser = function listUser (req, res, next, id) {
   eventEmitter.emit('apihit', req);
 
-  Service.listUser(id)
+  UsersService.listUser(id)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -121,7 +122,7 @@ module.exports.listUser = function listUser (req, res, next, id) {
 module.exports.createUser = function createUser (req, res, next, user) {
   eventEmitter.emit('apihit', req);
 
-  Service.createUser(user)
+  UsersService.createUser(user)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -138,7 +139,7 @@ module.exports.createUser = function createUser (req, res, next, user) {
 module.exports.searchPackages = function searchPackages (req, res, next, jsearch) {
   eventEmitter.emit('apihit', req);
 
-  Service.searchPackages(jsearch)
+  PackagesService.searchPackages(jsearch)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -155,7 +156,7 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
 module.exports.patchUser = function patchUser (req, res, next, id, jpatch) {
   eventEmitter.emit('apihit', req);
 
-  Service.patchUser(id, jpatch)
+  UsersService.patchUser(id, jpatch)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -173,7 +174,7 @@ module.exports.deletePackage = function deletePackage (req, res, next, packageNa
 
   eventEmitter.emit('apihit', req);
 
-  Service.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
+  PackagesService.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
@@ -191,7 +192,7 @@ module.exports.deletePackageById = function deletePackageById (req, res, next, i
 
   eventEmitter.emit('apihit', req);
 
-  Service.deletePackageById(id)
+  PackagesService.deletePackageById(id)
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
@@ -209,7 +210,7 @@ module.exports.cleanupPackages = function cleanupPackages (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.cleanupPackages()
+  PackagesService.cleanupPackages()
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })

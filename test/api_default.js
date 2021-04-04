@@ -13,7 +13,7 @@ chai.use(require('chai-json-schema'));
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
 
-const service = require('../service/PackagesService.js');
+const PackagesService = require('../service/PackagesService.js');
 
 describe('getDefault', function() {
 	before(async () => {
@@ -23,7 +23,7 @@ describe('getDefault', function() {
 
 	context('[BINTRA-] get packages', function() {
 		it('[STEP-] should have empty reply', async () => {
-			var result = await service.listPackages();
+			var result = await PackagesService.listPackages();
 			return expect(result).to.have.length(0);
 		});
 	});
@@ -38,51 +38,51 @@ describe('getDefault', function() {
                 	await packageNew.save();
         	});
                 it('[STEP-] should have one reply', async () => {
-                        var result = await service.listPackages();
+                        var result = await PackagesService.listPackages();
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] get package by values', async () => {
-                        var result = await service.listPackage('theName', 'theVersion', 'theArchitecture', 'theFamily');
+                        var result = await PackagesService.listPackage('theName', 'theVersion', 'theArchitecture', 'theFamily');
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by name', async () => {
-                        var result = await service.searchPackages({ packageName: 'theName' });
+                        var result = await PackagesService.searchPackages({ packageName: 'theName' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by version', async () => {
-                        var result = await service.searchPackages({ packageVersion: 'theVersion' });
+                        var result = await PackagesService.searchPackages({ packageVersion: 'theVersion' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by arch', async () => {
-                        var result = await service.searchPackages({ packageArch: 'theArchitecture' });
+                        var result = await PackagesService.searchPackages({ packageArch: 'theArchitecture' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by fanily', async () => {
-                        var result = await service.searchPackages({ packageFamily: 'theFamily' });
+                        var result = await PackagesService.searchPackages({ packageFamily: 'theFamily' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by hash', async () => {
-                        var result = await service.searchPackages({ packageHash: 'theHash' });
+                        var result = await PackagesService.searchPackages({ packageHash: 'theHash' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by count', async () => {
-                        var result = await service.searchPackages({ count: 1 });
+                        var result = await PackagesService.searchPackages({ count: 1 });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by tscreated', async () => {
-                        var result = await service.searchPackages({ tscreated: tsnow });
+                        var result = await PackagesService.searchPackages({ tscreated: tsnow });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by tsupdated', async () => {
-                        var result = await service.searchPackages({ tsupdated: tsnow });
+                        var result = await PackagesService.searchPackages({ tsupdated: tsnow });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by wildcard name', async () => {
-                        var result = await service.searchPackages({ packageName: 'the*' });
+                        var result = await PackagesService.searchPackages({ packageName: 'the*' });
                         return expect(result).to.have.length(1);
                 });
 		it('[STEP-] search packages by name and version', async () => {
-                        var result = await service.searchPackages({ packageName: 'theName', packageVersion: 'theVersion' });
+                        var result = await PackagesService.searchPackages({ packageName: 'theName', packageVersion: 'theVersion' });
                         return expect(result).to.have.length(1);
                 });
         });
