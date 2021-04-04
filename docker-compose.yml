@@ -34,9 +34,6 @@ services:
       - MONGO_HOSTNAME=database
     ports:
       - "8087:8080"
-#    volumes:
-#      - .:/home/node/app
-#      - node_modules:/home/node/app/node_modules
     networks:
       - bintra-network
     command: npm start
@@ -52,4 +49,3 @@ networks:
 
 volumes:
   dbdata:
-#  node_modules:
