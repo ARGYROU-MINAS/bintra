@@ -13,6 +13,7 @@ var dateFormat = require("dateformat");
 require("datejs");
 var jsonpatch = require('json-patch');
 var LoginModel = require('../models/login.js');
+var DomainModel = require('../models/domain.js');
 const bcrypt = require ('bcrypt');
 
 var eventEmitter = require('../utils/eventer').em;
@@ -36,6 +37,111 @@ function getUserObject(username) {
         console.error("getUser failed: " + err);
         reject("getUser failed");
       });
+  });
+}
+
+/**
+ * @method
+ * List all registered blacklisted domain.
+ * @public
+ *
+ * @returns array of domain entries
+ **/
+exports.listDomains = function() {
+  return new Promise(function(resolve, reject) {
+    console.log("In list domains service");
+
+    DomainModel.find({})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * List all registered blacklisted domain.
+ * @public
+ * @param {string} domainname - Domain name
+ *
+ * @returns array of domain entries
+ **/
+exports.addDomain = function(domainname) {
+  return new Promise(function(resolve, reject) {
+    console.log("In add domain service");
+
+    var tsnow = new Date();
+    var d = new DomainModel({
+        name: domainname,
+        tscreated: tsnow
+    });
+
+    d.save()
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Delete one registered blacklisted domain.
+ * @public
+ * @param {string} domainname - Domain name
+ *
+ * @returns domain object before deleting
+ **/
+exports.deleteDomain = function(domainname) {
+  return new Promise(function(resolve, reject) {
+    console.log("In delete domain service");
+
+    DomainModel.remove({name: domainname})
+          .then(item => {
+                  console.info("Was OK");
+                  resolve(item);
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
+/**
+ * @method
+ * Check for registered blacklisted domain.
+ * @public
+ * @param {string} domainname - Domain name
+ *
+ * @returns domain object before deleting
+ **/
+exports.checkDomain = function(domainname) {
+  return new Promise(function(resolve, reject) {
+    console.log("In check domain service");
+
+    DomainModel.find({name: domainname})
+          .then(item => {
+                  console.info("Was OK");
+		  if(item.length == 1) {
+			  resolve(item[0]);
+		  } else {
+			  resolve(null);
+		  }
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
   });
 }
 
@@ -201,28 +307,45 @@ exports.deleteUser = function(idUser) {
 exports.createUser = function(user) {
   return new Promise(function(resolve, reject) {
     console.log("In create user service");
-    const saltRounds = 10;
-    var tsnow = new Date();
-    bcrypt.hash(user.password, saltRounds, function(err, hash) {
-      var u = new LoginModel({
-        name: user.username,
-        passwd: hash,
-        email: user.email,
-	role: "user",
-	status: "register",
-	tscreated: tsnow
-      });
 
-      u.save()
-          .then(item => {
+    var domain = user.email.split('@')[1];
+    console.log("Check domain " + domain);
+    DomainModel.find({name: domain})
+	  .then(item => {
                   console.info("Was OK");
-                  resolve(u);
+                  if(item.length == 1) {
+			  console.error("Domain black listed: " + domain);
+                          reject("bahh");
+                  } else {
+			  const saltRounds = 10;
+      			  var tsnow = new Date();
+      			  bcrypt.hash(user.password, saltRounds, function(err, hash) {
+        		  var u = new LoginModel({
+          		    name: user.username,
+          		    passwd: hash,
+          		    email: user.email,
+          		    role: "user",
+          		    status: "register",
+          		    tscreated: tsnow
+        		  });
+
+        		  u.save()
+          			.then(item => {
+                  			console.info("Was OK");
+                  			resolve(u);
+          			})
+          			.catch(errSave => {
+                  			console.error("Not OK: ", errSave);
+                  			reject("bahh");
+          			});
+      			  });
+                  }
           })
-          .catch(errSave => {
-                  console.error("Not OK: ", errSave);
+          .catch(err => {
+                  console.error("Not OK: ", err);
                   reject("bahh");
           });
-    });
+
   });
 }
 

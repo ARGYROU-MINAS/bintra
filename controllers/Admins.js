@@ -116,6 +116,79 @@ module.exports.listUser = function listUser (req, res, next, id) {
 
 /**
  * @method
+ * List all black listed domains.
+ * @public
+ */
+module.exports.listDomains = function listDomains (req, res, next) {
+  eventEmitter.emit('apihit', req);
+
+  UsersService.listDomains()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * Add a black listed domains.
+ * @public
+ */
+module.exports.addDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit('apihit', req);
+
+  UsersService.addDomain(name)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * Delete a black listed domains.
+ * @public
+ */
+module.exports.deleteDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit('apihit', req);
+
+  UsersService.deleteDomain(name)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all black listed domains.
+ * @public
+ */
+module.exports.checkDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit('apihit', req);
+
+  UsersService.checkDomain(name)
+    .then(function (payload) {
+      if(null == payload) {
+        utils.writeJson(res, {message: 'Not found'}, 404);
+      } else {
+        utils.writeJson(res, payload, 200);
+      }
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+
+/**
+ * @method
  * List all packages and variations.
  * @public
  */

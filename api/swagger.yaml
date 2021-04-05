@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.2
+  version: 1.0.3
 
 servers:
   - url: https://api.bintra.directory/v1
@@ -310,6 +310,123 @@ paths:
           $ref: '#/components/responses/BadRequest'
 
 
+  /domains:
+    get:
+      tags:
+        - admin
+      summary: return all black listed domains
+      description: |
+        Get all black listed domains for not beeing registered
+      operationId: listDomains
+      x-swagger-router-controller: Admins
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+    put:
+      tags:
+        - admin
+      summary: add black listed domains
+      description: |
+        Add a black listed domain for not beeing registered
+      operationId: addDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: query
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+    delete:
+      tags:
+        - admin
+      summary: delete black listed domains
+      description: |
+        Delete a black listed domain for not beeing registered
+      operationId: deleteDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: query
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+  /domain/{name}:
+    get:
+      tags:
+        - admin
+      summary: return if black listed domain exists
+      description: |
+        Get black listed domain for not beeing registered or empty
+      operationId: checkDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: path
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainItem'
+        404:
+          $ref: '#/components/responses/NotFound'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
   /packagesfull:
     get:
       tags:
@@ -556,7 +673,7 @@ paths:
       x-swagger-router-controller: Admins
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/Registration'
         required: true
@@ -940,6 +1057,15 @@ components:
         email:
           type: string
         status:
+          type: string
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    DomainItem:
+      type: object
+      properties:
+        name:
           type: string
         tscreated:
           type: string
