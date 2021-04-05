@@ -330,7 +330,7 @@ exports.createUser = function(user) {
         		  });
 
         		  u.save()
-          			.then(item => {
+          			.then(item2 => {
                   			console.info("Was OK");
                   			resolve(u);
           			})
