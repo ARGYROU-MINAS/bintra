@@ -6,7 +6,8 @@ pub_mkdocs/
 out/
 mochawesome-report/
 coverage/
-test-results.xml
+xunit.xml
+junit-custom.xml
 .nyc_output/
 *.deb
 

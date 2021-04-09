@@ -9,7 +9,7 @@
     "test": "mocha --reporter mochawesome --exit",
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
-    "combined": "nyc --reporter=lcov --reporter=text-summary mocha --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --reporter mochawesome --exit",
+    "combined": "nyc --reporter=lcov --reporter=text-summary mocha --reporter mocha-multi-reporters --reporter-options configFile=testreport-config.json --exit",
     "testlink": "mocha --reporter=xunit --exit",
     "adduser": "node local/adduser.js",
     "addadmin": "node local/addadmin.js"
@@ -51,6 +51,7 @@
     "jsdoc": "~3.6.6",
     "mocha": "^8.2.1",
     "mocha-junit-reporter": "^2.0.0",
+    "mocha-multi-reporters": "^1.5.1",
     "mocha-sonarqube-reporter": "^1.0.2",
     "mochawesome": "^6.2.1",
     "nyc": "^15.1.0",
