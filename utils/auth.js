@@ -11,29 +11,14 @@ require('custom-env').env(true);
 var sharedSecret = process.env.JWT_SECRET;
 var issuer = process.env.JWT_ISSUER;
 
-//Here we setup the security checks for the endpoints
-//that need it (in our case, only /protected). This
-//function will be called every time a request to a protected
-//endpoint is received
-//exports.verifyToken = function(req, authOrSecDef, token, callback) {
-
-exports.checkAuthentication = function(req, res, next) {
-  console.log("in auth.checkAutrhentication filter");
-  next();
-}
 
 exports.verifyToken = async function(req, scopes, schema) {
-  //these are the scopes/roles defined for the current endpoint
-//  var currentScopes = req.swagger.operation["x-security-scopes"];
-  console.log("AUTH: Check for scopes:");
-
-  //console.log(req);
   var current_req_scopes = req.openapi.schema["x-security-scopes"]
   console.log(current_req_scopes);
   console.log(schema);
   var token = req.headers.authorization;
 
-  console.log("in verify " + scopes + " -> " + token)
+  console.log("in verify, token: " + token)
 
   //validate the 'Authorization' header. it should have the following format:
   //'Bearer tokenString'
@@ -49,7 +34,7 @@ exports.verifyToken = async function(req, scopes, schema) {
     }
 
     //check if the JWT was verified correctly
-    if (Array.isArray(scopes) && decodedToken.role) {
+    if (decodedToken.role) {
       console.log("User has role " + decodedToken.role + " in JWT");
 
       // check if the issuer matches
@@ -65,19 +50,15 @@ exports.verifyToken = async function(req, scopes, schema) {
 
       // you can add more verification checks for the
       // token here if necessary, such as checking if
-      // the username belongs to an active user
+      // the username belongs to an active user, will throw out if not
       console.log("Check if user is active: " + decodedToken.sub + "?");
-      var response = await UsersService.isActiveUser(decodedToken.sub);
-      console.log(response);
-      if(response) {
-        //add the token to the request so that we
-        //can access it in the endpoint code if necessary
-        req.auth = decodedToken;
-        console.log("Add AUTH to request object");
-        return true;
-      }
-      console.error("User not active");
-      return false;
+      await UsersService.isActiveUser(decodedToken.sub);
+      //add the token to the request so that we
+      //can access it in the endpoint code if necessary
+      req.auth = decodedToken;
+      console.log("Added AUTH to request object");
+
+      return true;
     }
   } else {
     return false;
