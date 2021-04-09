@@ -59,15 +59,9 @@ exports.verifyToken = async function(req, scopes, schema) {
         return false;
       }
 
-      // Check if users role matches api precondition
+      // Check if users role matches api precondition, will return if OK, otherwise jump out
       console.log("Check users role matching API requirements");
-      var responseRole = await UsersService.hasRole(decodedToken.sub, current_req_scopes);
-      if(responseRole) {
-        console.log("Role matched");
-      } else {
-        console.error("User does not have wanted role");
-        return false;
-      }
+      await UsersService.hasRole(decodedToken.sub, current_req_scopes);
 
       // you can add more verification checks for the
       // token here if necessary, such as checking if

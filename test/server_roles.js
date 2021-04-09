@@ -26,17 +26,33 @@ describe('server roles', () => {
 		await LoginModel.updateMany({name: 'max'}, { $set: {role: 'user', status: 'active'} });
 
 		await LoginModel.deleteMany({name: 'bob'});
-                var oUserDefault = {username: 'bob', email: 'test@example.com', password: 'yyy'};
-                await UsersService.createUser(oUserDefault);
+                var oUserAdmin = {username: 'bob', email: 'test@example.com', password: 'yyy'};
+                await UsersService.createUser(oUserAdmin);
                 await LoginModel.updateMany({name: 'bob'}, { $set: {role: 'admin', status: 'active'} });
+
+		await LoginModel.deleteMany({name: 'joe'});
+                var oUserInactive = {username: 'joe', email: 'test@example.com', password: 'zzz'};
+                await UsersService.createUser(oUserInactive);
+                await LoginModel.updateMany({name: 'joe'}, { $set: {role: 'user', status: 'register'} });
 	});
 
 	describe('[BINTRA-] Check login post', () => {
-                it('[STEP-] should get error', (done) => {
+                it('[STEP-] wrong passsword for MAX should get error', (done) => {
                   request(server)
                       .post('/v1/login')
 		      .set('content-type', 'application/x-www-form-urlencoded')
 		      .send({username: 'max', password: 'nono'})
+                      .end((err, res) => {
+                            res.should.have.status(403);
+                            res.body.should.have.property('message', 'Error: Credentials incorrect');
+                            done();
+                        });
+                });
+		it('[STEP-] inactive user JOE should get error', (done) => {
+                  request(server)
+                      .post('/v1/login')
+                      .set('content-type', 'application/x-www-form-urlencoded')
+                      .send({username: 'joe', password: 'zzz'})
                       .end((err, res) => {
                             res.should.have.status(403);
                             res.body.should.have.property('message', 'Error: Credentials incorrect');

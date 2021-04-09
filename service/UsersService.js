@@ -382,7 +382,7 @@ exports.checkUser = function(name, passwd) {
 			  }
                   });
                   } else {
-                    console.error("No entry found");
+                    console.error("No entry found or perhaps not yet activated");
                     reject("bahh");
                   }
           })
