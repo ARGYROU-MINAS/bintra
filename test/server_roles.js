@@ -13,13 +13,22 @@ const UsersService = require('../service/UsersService.js');
 
 chai.use(chaiHttp);
 
+var tokenUser = "";
+var tokenAdmin = "";
+
 describe('server roles', () => {
 	before(async () => {
 		console.log("prepare DB before");
+
 		await LoginModel.deleteMany({name: 'max'});
 		var oUserDefault = {username: 'max', email: 'test@example.com', password: 'xxx'};
 		await UsersService.createUser(oUserDefault);
 		await LoginModel.updateMany({name: 'max'}, { $set: {role: 'user', status: 'active'} });
+
+		await LoginModel.deleteMany({name: 'bob'});
+                var oUserDefault = {username: 'bob', email: 'test@example.com', password: 'yyy'};
+                await UsersService.createUser(oUserDefault);
+                await LoginModel.updateMany({name: 'bob'}, { $set: {role: 'admin', status: 'active'} });
 	});
 
 	describe('[BINTRA-] Check login post', () => {
@@ -34,7 +43,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] should work', (done) => {
+		it('[STEP-] max as user should work', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -42,9 +51,51 @@ describe('server roles', () => {
                       .end((err, res) => {
                             res.should.have.status(200);
                             res.body.should.have.property('token');
+			    tokenUser = res.body.token;
+                            done();
+                        });
+                });
+		it('[STEP-] bob as admin should work', (done) => {
+                  request(server)
+                      .post('/v1/login')
+                      .set('content-type', 'application/x-www-form-urlencoded')
+                      .send({username: 'bob', password: 'yyy'})
+                      .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.have.property('token');
+			    tokenAdmin = res.body.token;
                             done();
                         });
                 });
         });
+
+	describe('[BINTRA-] Check admin only api calls', () => {
+		it('[STEP-] no token should get error', (done) => {
+                  request(server)
+                      .get('/v1/packagesfull')
+                      .end((err, res) => {
+                            res.should.have.status(401);
+                            done();
+                        });
+                });
+		it('[STEP-] user token should get error', (done) => {
+                  request(server)
+                      .get('/v1/packagesfull')
+		      .auth(tokenUser, { type: 'bearer' })
+                      .end((err, res) => {
+                            res.should.have.status(401);
+                            done();
+                        });
+                });
+		it('[STEP-] admintoken should work', (done) => {
+                  request(server)
+                      .get('/v1/packagesfull')
+		      .auth(tokenAdmin, { type: 'bearer' })
+                      .end((err, res) => {
+                            res.should.have.status(200);
+                            done();
+                        });
+                });
+	});
 
 });
