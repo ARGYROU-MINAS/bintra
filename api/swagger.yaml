@@ -1105,8 +1105,10 @@ components:
       properties:
         id:
           type: string
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          maxLength: 24
+          minLength: 24
+          pattern: ^[a-fA-F0-9]{24}$
+          example: 606fdd86515dd2001fc2a17e
         packageName:
           type: string
         packageVersion:

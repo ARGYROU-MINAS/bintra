@@ -15,6 +15,8 @@ chai.use(chaiHttp);
 
 const PackageService = require('../service/PackagesService.js');
 
+var packageid = "";
+
 describe('PFilter server tests', function() {
 	before(async () => {
 		console.log("run before");
@@ -28,6 +30,15 @@ describe('PFilter server tests', function() {
 	});
 
 	context('[BINTRA-] search for package', () => {
+		it('[STEP-] get package count', (done) => {
+                  request(server)
+                      .get('/v1/count')
+                      .end((err, res) => {
+                            res.should.have.status(200);
+			    res.body.should.have.property('count', 1);
+                            done();
+                      });
+                });
 		it('[STEP-] get some packages listed', (done) => {
                   request(server)
                       .get('/v1/packages')
@@ -39,8 +50,10 @@ describe('PFilter server tests', function() {
 		      })
                       .end((err, res) => {
                             res.should.have.status(200);
+			    packageid = res.body[0]._id;
+			    console.log(packageid);
                             done();
-                        });
+                      });
                 });
 		it('[STEP-] Use wrong chars in params', (done) => {
                   request(server)
@@ -54,7 +67,16 @@ describe('PFilter server tests', function() {
                       .end((err, res) => {
                             res.should.have.status(400);
                             done();
-                        });
+                      });
+                });
+		it('[STEP-] get special package data', (done) => {
+                  request(server)
+                      .get('/v1/package/' + packageid)
+                      .end((err, res) => {
+                            res.should.have.status(200);
+			    res.body.should.have.property('id', packageid);
+                            done();
+                      });
                 });
         });
 
