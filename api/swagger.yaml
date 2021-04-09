@@ -931,6 +931,7 @@ paths:
       security:
         - bearerauth: []
       x-security-scopes:
+        - admin
         - user
 
 

@@ -27,7 +27,9 @@ exports.verifyToken = async function(req, scopes, schema) {
 //  var currentScopes = req.swagger.operation["x-security-scopes"];
   console.log("AUTH: Check for scopes:");
 
-  console.log(scopes);
+  //console.log(req);
+  var current_req_scopes = req.openapi.schema["x-security-scopes"]
+  console.log(current_req_scopes);
   console.log(schema);
   var token = req.headers.authorization;
 
@@ -39,7 +41,7 @@ exports.verifyToken = async function(req, scopes, schema) {
     var tokenString = token.split(" ")[1];
 
     var decodedToken = jwt.verify(tokenString, sharedSecret);
-    console.log("Decoed token:");
+    console.log("Decoded token:");
     console.log(decodedToken);
     if(!decodedToken) {
       console.error("Decode failed");
@@ -54,6 +56,16 @@ exports.verifyToken = async function(req, scopes, schema) {
       var issuerMatch = decodedToken.iss == issuer;
       if(!issuerMatch) {
         console.error("issuer doesn't match");
+        return false;
+      }
+
+      // Check if users role matches api precondition
+      console.log("Check users role matching API requirements");
+      var responseRole = await UsersService.hasRole(decodedToken.sub, current_req_scopes);
+      if(responseRole) {
+        console.log("Role matched");
+      } else {
+        console.error("User does not have wanted role");
         return false;
       }
 

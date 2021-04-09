@@ -416,3 +416,39 @@ exports.isActiveUser = function(uname) {
           });
   });
 }
+
+/**
+ * @method
+ * Check if user has one of the wanted roles.
+ * @public
+ * @param {string} uname - user login name
+ * @param {string} aRoles - Array of strings
+ *
+ * @returns boolean
+ **/
+exports.hasRole = function(uname, aRoles) {
+  return new Promise(function(resolve, reject) {
+    console.log("In hasRole service");
+
+    LoginModel.find({name: uname})
+          .then(item => {
+                  if(item.length > 0) {
+                    console.info("Was found OK");
+                    var uRole = item[0].role;
+                    console.log("USer " + uname + " has role " + uRole);
+                    if(-1 == aRoles.indexOf(uRole)) {
+                      console.error("User does not have one of the wanted roles");
+                      reject(false);
+                    }
+                    resolve(true);
+                  } else {
+                    console.error("No match found");
+                    reject(false);
+                  }
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject(false);
+          });
+  });
+}
