@@ -369,12 +369,17 @@ exports.checkUser = function(name, passwd) {
                   var pwhash = item[0].passwd;
                   console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
                   bcrypt.compare(passwd, pwhash, function(err, result) {
-	                  if(err) {
+			  if(err) {
+				  console.error("Some error during compare: " + err);
+				  reject("bahh");
+			  }
+	                  if(result) {
+				  console.log("matched");
+				  resolve(item[0]);
+			  } else {
 		                  console.error("Pwd mismatch");
-                          reject("bahh");
-                      }
-	                  console.log("pwd matched");
-                      resolve(item[0]);
+                                  reject("bahh");
+			  }
                   });
                   } else {
                     console.error("No entry found");
