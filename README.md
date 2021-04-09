@@ -18,8 +18,8 @@ Add perhaps gopg key
 
 ## run local for testing
 
-NODE\_ENV=develop npm start
-NODE\_ENV=test npm test
+    NODE_ENV=develop npm start
+    NODE_ENV=test npm test
 
 ## add user manually
 
