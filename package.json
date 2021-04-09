@@ -9,6 +9,7 @@
     "test": "mocha --reporter mochawesome --exit",
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
+    "combined": "nyc --reporter=lcov --reporter=text-summary mocha --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --reporter mochawesome --exit",
     "testlink": "mocha --reporter=xunit --exit",
     "adduser": "node local/adduser.js",
     "addadmin": "node local/addadmin.js"

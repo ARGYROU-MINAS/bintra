@@ -48,9 +48,7 @@ unittest:
   - npm install
   - ./setup_env_test.sh
   script:
-  - npm test
-  - npm run coverage
-  - npm run sona
+  - npm run combined
   coverage: '/Statements\s+:\s+(\d+\.\d+)%/'
   after_script:
     - ls -l
