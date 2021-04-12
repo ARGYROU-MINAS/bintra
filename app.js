@@ -22,6 +22,9 @@ var auth = require("./utils/auth");
 const express = require("express");
 const cors = require("cors");
 
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
 var pfilter = require('./controllers/pfilter');
 
 var emitter = require('events').EventEmitter;
@@ -71,6 +74,14 @@ app.use(serveStatic(path.join(__dirname, 'static')));
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
+var swaggerDocJson = YAML.load(path.join(__dirname,'api/swagger.yaml'));
+
+var uioptions = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Bintra directory API - binarytransparency",
+  customfavIcon: "/favicon.ico"
+};
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocJson, uioptions));
 
 // swaggerRouter configuration
 var options = {
@@ -98,7 +109,6 @@ var options = {
 app.use(pfilter);
 
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
-//var app = expressAppConfig.getApp();
 
   // Error handlers
   app.use((err, req, res, next) => {
