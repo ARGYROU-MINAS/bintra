@@ -14,7 +14,7 @@ Create in /etc/apt/sources.list.d/bintra.list with
 
     deb [arch=all] https://nexus.myocastor.de/repository/bintra focal main
 
-Add perhaps gopg key
+Add perhaps gpg key, see [gitlab wiki](https://gitlab.kretschmann.software/kai/bintra/-/wikis/Repository)
 
 ## run local for testing
 
