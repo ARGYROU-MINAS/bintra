@@ -292,3 +292,19 @@ module.exports.cleanupPackages = function cleanupPackages (req, res, next) {
     });
 };
 
+/**
+ * @method
+ * Get all version names.
+ * @public
+ */
+module.exports.getVersions = function getVersions (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+
+  var jdata = process.versions;
+  var json = require('../package.json');
+  jdata.bintra = json.version;
+  var payload = JSON.stringify(jdata);
+  res.writeHead(200, { "Content-Type": "application/json" });
+  return res.end(payload);
+};

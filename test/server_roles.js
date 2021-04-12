@@ -112,6 +112,16 @@ describe('server roles', () => {
                             done();
                         });
                 });
+		it('[STEP-] get versions', (done) => {
+                  request(server)
+                      .get('/v1/versions')
+                      .auth(tokenAdmin, { type: 'bearer' })
+                      .end((err, res) => {
+                            res.should.have.status(200);
+			    res.body.should.have.property('node');
+                            done();
+                        });
+                });
 	});
 
 });
