@@ -274,23 +274,6 @@ module.exports.deletePackageById = function deletePackageById (req, res, next, i
     });
 };
 
-/**
- * @method
- * Delete all packages, for testing purpose. Permission required.
- * @public
- */
-module.exports.cleanupPackages = function cleanupPackages (req, res, next) {
-
-  eventEmitter.emit('apihit', req);
-
-  PackagesService.cleanupPackages()
-    .then(function (payload) {
-      utils.writeText(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeText(res, payload, 400);
-    });
-};
 
 /**
  * @method

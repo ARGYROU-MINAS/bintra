@@ -364,27 +364,6 @@ exports.searchPackages = function(jsearch) {
   });
 }
 
-/**
- * @method
- * Delete all package data, used for CI tests on development.
- * @public
- *
- **/
-exports.cleanupPackages = function() {
-  return new Promise(function(resolve, reject) {
-    console.log("In cleanup service");
-
-    PackageModel.remove({})
-          .then(item => {
-                  console.info("Was OK: " + item);
-                  resolve("OK");
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
-}
 
 /**
  * @method

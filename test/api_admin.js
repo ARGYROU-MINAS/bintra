@@ -21,21 +21,6 @@ describe('getDefault', function() {
 		await PackageModel.deleteMany({});
 	});
 
-	context('[BINTRA-] cleanup packages', function() {
-		before(async () => {
-			var tsnow = new Date();
-			var packageNew = new PackageModel({name: 'theName', version: 'theVersion',
-                                                   arch: 'theArchitecture', family: 'theFamily',
-                                                   hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
-                	await packageNew.save();
-        	});
-                it('[STEP-] should have one reply', async () => {
-                        await PackagesService.cleanupPackages();
-			var result = await PackagesService.listPackages();
-			return expect(result).to.have.length(0);
-                });
-        });
-
 	context('[BINTRA-] delete package by id', function() {
                 before(async () => {
 			await PackageModel.deleteMany({});

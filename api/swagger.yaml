@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.3
+  version: 1.0.4
 
 servers:
   - url: https://api.bintra.directory/v1
@@ -570,34 +570,6 @@ paths:
                 $ref: '#/components/schemas/PackageItem'
         400:
           $ref: '#/components/responses/BadRequest'
-
-    delete:
-      tags:
-        - admin
-      summary: delete all packages
-      description: |
-        By passing in the appropriate options, you can validate a
-        package before installing it
-      operationId: cleanupPackages
-      x-swagger-router-controller: Admins
-      responses:
-        200:
-          description: positive result we hope
-          content: {}
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
-          description: Access Denied
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-      security:
-        - bearerauth: []
-      x-security-scopes:
-        - admin
 
 
   /test:
