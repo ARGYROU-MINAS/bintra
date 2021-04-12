@@ -118,6 +118,7 @@ describe('server roles', () => {
                       .auth(tokenAdmin, { type: 'bearer' })
                       .end((err, res) => {
                             res.should.have.status(200);
+			    console.log(res.body);
 			    res.body.should.have.property('node');
                             done();
                         });
