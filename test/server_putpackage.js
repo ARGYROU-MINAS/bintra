@@ -68,6 +68,24 @@ describe('PFilter put server tests', function() {
 					done();
 				});
 		});
+		it('Put defect hash package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: pFamily,
+                                        packageHash: pHash + 'Z'
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        reply.should.have.property('count', 3);
+                                        done();
+                                });
+                });
 	});
 
 	after(async () => {
