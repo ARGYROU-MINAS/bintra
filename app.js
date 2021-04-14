@@ -78,6 +78,7 @@ var swaggerDocJson = YAML.load(path.join(__dirname,'api/swagger.yaml'));
 
 var uioptions = {
   customCss: '.swagger-ui .topbar { display: none }',
+  customJs: '/matomo.js',
   customSiteTitle: "Bintra directory API - binarytransparency",
   customfavIcon: "/favicon.ico"
 };
