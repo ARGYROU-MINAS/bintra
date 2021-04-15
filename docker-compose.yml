@@ -9,9 +9,9 @@ services:
     cap_drop:
       - ALL
     cap_add:
-      - cap_dac_override # needed
-      - cap_setgid # needed
-      - cap_setuid # needed
+      - cap_dac_override
+      - cap_setgid
+      - cap_setuid
     env_file: .env.docker
     environment:
       - MONGO_INITDB_DATABASE=bintra
@@ -32,6 +32,13 @@ services:
     image: nodejs
     container_name: 'bintra-nodejs'
     restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - cap_fowner
+      - cap_dac_override
+      - cap_setgid
+      - cap_setuid
     depends_on:
       - database
     env_file: .env.docker
