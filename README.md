@@ -35,6 +35,13 @@ Add new property to existing data, like *family* attribute:
     use bintra
     db.packagemodels.updateMany({}, {$set: {"family": "debian"}})
 
+## docker logs
+
+Looking into a running service log:
+
+    docker logs bintra-nodejs
+    docker logs bintra-mongo
+
 ## backup mongoDB
 
     docker-compose exec -T database mongodump --gzip --archive|cat >dump_$(date '+%d-%m-%Y_%H-%M-%S').gz
