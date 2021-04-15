@@ -6,6 +6,12 @@ services:
     image: mongo:latest
     container_name: 'bintra-mongo'
     restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - cap_dac_override # needed
+      - cap_setgid # needed
+      - cap_setuid # needed
     env_file: .env.docker
     environment:
       - MONGO_INITDB_DATABASE=bintra
