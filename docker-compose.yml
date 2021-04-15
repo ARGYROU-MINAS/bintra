@@ -34,11 +34,6 @@ services:
     restart: unless-stopped
     cap_drop:
       - ALL
-    cap_add:
-      - cap_fowner
-      - cap_dac_override
-      - cap_setgid
-      - cap_setuid
     depends_on:
       - database
     env_file: .env.docker
