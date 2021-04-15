@@ -71,6 +71,12 @@ app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.pa
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(serveStatic(path.join(__dirname, 'static')));
 
+// Add some mongoose data to request for later use
+app.use(function(req, res, next) {
+  req.mcdadmin = mongoose.connection;
+  next();
+});
+
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
