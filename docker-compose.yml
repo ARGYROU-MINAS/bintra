@@ -6,15 +6,24 @@ services:
     image: mongo:latest
     container_name: 'bintra-mongo'
     restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - cap_dac_override
+      - cap_setgid
+      - cap_setuid
     env_file: .env.docker
     environment:
-      - MONGO_INITDB_DATABASE=$MONGO_DB
-      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGO_INITDB_DATABASE=bintra
     volumes:
       - dbdata:/data/db
     networks:
       - bintra-network
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/bintra --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
 
   nodejs:
     build:
@@ -23,24 +32,24 @@ services:
     image: nodejs
     container_name: 'bintra-nodejs'
     restart: unless-stopped
+    cap_drop:
+      - ALL
     depends_on:
       - database
     env_file: .env.docker
     environment:
       - NODE_ENV=docker
-      - MONGO_USERNAME=$MONGO_USERNAME
-      - MONGO_PASSWORD=$MONGO_PASSWORD
       - MONGO_HOSTNAME=database
-      - MONGO_PORT=$MONGO_PORT
-      - MONGO_DB=$MONGO_DB
     ports:
       - "8087:8080"
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
     networks:
       - bintra-network
     command: npm start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/docs/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 networks:
   bintra-network:
@@ -48,4 +57,3 @@ networks:
 
 volumes:
   dbdata:
-  node_modules:

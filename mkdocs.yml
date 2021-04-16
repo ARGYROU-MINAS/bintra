@@ -1,4 +1,5 @@
 ---
+docs_dir: documentation
 site_name: BinTra
 site_dir: pub_mkdocs
 site_description: Binary Transparency Directory

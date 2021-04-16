@@ -1,27 +1,21 @@
 ---
-swagger: '2.0'
+
+openapi: 3.0.1
+
 info:
-  description: bintra API
-  version: 1.0.0
   title: Binary Transparency  API
-  # put the contact info for your development or API team
+  description: bintra API
   contact:
     email: kai@kretschmann.consulting
-
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+  version: 1.0.4
 
-securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
-    description: |
-     For accessing the API a valid JWT token must be passed in all the queries
-     in the 'Authorization' header.
+servers:
+  - url: https://api.bintra.directory/v1
+  - url: http://192.168.0.249:8080/v1
 
-# tags are used for organizing operations
 tags:
   - name: default
     description: Operations for all with or without token
@@ -29,472 +23,1155 @@ tags:
     description: Operations available to regular users and admins
   - name: admin
     description: Operations available only to admin users
+  - name: api
+    description: Operations for internal API use
 
 paths:
   /login:
-    x-swagger-router-controller: "Admins"
     post:
-      operationId: loginPost
       tags:
         - default
-      description: "Login for a particular role from db"
+      description: Login for a particular role from db
+      operationId: loginPost
+      x-swagger-router-controller: Admins
+      requestBody:
+        description: Login data as html form
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        200:
+          description: Success
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Token'
+        403:
+          description: Access Denied
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+  /package:
+    get:
+      tags:
+        - default
+      summary: get data for a package
+      description: |
+        Return no match at all, a single match with a high count for good
+        matches, or multiple matches with only one good and one or more
+        faked entries.
+      operationId: listPackage
+      x-swagger-router-controller: Users
       parameters:
-        - name: authentication
-          in: body
+        - name: packageName
+          in: query
+          description: package name from extracted meta info
           required: true
           schema:
-            $ref: "#/definitions/Authentication"
+            type: string
+        - name: packageVersion
+          in: query
+          description: package version from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageArch
+          in: query
+          description: package architecture from extracted meta info
+          required: true
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package Family, like debian, etc.
+          required: true
+          schema:
+            type: string
       responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Token"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /package:
+        200:
+          description: single good result we hope
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageVariants'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
     put:
-      x-swagger-router-controller: "Users"
       tags:
         - user
       summary: validates package info
-      operationId: validatePackage
       description: |
         Add new package entry or increment an existing one.
         Returns all existing name-version variants with their hash and counts
         values for further decision of the installer tool.
         A valid token is required for this action.
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - admin
-        - user
-      produces:
-        - application/json
+      operationId: validatePackage
+      x-swagger-router-controller: Users
       parameters:
-        - in: query
-          name: packageName
+        - name: packageName
+          in: query
           description: package name from extracted meta info
           required: true
-          type: string
-        - in: query
-          name: packageVersion
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
           description: package version from extracted meta info
           required: true
-          type: string
-        - in: query
-          name: packageArch
+          schema:
+            type: string
+        - name: packageArch
+          in: query
           description: package architecture from extracted meta info
           required: true
-          type: string
-        - in: query
-          name: packageHash
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family, like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+              - debian
+        - name: packageHash
+          in: query
           description: SHA256 hash of downloaded file
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         200:
           description: |
             Single array entry with high count in best case,
             otherwise multiple entries with one high count and one or more
             faked ones to beware of.
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/PackageItem'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
-    get:
-      x-swagger-router-controller: "Users"
-      tags:
-        - default
-      summary: get data for a package
-      operationId: listPackage
-      description: |
-        Return no match at all, a single match with a high count for good
-        matches, or multiple matches with only one good and one or more
-        faked entries.
-      produces:
-        - application/json
-      parameters:
-        - in: query
-          name: packageName
-          description: package name from extracted meta info
-          required: true
-          type: string
-        - in: query
-          name: packageVersion
-          description: package version from extracted meta info
-          required: true
-          type: string
-        - in: query
-          name: packageArch
-          description: package architecture from extracted meta info
-          required: true
-          type: string
-      responses:
-        200:
-          description: single good result we hope
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/PackageVariants'
-        400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+        - user
+
     delete:
-      x-swagger-router-controller: "Admins"
       tags:
         - admin
       summary: delete one package
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - admin
-        - user
-      operationId: deletePackage
       description: |
         Delete one entry
+      operationId: deletePackage
+      x-swagger-router-controller: Admins
       parameters:
-        - in: query
-          name: packageName
+        - name: packageName
+          in: query
           description: package name from extracted meta info
           required: true
-          type: string
-        - in: query
-          name: packageVersion
+          schema:
+            type: string
+        - name: packageVersion
+          in: query
           description: package version from extracted meta info
           required: true
-          type: string
-        - in: query
-          name: packageHash
+          schema:
+            type: string
+        - name: packageHash
+          in: query
           description: SHA256 hash of downloaded file
           required: true
-          type: string
-        - in: query
-          name: packageArch
+          schema:
+            type: string
+        - name: packageArch
+          in: query
           description: package architecture from extracted meta info
           required: true
-          type: string
+          schema:
+            type: string
+        - name: packageFamily
+          in: query
+          description: package family like debian, etc.
+          required: true
+          schema:
+            type: string
+            enum:
+              - debian
       responses:
         200:
           description: positive result we hope
+          content: {}
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
+          description: Access Denied
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
   /package/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
     get:
-      x-swagger-router-controller: "Users"
       tags:
         - default
       summary: get data for a package
-      operationId: listPackageSingle
       description: |
         Return single package data
-      parameters:
-        - in: path
-          name: id
-          description: Package ID (24 hex chars)
-          required: true
-          type: string
-          minLength: 24
-          maxLength: 24
-          pattern: '^[a-fA-F0-9]{24}$'
-      produces:
-        - application/json
+      operationId: listPackageSingle
+      x-swagger-router-controller: Users
       responses:
         200:
           description: single good result we hope
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/PackageVariants'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/PackageVariants'
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+
     delete:
-      x-swagger-router-controller: "Admins"
       tags:
         - admin
       summary: delete one package by ID
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - admin
-        - user
-      operationId: deletePackageById
       description: |
         Delete one entry
-      parameters:
-        - in: path
-          name: id
-          description: Package ID (24 hex chars)
-          required: true
-          type: string
-          minLength: 24
-          maxLength: 24
-          pattern: '^[a-fA-F0-9]{24}$'
+      operationId: deletePackageById
+      x-swagger-router-controller: Admins
       responses:
         200:
           description: positive result we hope
+          content: {}
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
+          description: Access Denied
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
   /count:
     get:
-      x-swagger-router-controller: "Users"
       tags:
-        - default
+        - api
       summary: return number of all entries
-      operationId: countPackage
       description: |
         By passing in the appropriate options, you can validate a
         package before installing it
-      produces:
-        - application/json
+      operationId: countPackage
+      x-swagger-router-controller: Users
       responses:
         200:
           description: positive result we hope
-          schema:
-            $ref: '#/definitions/PackageCount'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageCount'
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+
+
+  /domains:
+    get:
+      tags:
+        - admin
+      summary: return all black listed domains
+      description: |
+        Get all black listed domains for not beeing registered
+      operationId: listDomains
+      x-swagger-router-controller: Admins
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+    put:
+      tags:
+        - admin
+      summary: add black listed domains
+      description: |
+        Add a black listed domain for not beeing registered
+      operationId: addDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: query
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+    delete:
+      tags:
+        - admin
+      summary: delete black listed domains
+      description: |
+        Delete a black listed domain for not beeing registered
+      operationId: deleteDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: query
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DomainItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+  /domain/{name}:
+    get:
+      tags:
+        - admin
+      summary: return if black listed domain exists
+      description: |
+        Get black listed domain for not beeing registered or empty
+      operationId: checkDomain
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: path
+          description: domain name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainItem'
+        404:
+          $ref: '#/components/responses/NotFound'
+        400:
+          $ref: '#/components/responses/BadRequest'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
   /packagesfull:
     get:
-      x-swagger-router-controller: "Users"
       tags:
         - admin
       summary: return all entries with all fields
-      operationId: listPackagesFull
       description: |
         Get all package data
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - admin
-      produces:
-        - application/json
+      operationId: listPackagesFull
+      x-swagger-router-controller: Users
       parameters:
-        - in: query
-          name: count
+        - name: count
+          in: query
           description: Limit number of entries
-          required: false
-          type: number
+          schema:
+            type: integer
+            minimum: 1
       responses:
         200:
           description: positive result we hope
-          schema:
-            $ref: '#/definitions/PackageItem'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
+  /tableview:
+    get:
+      tags:
+        - default
+      summary: return paginated results for viewer UI
+      description: |
+        Get all package data in a paged way
+      operationId: listPagePackages
+      x-swagger-router-controller: Users
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Entries per page
+          required: true
+          schema:
+            type: number
+        - name: sorters
+          in: query
+          description: Sort by which property
+          required: false
+          schema:
+            type: string
+            enum:
+              - tsupdated
+              - tscreated
+              - count
+              - name
+            default: tsupdated
+        - name: filter
+          in: query
+          description: filter for
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagedata'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+
   /packages:
     get:
-      x-swagger-router-controller: "Users"
       tags:
         - default
       summary: return all entries
-      operationId: listPackages
       description: |
         Get all package data
-      produces:
-        - application/json
+      operationId: listPackages
+      x-swagger-router-controller: Users
       parameters:
-        - in: query
-          name: count
+        - name: skip
+          in: query
+          description: Skip entries before listing
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: count
+          in: query
           description: Limit number of entries
           required: false
-          type: number
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: sort
+          in: query
+          description: Sort by which property
+          required: false
+          schema:
+            type: string
+            enum:
+              - tsupdated
+              - tscreated
+              - count
+              - name
+            default: tsupdated
+        - name: direction
+          in: query
+          description: Sort up or down
+          required: false
+          schema:
+            type: string
+            enum:
+              - up
+              - down
+            default: down
       responses:
         200:
           description: positive result we hope
-          schema:
-            $ref: '#/definitions/PackageItem'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageItem'
         400:
-          description: bad input parameter(s)
-    delete:
-      x-swagger-router-controller: "Admins"
+          $ref: '#/components/responses/BadRequest'
+
+
+  /test:
+    get:
       tags:
-        - admin
-      summary: delete all packages
-      operationId: cleanupPackages
+        - default
+      summary: check authentication
+      description: |
+        Some dummy function everyone can access
+      operationId: testDefault
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+    delete:
+      tags:
+        - api
+      summary: check authentication
+      description: |
+        Some dummy function only admins can access
+      operationId: testAdmin
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
       security:
-        - Bearer: []
+        - bearerauth: []
       x-security-scopes:
         - admin
-        - user
-      description: |
-        By passing in the appropriate options, you can validate a
-        package before installing it
-      responses:
-        200:
-          description: positive result we hope
-        400:
-          description: bad input parameter(s)
-        403:
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /users:
+
+
+  /user:
     get:
-      x-swagger-router-controller: "Admins"
       tags:
         - admin
       summary: return all entries
-      operationId: listUsers
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - admin
       description: |
         Get all users data
-      produces:
-        - application/json
+      operationId: listUsers
+      x-swagger-router-controller: Admins
       responses:
         200:
           description: positive result we hope
-          schema:
-            $ref: '#/definitions/LoginItem'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
         400:
-          description: bad input parameter(s)
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+    post:
+      tags:
+        - api
+      summary: create a user
+      description: |
+        Create a new user and prepare opt in steps
+      operationId: createUser
+      x-swagger-router-controller: Admins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+        required: true
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+        - api
+      x-codegen-request-body-name: user
+
+
+  /user/{id}:
+    get:
+      tags:
+        - admin
+      summary: return the entries
+      description: |
+        Get all user data
+      operationId: listUser
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+    put:
+      tags:
+        - api
+      summary: update user status
+      description: |
+        Update status of a single user for optin etc
+      operationId: putUserStatus
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
+        - name: status
+          in: query
+          description: New status enum value
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+        - api
+
+    delete:
+      tags:
+        - admin
+      summary: delete the user
+      description: |
+        Deletes the user entry
+      operationId: deleteUser
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+    patch:
+      tags:
+        - admin
+      summary: update fields
+      description: |
+        Update fields for a user
+      operationId: patchUser
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: id
+          in: path
+          description: Package ID (24 hex chars)
+          required: true
+          schema:
+            maxLength: 24
+            minLength: 24
+            pattern: ^[a-fA-F0-9]{24}$
+            type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PatchRequest'
+        required: false
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+      x-codegen-request-body-name: jpatch
+
+
+  /search:
+    post:
+      tags:
+        - default
+      summary: search entries by any combination
+      description: Search package data by one or more attributes
+      operationId: searchPackages
+      x-swagger-router-controller: Admins
+      x-codegen-request-body-name: jsearch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+
+  /feed.{type}:
+    get:
+      tags:
+        - default
+      summary: Return feed of latest entries
+      description: |
+        Get all the latest entries in some RSS defined format type
+      operationId: bintraFeed
+      x-swagger-router-controller: Feeds
+      parameters:
+        - name: type
+          in: path
+          description: Type of feed
+          required: true
+          schema:
+            type: string
+            enum:
+              - rss
+              - atom
+              - json
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/rss+xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+
   /token:
     get:
-      x-swagger-router-controller: "Users"
       tags:
         - user
       summary: Validate token and return information
-      operationId: checkToken
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - user
       description: |
         Get meta data from valid JWT token like expiration date
-      produces:
-        - application/json
+      operationId: checkToken
+      x-swagger-router-controller: Users
       responses:
         200:
           description: positive result we hope
-          schema:
-            $ref: '#/definitions/TokenItem'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenItem'
         400:
-          description: bad input parameter(s)
-definitions:
-  Authentication:
-    type: object
-    properties:
-      username:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+        - user
+
+
+  /versions:
+    get:
+      tags:
+        - admin
+      summary: Get all version strings
+      description: |
+        Get version data for runtime modules
+      operationId: getVersions
+      x-swagger-router-controller: Admins
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
+components:
+  parameters:
+    idParam:
+      in: path
+      name: id
+      required: true
+      description: Package ID (24 hex chars)
+      schema:
+        maxLength: 24
+        minLength: 24
+        pattern: ^[a-fA-F0-9]{24}$
         type: string
-        example: "username"
-      password:
-        type: string
-        example: "password"
-  TokenItem:
-    type: object
-    properties:
-      name:
-        type: string
-      tsfrom:
-        type: string
-        format: date-time
-        example: 2016-08-29T09:12:33.001Z
-      tsto:
-        type: string
-        format: date-time
-        example: 2016-08-29T09:12:33.001Z
-  LoginItem:
-    type: object
-    required:
-      - name
-      - email
-      - hash
-      - tscreated
-    properties:
-      name:
-        type: string
-      email:
-        type: string
-      hash:
-        type: string
-      tscreated:
-        type: string
-        format: date-time
-        example: 2016-08-29T09:12:33.001Z
-  PackageItem:
-    type: object
-    required:
-      - count
-      - hash
-      - name
-      - version
-      - arch
-      - tscreated
-    properties:
-      hash:
-        type: string
-      name:
-        type: string
-      version:
-        type: string
-      arch:
-        type: string
-      count:
-        type: integer
-        example: 123
-      tscreated:
-        type: string
-        format: date-time
-        example: 2016-08-29T09:12:33.001Z
-  PackageVariants:
-    type: object
-    required:
-      - id
-      - packageName
-      - packageVersion
-      - packageHash
-      - packageArch
-      - count
-      - creationDate
-    properties:
-      id:
-        type: string
-        format: uuid
-        example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      packageName:
-        type: string
-      packageVersion:
-        type: string
-      packageArch:
-        type: string
-      packageHash:
-        type: string
-      count:
-        type: integer
-        example: 123
-      creationDate:
-        type: string
-        format: date-time
-        example: 2016-08-29T09:12:33.001Z
-  PackageCount:
-    type: object
-    required:
-      - count
-    properties:
-      count:
-        type: integer
-        example: 123
-  Token:
-    type: object
-    properties:
-      token:
-        type: string
-  Error:
-    type: object
-    properties:
-      message:
-        type: string
-basePath: /v1
+
+  schemas:
+    SearchRequest:
+      type: object
+      properties:
+        packageName:
+          type: string
+        packageVersion:
+          type: string
+        packageArch:
+          type: string
+        packageFamily:
+          type: string
+        packageHash:
+          type: string
+        count:
+          type: integer
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        tsupdated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+
+    PatchRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/PatchEntry'
+    PatchEntry:
+      required:
+        - op
+        - path
+      type: object
+      properties:
+        op:
+          type: string
+          description: The operation
+          enum:
+            - add
+            - remove
+            - replace
+            - move
+            - copy
+            - test
+        path:
+          type: string
+          description: A JSON-Pointer
+        value:
+          type: string
+          description: The value to be used witzhin that operation
+        from:
+          type: string
+          description: A string containing a JSON Pointer value
+      description: A JSONPatch document as RFC 6902
+    Registration:
+      required:
+        - email
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        password:
+          type: string
+          format: password
+          example: password
+        email:
+          type: string
+          format: email
+          example: me@example.com
+    TokenItem:
+      type: object
+      properties:
+        name:
+          type: string
+        tsfrom:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        tsto:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+
+    Pagedata:
+      type: object
+      properties:
+        last_page:
+          type: number
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageItem'
+
+    VersionItem:
+      type: object
+
+    UserList:
+      type: array
+      items:
+        $ref: '#/components/schemas/LoginItem'
+    LoginItem:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    DomainItem:
+      type: object
+      properties:
+        name:
+          type: string
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    PackageItem:
+      required:
+        - arch
+        - count
+        - family
+        - hash
+        - name
+        - tscreated
+        - version
+      type: object
+      properties:
+        hash:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        arch:
+          type: string
+        family:
+          type: string
+        count:
+          type: integer
+          example: 123
+        tscreated:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    PackageVariants:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 24
+          minLength: 24
+          pattern: ^[a-fA-F0-9]{24}$
+          example: 606fdd86515dd2001fc2a17e
+        packageName:
+          type: string
+        packageVersion:
+          type: string
+        packageArch:
+          type: string
+        packageFamily:
+          type: string
+        packageHash:
+          type: string
+        count:
+          type: integer
+          example: 123
+        creationDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    PackageCount:
+      required:
+        - count
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad Request, some parameter must be wrong
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Bad Request, nothing found for this data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    bearerauth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

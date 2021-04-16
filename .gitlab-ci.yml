@@ -6,7 +6,7 @@ stages:
 
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
-image: node:12
+image: node:14
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ee/ci/yaml/README.html#cache
@@ -41,14 +41,14 @@ jsdocs:
 unittest:
   stage: test
   image: $CI_REGISTRY/kai/bintra:fat
+  variables:
+    NODE_ENV: test
   before_script:
   - /etc/init.d/mongodb start
   - npm install
   - ./setup_env_test.sh
   script:
-  - npm test
-  - npm run coverage
-  - npm run sona
+  - npm run combined
   coverage: '/Statements\s+:\s+(\d+\.\d+)%/'
   after_script:
     - ls -l
@@ -56,7 +56,7 @@ unittest:
     paths:
     - mochawesome-report/
     - coverage/
-    - test-results.xml 
+    - xunit.xml 
 
 sonarqube:
   stage: analyze
@@ -85,6 +85,9 @@ pages:
   artifacts:
     paths:
     - public
+  only:
+    refs:
+      - master
 
 package:
   stage: deploy

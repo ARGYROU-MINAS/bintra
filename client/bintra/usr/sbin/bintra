@@ -6,6 +6,8 @@ exec 1>>/var/log/bintra.log 2>&1
 
 echo "Got called with optional args: '$@'"
 
+bintraVersion=1.0.5
+
 if [ -f "/etc/bintra.conf" ]; then
   . /etc/bintra.conf
   echo "Config file read"
@@ -17,7 +19,7 @@ fi
 while IFS='$\n' read -r line; do
   echo "input '$line' received"
 
-  tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
+  tmp_dir=$(mktemp -d -t bintra-XXXXXXXXXX)
   echo "Work in $tmp_dir"
   cd $tmp_dir
 
@@ -27,13 +29,13 @@ while IFS='$\n' read -r line; do
   cp $line package.deb
   ar x package.deb
   ls -l
-  tar xf control.tar.xz
+  tar xf control.tar.?z
 
-  packageName=$(cat control | grep "Package" | cut -d":" -f2- | xargs)
-  packageVersion=$(cat control | grep "Version" | cut -d":" -f2- | xargs)
-  packageArch=$(cat control | grep "Architecture" | cut -d":" -f2- | xargs)
+  packageName=$(cat control | grep "^Package:" | cut -d":" -f2- | xargs)
+  packageVersion=$(cat control | grep "^Version:" | cut -d":" -f2- | xargs)
+  packageArch=$(cat control | grep "^Architecture:" | cut -d":" -f2- | xargs)
 
-  APIREPLY=$(curl -X PUT "https://api.bintra.directory/v1/package?packageName=$packageName&packageVersion=$packageVersion&packageArch=$packageArch&packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --silent --show-error --user-agent "bintra/1.0")
+  APIREPLY=$(curl -X PUT -G "https://api.bintra.directory/v1/package" --data-urlencode "packageName=$packageName" --data-urlencode "packageVersion=$packageVersion" --data-urlencode "packageArch=$packageArch" --data-urlencode "packageFamily=debian" --data-urlencode "packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --silent --show-error --user-agent "bintra/$bintraVersion")
   echo "APIreply: $APIREPLY"
   if [ "$APIREPLY" = "Error: Access Denied" ];
   then
@@ -50,13 +52,16 @@ while IFS='$\n' read -r line; do
     if (( $HASHMATCHCOUNT <= $BADCOUNT ));
     then
       echo "We abort here"
+      logger -p local0.warn "Package $packageName might be dangerous"
       exit -1
     else
       echo "Seems still OK to me"
+      logger -p local0.info "Package $packageName still OK"
     fi;
   else
     HASHMATCHCOUNT=$(echo $APIREPLY|jq '.[].count')
     echo "All is fine, we had $HASHMATCHCOUNT uses of that hash"
+    logger -p local0.info "Package $packageName OK"
   fi;
 
   cd /tmp

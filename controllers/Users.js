@@ -10,7 +10,8 @@
 var dateFormat = require("dateformat");
 var utils = require('../utils/writer.js');
 var eventEmitter = require('../utils/eventer').em;
-var Service = require('../service/PackagesService');
+var PackagesService = require('../service/PackagesService');
+var UsersService = require('../service/UsersService');
 
 
 /**
@@ -19,7 +20,9 @@ var Service = require('../service/PackagesService');
  * @public
  */
 module.exports.checkToken = function checkToken (req, res, next) {
+  console.log("In check");
   eventEmitter.emit('apihit', req);
+  console.log(req.auth);
 
   var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
   var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
@@ -34,16 +37,12 @@ module.exports.checkToken = function checkToken (req, res, next) {
  * Validate package, store information and return alternatives.
  * @public
  */
-module.exports.validatePackage = function validatePackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageArch = req.swagger.params['packageArch'].value;
-  var packageHash = req.swagger.params['packageHash'].value;
+module.exports.validatePackage = function validatePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
   var username = req.auth.sub;
 
   eventEmitter.emit('apihit', req);
 
-  Service.validatePackage(packageName, packageVersion, packageArch, packageHash, username)
+  PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -57,14 +56,11 @@ module.exports.validatePackage = function validatePackage (req, res, next) {
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackage = function listPackage (req, res, next) {
-  var packageName = req.swagger.params['packageName'].value;
-  var packageVersion = req.swagger.params['packageVersion'].value;
-  var packageArch = req.swagger.params['packageArch'].value;
+module.exports.listPackage = function listPackage (req, res, next, packageName, packageVersion, packageArch, packageFamily) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackage(packageName, packageVersion, packageArch)
+  PackagesService.listPackage(packageName, packageVersion, packageArch, packageFamily)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -78,12 +74,34 @@ module.exports.listPackage = function listPackage (req, res, next) {
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackageSingle = function listPackage (req, res, next) {
-  var packageId = req.swagger.params['id'].value;
+module.exports.listPackageSingle = function listPackage (req, res, next, id) {
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackageSingle(packageId)
+  PackagesService.listPackageSingle(id)
+    .then(function (payload) {
+      if(null == payload) {
+        utils.writeJson(res, {message: 'Not found'}, 404);
+      } else {
+        utils.writeJson(res, payload, 200);
+      }
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.listPackages = function listPackage (req, res, next, skip, count, sort, direction) {
+  console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction);
+
+  eventEmitter.emit('apihit', req);
+
+  PackagesService.listPackages(skip, count, sort, direction)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -97,15 +115,12 @@ module.exports.listPackageSingle = function listPackage (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackages = function listPackage (req, res, next) {
-  var count = req.swagger.params['count'].value;
-  if(!count) {
-    count = 100;
-  }
+module.exports.listPagePackages = function listPagePackage (req, res, next, page, size, sorters, filter) {
+  console.log("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackages(count)
+  PackagesService.listPagePackages(page, size, sorters, filter)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -119,15 +134,14 @@ module.exports.listPackages = function listPackage (req, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackagesFull = function listPackage (req, res, next) {
-  var count = req.swagger.params['count'].value;
+module.exports.listPackagesFull = function listPackage (req, res, next, count) {
   if(!count) {
     count = 100;
   }
 
   eventEmitter.emit('apihit', req);
 
-  Service.listPackagesFull(count)
+  PackagesService.listPackagesFull(count)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
@@ -145,14 +159,40 @@ module.exports.countPackage = function countPackage (req, res, next) {
 
   eventEmitter.emit('apihit', req);
 
-  var a = req.headers['Authorize'];
-  console.log("Auth: " + a); 
-
-  Service.countPackage()
+  PackagesService.countPackage()
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
     .catch(function (payload) {
       utils.writeJson(res, payload, 400);
     });
+};
+
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testDefault = function testDefault (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called default"};
+  utils.writeJson(res, payload, 200);
+};
+
+/**
+ * @method
+ * Test function
+ * @public
+ */
+module.exports.testAdmin = function testAdmin (req, res, next) {
+
+  eventEmitter.emit('apihit', req);
+console.log(req.openapi.schema.security);
+
+  var payload = {message: "you called admin"};
+  utils.writeJson(res, payload, 200);
 };
