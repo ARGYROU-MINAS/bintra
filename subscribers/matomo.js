@@ -17,8 +17,14 @@ var baseUrl = 'https://api.bintra.directory';
  * @returns {string} IP number
  */
 function getRemoteAddr(req) {
+  // console.log(req.headers);
+  if(req.headers['x-forwarded-for']) {
+    var aIPs = req.headers['x-forwarded-for'].split(',');
+    var firstIP = aIPs[0];
+    console.debug(firstIP);
+    return firstIP;
+  }
   if(req.headers['x-real-ip']) return req.headers['x-real-ip'];
-  if(req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'];
 
   if (req.ip) return req.ip;
   if (req._remoteAddress) return req._remoteAddress;
