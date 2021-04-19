@@ -6,7 +6,7 @@ exec 1>>/var/log/bintra.log 2>&1
 
 echo "Got called with optional args: '$@'"
 
-bintraVersion=1.0.5
+bintraVersion=1.0.6
 
 if [ -f "/etc/bintra.conf" ]; then
   . /etc/bintra.conf
@@ -35,7 +35,7 @@ while IFS='$\n' read -r line; do
   packageVersion=$(cat control | grep "^Version:" | cut -d":" -f2- | xargs)
   packageArch=$(cat control | grep "^Architecture:" | cut -d":" -f2- | xargs)
 
-  APIREPLY=$(curl -X PUT -G "https://api.bintra.directory/v1/package" --data-urlencode "packageName=$packageName" --data-urlencode "packageVersion=$packageVersion" --data-urlencode "packageArch=$packageArch" --data-urlencode "packageFamily=debian" --data-urlencode "packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --silent --show-error --user-agent "bintra/$bintraVersion")
+  APIREPLY=$(curl -X PUT -G "https://api.binarytransparency.net/v1/package" --data-urlencode "packageName=$packageName" --data-urlencode "packageVersion=$packageVersion" --data-urlencode "packageArch=$packageArch" --data-urlencode "packageFamily=debian" --data-urlencode "packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --silent --show-error --user-agent "bintra/$bintraVersion")
   echo "APIreply: $APIREPLY"
   if [ "$APIREPLY" = "Error: Access Denied" ];
   then
