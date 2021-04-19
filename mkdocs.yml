@@ -17,4 +17,4 @@ nav:
   - Imprint: imprint.md
   - Architecture: architecture.md
   - 'Issue tracker': 'https://gitlab.kretschmann.software/kai/bintra/-/issues'
-  - 'Swagger API': 'https://api.bintra.directory/docs/'
+  - 'Swagger API': 'https://api.binarytransparency.net/docs/'

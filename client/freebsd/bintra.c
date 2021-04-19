@@ -16,7 +16,7 @@
 static const char PLUGIN_NAME[] = "bintra";
 static const char CFG_JWT[] = "JWT";
 static const char CFG_COUNT[] = "BADCOUNT";
-static const char URL[] = "https://api.bintra.directory/v1/package?";
+static const char URL[] = "https://api.binarytransparency.net/v1/package?";
 static const char ARG_name[] = "packageName";
 static const char ARG_version[] = "packageVersion";
 static const char ARG_arch[] = "packageArch";

@@ -20,9 +20,9 @@ function getInitialFeed() {
     updated: new Date(),
     generator: "Feed for bintra", // optional, default = 'Feed for Node.js'
     feedLinks: {
-      json: "https://api.bintra.directory/v1/feed.json",
-      rss: "https://api.bintra.directory/v1/feed.rss",
-      atom: "https://api.bintra.directory/v1/feed.atom"
+      json: "https://api.binarytransparency.net/v1/feed.json",
+      rss: "https://api.binarytransparency.net/v1/feed.rss",
+      atom: "https://api.binarytransparency.net/v1/feed.atom"
     },
     author: {
       name: "Kai KRETSCHMANN",
@@ -50,7 +50,7 @@ function feedRss (req, res, next) {
                 var myid = entry._id;
                 rssfeed.addItem({
 title: entry.name,
-id: "https://api.bintra.directory/v1/package/" + myid,
+id: "https://api.binarytransparency.net/v1/package/" + myid,
 link: "https://bintra.directory/details/?id=" + myid,
 description: entry.name,
 date: entry.tsupdated || new Date(),
@@ -75,7 +75,7 @@ function feedAtom(req, res, next) {
                 var myid = entry._id;
                 atomfeed.addItem({
 title: entry.name,
-link: "https://api.bintra.directory/v1/package/" + myid,
+link: "https://api.binarytransparency.net/v1/package/" + myid,
 description: entry.name,
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash,
 date: entry.tsupdated || new Date()
@@ -101,7 +101,7 @@ function feedJson(req, res, next) {
                 jsonfeed.addItem({
 title: entry.name,
 id: entry._id,
-link: "https://api.bintra.directory/v1/package/" + myid,
+link: "https://api.binarytransparency.net/v1/package/" + myid,
 description: entry.name,
 date: entry.tsupdated || new Date(),
 content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash

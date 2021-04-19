@@ -10,7 +10,7 @@ var M = new Masto({
   api_url: process.env.TOOTAPI
 })
 
-var baseUrl = 'https://api.bintra.directory';
+var baseUrl = 'https://api.binarytransparency.net';
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
   if(process.env.TOOTAUTH == "XXX") return;
