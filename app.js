@@ -112,6 +112,13 @@ var options = {
     }
 };
 
+// No "/v1" pattern, so it is wrong from here on
+app.use(/^(?!\/v1).+/, function(req, res) {
+  console.error('No API call');
+  res.status(404);
+  res.send('No API call');
+});
+
 // Filter all parameters known
 app.use(pfilter);
 
@@ -119,6 +126,7 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
 
   // Error handlers
   app.use((err, req, res, next) => {
+    console.error("In error handler");
     if (err.statusCode === 401) {
        // do something you like
 
