@@ -226,7 +226,7 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
  * List all packages and variations.
  * @public
  */
-module.exports.patchUser = function patchUser (req, res, next, id, jpatch) {
+module.exports.patchUser = function patchUser (req, res, next, jpatch, id) {
   eventEmitter.emit('apihit', req);
 
   UsersService.patchUser(id, jpatch)
