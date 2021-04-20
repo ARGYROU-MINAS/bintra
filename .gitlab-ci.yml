@@ -101,11 +101,14 @@ package:
 publish:
   stage: deploy
   image: ubuntu:latest
+  variables:
+    GIT_STRATEGY: none
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client )'
     - mkdir -p ~/.ssh
+    - chmod 0700 ~/.ssh
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_CI_PRIV")
+    - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
