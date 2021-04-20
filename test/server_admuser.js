@@ -60,6 +60,16 @@ describe('PFilter put server tests', function() {
 					done();
 				});
 		});
+		it('List user', (done) => {
+                        request(server)
+                                .get('/v1/user/' + idUser)
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body;
+                                        done();
+                                });
+                });
 		it('set user status', (done) => {
                         request(server)
                                 .put('/v1/user/' + idUser)
@@ -74,7 +84,6 @@ describe('PFilter put server tests', function() {
                                 });
                 });
 		it('patch user', (done) => {
-			console.log("IDuser=" + idUser + "!");
                         request(server)
                                 .patch('/v1/user/' + idUser)
                                 .send([{
@@ -82,6 +91,16 @@ describe('PFilter put server tests', function() {
 					path: "/email",
 					value: "new@example.com"
                                 }])
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body;
+                                        done();
+                                });
+                });
+		it('delete user', (done) => {
+                        request(server)
+                                .delete('/v1/user/' + idUser)
                                 .auth(tokenUser, { type: 'bearer' })
                                 .end((err, res) => {
                                         res.should.have.status(200);
