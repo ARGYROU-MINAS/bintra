@@ -100,12 +100,12 @@ package:
 
 publish:
   stage: deploy
-  image: alpine
+  image: ubuntu:latest
   before_script:
-    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - 'which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client )'
+    - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_CI_PRIV")
-    - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
