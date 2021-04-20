@@ -104,6 +104,7 @@ publish:
   variables:
     GIT_STRATEGY: none
   cache: {}
+  dependencies: []
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client )'
     - mkdir -p ~/.ssh
