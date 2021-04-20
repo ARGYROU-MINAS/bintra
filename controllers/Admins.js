@@ -64,6 +64,24 @@ module.exports.listUsers = function listUsers (req, res, next) {
 
 /**
  * @method
+ * Get user data of named user.
+ * @public
+ */
+module.exports.getUser = function getUser (req, res, next, name) {
+
+  eventEmitter.emit('apihit', req);
+
+  UsersService.getUser(name)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
+};
+
+/**
+ * @method
  * List all packages and variations.
  * @public
  */

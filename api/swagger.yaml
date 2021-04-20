@@ -610,6 +610,39 @@ paths:
         - admin
 
 
+  /username/{name}:
+    get:
+      tags:
+        - admin
+      summary: return entry of one user
+      description: |
+        Get all users data
+      operationId: getUser
+      x-swagger-router-controller: Admins
+      parameters:
+        - name: name
+          in: path
+          description: User name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: positive result we hope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
+
   /user:
     get:
       tags:

@@ -42,6 +42,10 @@ describe('PFilter put server tests', function() {
                 await UsersService.createUser(oUserDefault);
                 await LoginModel.updateMany({name: 'max'}, { $set: {role: 'admin', status: 'active'} });
 
+		var oUserDummy = {username: 'bob', email: 'trash@example.com', password: 'abc'};
+		await UsersService.createUser(oUserDummy);
+		await LoginModel.updateMany({name: 'bob'}, { $set: {role: 'user', status: 'active'} });
+
 		console.log("Login to get token");
 		tokenUser = uauth.issueToken('max', 'user');
 		console.log("Token: " + tokenUser);
@@ -56,10 +60,21 @@ describe('PFilter put server tests', function() {
 					res.should.have.status(200);
 					var reply = res.body;
 					reply.should.have.lengthOf.above(0);
-					idUser = reply[0]._id;
 					done();
 				});
 		});
+		it('Get bob users', (done) => {
+                        request(server)
+                                .get('/v1/username/bob')
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body;
+					idUser = reply._id;
+					console.log("Bob user id=" + idUser);
+                                        done();
+                                });
+                });
 		it('List user', (done) => {
                         request(server)
                                 .get('/v1/user/' + idUser)

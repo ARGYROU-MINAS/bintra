@@ -223,6 +223,34 @@ exports.listUser = function(idUser) {
   });
 }
 
+/**
+ * @method
+ * Show userdata of given name.
+ * @public
+ * @param {string} name - user name in database
+ *
+ * @returns object with user data
+ **/
+exports.getUser = function(name) {
+  return new Promise(function(resolve, reject) {
+    console.log("In get user service");
+
+    LoginModel.find({name: name}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
+          .then(item => {
+                  console.info("Was OK");
+                  if(item.length > 0) {
+                        resolve(item[0]);
+                } else {
+                        reject("not found");
+                }
+          })
+          .catch(err => {
+                  console.error("Not OK: ", err);
+                  reject("bahh");
+          });
+  });
+}
+
 
 /**
  * @method
