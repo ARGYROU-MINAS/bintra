@@ -56,10 +56,41 @@ describe('PFilter put server tests', function() {
 					res.should.have.status(200);
 					var reply = res.body;
 					reply.should.have.lengthOf.above(0);
+					idUser = reply[0]._id;
 					done();
 				});
 		});
+		it('set user status', (done) => {
+                        request(server)
+                                .put('/v1/user/' + idUser)
+				.query({
+					status: 'active'
+				})
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body;
+                                        done();
+                                });
+                });
+		it('patch user', (done) => {
+			console.log("IDuser=" + idUser + "!");
+                        request(server)
+                                .patch('/v1/user/' + idUser)
+                                .send([{
+					op: "replace",
+					path: "/email",
+					value: "new@example.com"
+                                }])
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body;
+                                        done();
+                                });
+                });
 	});
+
 	context('Check domain actions', () => {
                 it('List domains', (done) => {
                         request(server)
