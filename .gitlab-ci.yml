@@ -69,7 +69,7 @@ sonarqube:
     - git fetch --unshallow
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
-  allow_failure: true
+  allow_failure: false
 
 pages:
   stage: deploy
@@ -98,3 +98,16 @@ package:
     paths:
     - client/bintra.deb
 
+publish:
+  stage: deploy
+  image: alpine
+  before_script:
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_CI_PRIV")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+  only:
+    - master

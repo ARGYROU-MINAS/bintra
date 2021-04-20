@@ -294,7 +294,6 @@ module.exports.getVersions = function getVersions (req, res, next) {
       return res.status(500);
     }
 
-    var version = info.version.split('.').map(function(n) { return parseInt(n, 10); });
     jdata.mongodb = info.version;
     var payload = JSON.stringify(jdata);
     res.writeHead(200, { "Content-Type": "application/json" });
