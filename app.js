@@ -43,11 +43,15 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080'];
 var corsOptions = {
   origin: function(origin, callback) {
-      console.log("cors check on " + origin);
-      if(corsWhitelist.indexOf(origin) !== -1 || !origin) {
+      if(!(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.log("cors check on " + origin);
+        if(corsWhitelist.indexOf(origin) !== -1) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
       }
     }
 };
