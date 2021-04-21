@@ -236,7 +236,7 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
       utils.writeJson(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+      utils.writeText(res, payload.msg, payload.code);
     });
 };
 

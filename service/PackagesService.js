@@ -192,12 +192,12 @@ exports.listPackageSingle = function(packageId) {
                         var r = renameAttributes(item[0]);
                         resolve(r);
                   } else {
-                        resolve(null);
+                        reject({code:404, msg:"not found"});
                   }
           })
           .catch(err => {
                   console.error("Not OK: ", err);
-                  reject("bahh");
+                  reject({code:400, msg:"bahh"});
           });
   });
 }
@@ -355,11 +355,15 @@ exports.searchPackages = function(jsearch) {
           .limit(count)
           .then(item => {
                   console.info("Was OK");
-                  resolve(item);
+		  if(item.length == 0) {
+                          reject({code:404, msg:"not found"});
+		  } else {
+                          resolve(item);
+		  }
           })
           .catch(err => {
                   console.error("Not OK: ", err);
-                  reject("bahh");
+                  reject({code:400, msg:"bahh"});
           });
   });
 }

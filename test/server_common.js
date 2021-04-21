@@ -58,14 +58,14 @@ describe('server', () => {
         });
 
 	describe('[BINTRA-] Check search api', () => {
-                it('[STEP-] should get at least empty reply', (done) => {
+                it('[STEP-] should get empty reply 404', (done) => {
                   request(server)
                       .post('/v1/search')
                       .set('content-type', 'application/json')
 		      .expect('Content-Type', /json/)
                       .send({packageName: 'a*'})
                       .end((err, res) => {
-                            res.should.have.status(200);
+                            res.should.have.status(404);
                             done();
                         });
                 });

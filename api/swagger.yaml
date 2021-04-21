@@ -884,6 +884,8 @@ paths:
                 $ref: '#/components/schemas/PackageItem'
         400:
           $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
 
 
   /feed.{type}:
@@ -1212,9 +1214,9 @@ components:
     NotFound:
       description: Bad Request, nothing found for this data
       content:
-        application/json:
+        text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            type: string
 
   securitySchemes:
     bearerauth:
