@@ -378,16 +378,21 @@ exports.searchPackages = function(jsearch) {
  **/
 exports.deletePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash) {
   return new Promise(function(resolve, reject) {
-    console.log("In cleanup service");
+    console.log("In deletePackage service");
 
-    PackageModel.remove({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily, hash: packageHash})
+    var query = {name: packageName, version: packageVersion, arch: packageArch, family: packageFamily, hash: packageHash};
+    PackageModel.deleteOne(query)
           .then(item => {
-                  console.info("Was OK");
-                  resolve("OK");
+		  if(item.deletedCount != 1) {
+			console.error("not found, not deleted");
+			reject({code:404, msg:"not found"});
+		  } else {
+                        resolve("OK");
+		  }
           })
           .catch(err => {
                   console.error("Not OK: ", err);
-                  reject("bahh");
+                  reject({code:400, msg:"bahh"});
           });
   });
 }
@@ -403,14 +408,18 @@ exports.deletePackageById = function(packageId) {
   return new Promise(function(resolve, reject) {
     console.log("In cleanup service");
 
-    PackageModel.remove({_id: packageId})
+    PackageModel.deleteOne({_id: packageId})
           .then(item => {
-                  console.info("Was OK");
-                  resolve("OK");
+		  if(item.deletedCount != 1) {
+			  console.error("not found, not deleted");
+			  reject({code:404, msg:"not found"});
+		  } else {
+                          resolve("OK");
+		  }
           })
           .catch(err => {
                   console.error("Not OK: ", err);
-                  reject("bahh");
+                  reject({code:400, msg:"bahh"});
           });
   });
 }

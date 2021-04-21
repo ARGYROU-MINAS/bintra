@@ -263,7 +263,6 @@ module.exports.patchUser = function patchUser (req, res, next, jpatch, id) {
  * @public
  */
 module.exports.deletePackage = function deletePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
-
   eventEmitter.emit('apihit', req);
 
   PackagesService.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
@@ -271,7 +270,7 @@ module.exports.deletePackage = function deletePackage (req, res, next, packageNa
       utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeText(res, payload, 400);
+      utils.writeText(res, payload.msg, payload.code);
     });
 };
 
@@ -289,7 +288,7 @@ module.exports.deletePackageById = function deletePackageById (req, res, next, i
       utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeText(res, payload, 400);
+      utils.writeText(res, payload.msg, payload.code);
     });
 };
 

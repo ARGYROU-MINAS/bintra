@@ -69,6 +69,22 @@ describe('PFilter put server tests', function() {
 					done();
 				});
 		});
+		it('remove one wrong named package', (done) => {
+                        request(server)
+                                .delete('/v1/package')
+                                .query({
+                                        packageName: 'sillyname',
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: pFamily,
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(404);
+                                        done();
+                                });
+                });
 		it('remove one named package', (done) => {
                         request(server)
                                 .delete('/v1/package')
@@ -85,12 +101,12 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
-		it('remove one ID package', (done) => {
+		it('remove one ID package which is gone already', (done) => {
                         request(server)
                                 .delete('/v1/package/' + idPackage)
                                 .auth(tokenUser, { type: 'bearer' })
                                 .end((err, res) => {
-                                        res.should.have.status(200);
+                                        res.should.have.status(404);
                                         done();
                                 });
                 });
