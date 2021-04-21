@@ -186,8 +186,19 @@ describe('PFilter put server tests', function() {
                                 })
                                 .auth(tokenUser, { type: 'bearer' })
                                 .end((err, res) => {
-					console.log(res);
                                         res.should.have.status(200);
+                                        done();
+                                });
+                });
+		it('Delete non existing domain', (done) => {
+                        request(server)
+                                .delete('/v1/domains')
+                                .query({
+                                        name: 'sillyname'
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(404);
                                         done();
                                 });
                 });
