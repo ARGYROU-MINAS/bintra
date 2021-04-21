@@ -21,6 +21,7 @@ var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
 const toobusy = require('toobusy-js');
+const hpp = require('hpp');
 const express = require("express");
 const cors = require("cors");
 
@@ -59,6 +60,8 @@ var corsOptions = {
 };
 
 var app = express();
+
+app.use(hpp());
 
 app.use(cors(corsOptions));
 
@@ -148,12 +151,13 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
 var serverPort = process.env.BIND_PORT;
 var serverHost = process.env.BIND_HOST;
 console.log("Bind to %s : %d", serverHost, serverPort);
-http.createServer(app).listen(serverPort, serverHost, function () {
+var server = http.createServer(app).listen(serverPort, serverHost, function () {
   console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
   console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
 });
 
 process.on('SIGINT', function() {
+  console.error("SIGINT received, quit");
   server.close();
   // calling .shutdown allows your process to exit normally
   toobusy.shutdown();
