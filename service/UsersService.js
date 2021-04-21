@@ -84,14 +84,18 @@ exports.deleteDomain = function(domainname) {
   return new Promise(function(resolve, reject) {
     console.log("In delete domain service");
 
-    DomainModel.remove({name: domainname})
+    DomainModel.deleteOne({name: domainname})
           .then(item => {
-                  console.info("Was OK");
-                  resolve(item);
+		  if(item.deletedCount != 1) {
+                        console.error("not found, not deleted");
+                        reject({code:404, msg:"not found"});
+                  } else {
+                        resolve("OK");
+                  }
           })
           .catch(err => {
                   console.error("Not OK: ", err);
-                  reject("bahh");
+                  reject({code:400, msg:"bahh"});
           });
   });
 }

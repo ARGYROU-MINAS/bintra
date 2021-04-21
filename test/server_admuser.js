@@ -42,6 +42,7 @@ describe('PFilter put server tests', function() {
                 await UsersService.createUser(oUserDefault);
                 await LoginModel.updateMany({name: 'max'}, { $set: {role: 'admin', status: 'active'} });
 
+		await LoginModel.deleteMany({name: 'bob'});
 		var oUserDummy = {username: 'bob', email: 'trash@example.com', password: 'abc'};
 		await UsersService.createUser(oUserDummy);
 		await LoginModel.updateMany({name: 'bob'}, { $set: {role: 'user', status: 'active'} });
@@ -185,6 +186,7 @@ describe('PFilter put server tests', function() {
                                 })
                                 .auth(tokenUser, { type: 'bearer' })
                                 .end((err, res) => {
+					console.log(res);
                                         res.should.have.status(200);
                                         done();
                                 });

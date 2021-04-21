@@ -177,10 +177,10 @@ module.exports.deleteDomain = function listDomains (req, res, next, name) {
 
   UsersService.deleteDomain(name)
     .then(function (payload) {
-      utils.writeJson(res, payload, 200);
+      utils.writeText(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+      utils.writeText(res, payload.msg, payload.code);
     });
 };
 
