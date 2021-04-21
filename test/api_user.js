@@ -23,8 +23,10 @@ var JWT;
 describe('User stuff', function() {
 	before(async () => {
 		console.log("run before");
+
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
+
 		var u = {username: 'max', email: 'test@example.com', password: 'xxx'};
 		await UsersService.createUser(u);
 		await LoginModel.updateMany({}, { $set: {status: 'active' }});
@@ -63,6 +65,32 @@ describe('User stuff', function() {
                         UsersService.listUser(idUser)
                                 .then(itemFound => {
                                         itemFound.should.have.property('email');
+                                        done();
+                                });
+                });
+		it('Check role', (done) => {
+                        UsersService.hasRole('max', ['user'])
+                                .then(itemFound => {
+                                        done();
+                                });
+                });
+		it('Check role with wrong role', (done) => {
+                        UsersService.hasRole('max', ['admin'])
+                                .then(itemFound => {
+					console.error("Sould not pass");
+				})
+				.catch(err => {
+					console.log("expected error");
+					done();
+                                });
+                });
+		it('Check role with wrong user', (done) => {
+                        UsersService.hasRole('sam', ['user'])
+                                .then(itemFound => {
+					console.error("should not pass");
+				 })
+                                .catch(err => {
+                                        console.log("expected error");
                                         done();
                                 });
                 });
