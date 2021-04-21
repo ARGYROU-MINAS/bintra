@@ -4,7 +4,7 @@
   "description": "Binary Transparency Directory API",
   "main": "app.js",
   "scripts": {
-    "prestart": "npm install",
+    "prestart": "npm ci",
     "start": "node app.js",
     "test": "mocha --reporter mochawesome --exit",
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
