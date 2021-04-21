@@ -12,7 +12,8 @@ var eventEmitter = require('../utils/eventer').em;
 var PackagesService = require('../service/PackagesService');
 var UsersService = require('../service/UsersService');
 var auth = require("../utils/auth");
-
+var fs = require('fs');
+var path = require('path');
 
 
 /**
@@ -304,7 +305,17 @@ module.exports.getVersions = function getVersions (req, res, next) {
 
   var jdata = process.versions;
   var json = require('../package.json');
+  var gitrevFilename = path.join(__dirname,'../.gitrevision');
+  var gitrevision = "";
+
+  try {
+    fs.accessSync(gitrevFilename, fs.constants.R_OK);
+    gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
+  } catch(err) {
+    console.error("gitrevision file not found at: " + gitrevFilename);
+  }
   jdata.bintra = json.version;
+  jdata.gitrevision = gitrevision.trim();
   var admin = req.mcdadmin.db.admin();
   admin.serverStatus(function(err, info) {
     if(err) {
