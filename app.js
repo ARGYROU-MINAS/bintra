@@ -19,6 +19,8 @@ var oas3Tools = require('./myoas/'); //require('oas3-tools');
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
+
+const toobusy = require('toobusy-js');
 const express = require("express");
 const cors = require("cors");
 
@@ -68,6 +70,17 @@ app.use('/', function doRedir(req, res, next) {
     res.writeHead(301, {Location: '/docs/'});
     res.end();
   }
+});
+
+app.use(function(req, res, next) {
+  if (toobusy()) {
+    res.send(503, "I'm busy right now, sorry.");
+  } else {
+    next();
+  }
+});
+toobusy.onLag(function(currentLag) {
+  console.error("Event loop lag detected! Latency: " + currentLag + "ms");
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
@@ -138,6 +151,13 @@ console.log("Bind to %s : %d", serverHost, serverPort);
 http.createServer(app).listen(serverPort, serverHost, function () {
   console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
   console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
+});
+
+process.on('SIGINT', function() {
+  server.close();
+  // calling .shutdown allows your process to exit normally
+  toobusy.shutdown();
+  process.exit();
 });
 
 module.exports = app; // for testing
