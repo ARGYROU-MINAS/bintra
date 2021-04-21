@@ -75,6 +75,15 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
+		it('Get wrong username', (done) => {
+                        request(server)
+                                .get('/v1/username/4huhu_')
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(400);
+                                        done();
+                                });
+                });
 		it('List user', (done) => {
                         request(server)
                                 .get('/v1/user/' + idUser)

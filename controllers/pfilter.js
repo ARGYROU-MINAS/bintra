@@ -8,6 +8,16 @@ function cleanupString(s) {
 	return sNew;
 }
 
+
+function cleanupName(s) {
+        var sNew = s.replace(/[^a-z0-9\-\.]/gi, '');
+        if(sNew != s) {
+                console.warn("Filtered invalid chars");
+        }
+        return sNew;
+}
+
+
 function cleanupWord(s) {
         var sNew = s.replace(/[^a-zA-Z]/gi, '');
         if(sNew != s) {
@@ -55,6 +65,9 @@ module.exports = function (req, res, next) {
                     break;
                 case "packageHash":
                     req.query[key] = cleanupStringHex(value);
+                    break;
+                case "name":
+                    req.query[key] = cleanupName(value);
                     break;
                 case "sort":
                 case "sorters":

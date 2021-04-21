@@ -20,27 +20,6 @@ var eventEmitter = require('../utils/eventer').em;
 
 
 /**
- * Helper functions
- */
-function getUserObject(username) {
-  return new Promise(function(resolve, reject) {
-    LoginModel.find({name: username})
-      .then(itemFound => {
-        if(1 == itemFound.length) {
-          console.log("Found user");
-          resolve(itemFound[0]);
-        } else {
-          reject("Not found");
-        }
-      })
-      .catch(err => {
-        console.error("getUser failed: " + err);
-        reject("getUser failed");
-      });
-  });
-}
-
-/**
  * @method
  * List all registered blacklisted domain.
  * @public

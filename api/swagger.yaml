@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.4
+  version: 1.0.5
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -626,6 +626,9 @@ paths:
           required: true
           schema:
             type: string
+            minLength: 3
+            maxLength: 100
+            pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
       responses:
         200:
           description: positive result we hope
@@ -1043,6 +1046,9 @@ components:
       properties:
         username:
           type: string
+          minLength: 3
+          maxLength: 100
+          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
           example: username
         password:
           type: string
@@ -1088,6 +1094,9 @@ components:
       properties:
         name:
           type: string
+          minLength: 3
+          maxLength: 100
+          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
         email:
           type: string
         status:
