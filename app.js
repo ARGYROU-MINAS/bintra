@@ -124,19 +124,6 @@ app.use(pfilter);
 
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
 
-  // Error handlers
-  app.use((err, req, res, next) => {
-    console.error("In error handler");
-    if (err.statusCode === 401) {
-       // do something you like
-
-       res.code = 401;
-       res.end(err.message);
-       return;
-     }
-     res.code = 500;
-     res.end(err.message);
-  });
 
 /**
  * Start the server
@@ -145,8 +132,8 @@ var serverPort = process.env.BIND_PORT;
 var serverHost = process.env.BIND_HOST;
 console.log("Bind to %s : %d", serverHost, serverPort);
 http.createServer(app).listen(serverPort, serverHost, function () {
-  console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-  console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+  console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
+  console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
 });
 
 module.exports = app; // for testing
