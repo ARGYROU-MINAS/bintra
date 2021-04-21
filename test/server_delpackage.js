@@ -110,6 +110,34 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
+		it('Put one more package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: pFamily,
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        reply.should.have.property('count', 1);
+                                        idPackage = reply._id;
+                                        done();
+                                });
+                });
+		it('remove one ID package', (done) => {
+                        request(server)
+                                .delete('/v1/package/' + idPackage)
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        done();
+                                });
+                });
 	});
 
 	after(async () => {
