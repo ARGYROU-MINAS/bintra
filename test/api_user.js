@@ -94,6 +94,22 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
+		it('Check active user', (done) => {
+                        UsersService.isActiveUser('max')
+                                .then(itemFound => {
+                                        done();
+                                });
+                });
+		it('Check active with wrong user', (done) => {
+                        UsersService.isActiveUser('sam')
+                                .then(itemFound => {
+                                        console.error("should not pass");
+                                 })
+                                .catch(err => {
+                                        console.log("expected error");
+                                        done();
+                                });
+                });
 	});
 
         context('[BINTRA-] Check default auth', () => {
