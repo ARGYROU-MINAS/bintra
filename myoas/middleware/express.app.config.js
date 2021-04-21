@@ -24,8 +24,8 @@ class ExpressAppConfig {
         this.app.use(bodyParser.text());
         this.app.use(bodyParser.json());
         this.app.use(this.configureLogger(appOptions.logging));
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.json({ limit: "1kb" }));
+        this.app.use(express.urlencoded({ extended: false, limit: "1kb"  }));
         this.app.use(cookieParser());
         const swaggerUi = new swagger_ui_1.SwaggerUI(swaggerDoc, appOptions.swaggerUI);
         this.app.use(swaggerUi.serveStaticContent());
