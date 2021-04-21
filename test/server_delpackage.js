@@ -19,7 +19,7 @@ const PackageService = require('../service/PackagesService.js');
 
 const uauth = require('../utils/auth.js');
 
-var packageid = "";
+var idPackage = "";
 var tokenUser = "";
 
 const pName = 'theName';
@@ -49,7 +49,7 @@ describe('PFilter put server tests', function() {
 		console.log("Token: " + tokenUser);
 	});
 
-	context('Check PUT action', () => {
+	context('Check PUT/DELETE action', () => {
 		it('Put one package again', (done) => {
 			request(server)
 				.put('/v1/package')
@@ -65,11 +65,10 @@ describe('PFilter put server tests', function() {
 					res.should.have.status(200);
 					var reply = res.body[0];
 					reply.should.have.property('count', 2);
+					idPackage = reply._id;
 					done();
 				});
 		});
-	});
-	context('finaly delete one package again', () => {
 		it('remove one named package', (done) => {
                         request(server)
                                 .delete('/v1/package')
@@ -80,6 +79,15 @@ describe('PFilter put server tests', function() {
                                         packageFamily: pFamily,
                                         packageHash: pHash
                                 })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        done();
+                                });
+                });
+		it('remove one ID package', (done) => {
+                        request(server)
+                                .delete('/v1/package/' + idPackage)
                                 .auth(tokenUser, { type: 'bearer' })
                                 .end((err, res) => {
                                         res.should.have.status(200);
