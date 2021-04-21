@@ -87,6 +87,24 @@ describe('PFilter put server tests', function() {
                                 });
                 });
 	});
+	context('Check paging', () => {
+		it('show paging interface', (done) => {
+                        request(server)
+                                .get('/v1/tableview')
+                                .query({
+					page: 1,
+                                        size: 10,
+					sorters: 'tsupdated'
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body.data[0];
+                                        reply.should.have.property('count', 3);
+                                        done();
+                                });
+                });
+	});
 
 	after(async () => {
 		console.log("after run");

@@ -477,13 +477,17 @@ paths:
           description: Page number
           required: true
           schema:
-            type: number
+            type: integer
+            minimum: 1
+            default: 1
         - name: size
           in: query
           description: Entries per page
           required: true
           schema:
-            type: number
+            type: integer
+            minimum: 1
+            default: 10
         - name: sorters
           in: query
           description: Sort by which property
