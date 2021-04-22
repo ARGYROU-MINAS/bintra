@@ -32,15 +32,15 @@ describe('User stuff', function() {
 		await LoginModel.updateMany({}, { $set: {status: 'active' }});
 	});
 
-	context('[STEP-] login', function() {
-		it('Check user was created', (done) => {
+	context('[BINTRA-20] login', function() {
+		it('[STEP-1] Check user was created', (done) => {
 			LoginModel.find({})
 				.then(itemFound => {
 					console.log("Query logins worked, mount=" + itemFound.length);
 					done();
 				});
 		});
-	        it('[STEP-] should get token', (done) => {
+	        it('[STEP-2] should get token', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -53,7 +53,7 @@ describe('User stuff', function() {
                             done();
                         });
                 });
-		it('List users', (done) => {
+		it('[STEP-3] List users', (done) => {
                         UsersService.listUsers()
                                 .then(itemFound => {
 					itemFound.should.have.length(1);
@@ -61,20 +61,20 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
-		it('List user', (done) => {
+		it('[STEP-4] List user', (done) => {
                         UsersService.listUser(idUser)
                                 .then(itemFound => {
                                         itemFound.should.have.property('email');
                                         done();
                                 });
                 });
-		it('Check role', (done) => {
+		it('[STEP-5] Check role', (done) => {
                         UsersService.hasRole('max', ['user'])
                                 .then(itemFound => {
                                         done();
                                 });
                 });
-		it('Check role with wrong role', (done) => {
+		it('[STEP-6] Check role with wrong role', (done) => {
                         UsersService.hasRole('max', ['admin'])
                                 .then(itemFound => {
 					console.error("Sould not pass");
@@ -84,7 +84,7 @@ describe('User stuff', function() {
 					done();
                                 });
                 });
-		it('Check role with wrong user', (done) => {
+		it('[STEP-7] Check role with wrong user', (done) => {
                         UsersService.hasRole('sam', ['user'])
                                 .then(itemFound => {
 					console.error("should not pass");
@@ -94,13 +94,13 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
-		it('Check active user', (done) => {
+		it('[STEP-8] Check active user', (done) => {
                         UsersService.isActiveUser('max')
                                 .then(itemFound => {
                                         done();
                                 });
                 });
-		it('Check active with wrong user', (done) => {
+		it('[STEP-9] Check active with wrong user', (done) => {
                         UsersService.isActiveUser('sam')
                                 .then(itemFound => {
                                         console.error("should not pass");
@@ -112,27 +112,15 @@ describe('User stuff', function() {
                 });
 	});
 
-        context('[BINTRA-] Check default auth', () => {
-                it('[STEP-] should get default', (done) => {
-                  request(server)
-                      .get('/v1/token')
-		      .set('Authorization', 'Bearer ' + JWT)
-                      .end((err, res) => {
-                            res.should.have.status(200);
-                            res.body.should.have.property('tsfrom');
-                            done();
-                        });
-                });
-		it('Add package in users name', (done) => {
+        context('[BINTRA-21] add package as user', () => {
+		it('[STEP-1] Add package in users name', (done) => {
                         PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
-					//var oneItem = itemFound[0];
-					//oneItem.shouldhave.property('name', 'theName');
                                         done();
                                 });
                 });
-		it('Add again package in users name', (done) => {
+		it('[STEP-2] Add again package in users name', (done) => {
                         PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
@@ -141,9 +129,9 @@ describe('User stuff', function() {
                 });
         });
 
-	context('Destroy user', () => {
+	context('[BINTRA-22] Destroy user', () => {
 		var idUser;
-		it('List users once more', (done) => {
+		it('[STEP-1] List users once more', (done) => {
                         UsersService.listUsers()
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);
@@ -151,15 +139,7 @@ describe('User stuff', function() {
                                         done();
                                 });
                 });
-	/*	it('Put user status', (done) => {
-			console.log('set user ' + idUser + ' to disabled');
-                        UsersService.putUserStatus(idUser, 'disabled')
-                                .then(itemFound => {
-                                        itemFound.should.have.property('status', 'disabled');
-                                        done();
-                                });
-                });*/
-		 it('Delete user', (done) => {
+		it('[STEP-2] Delete user', (done) => {
                         UsersService.deleteUser(idUser)
                                 .then(itemFound => {
                                         itemFound.should.have.property('status', 'deleted');

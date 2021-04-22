@@ -25,35 +25,35 @@ describe('Domain stuff', function() {
 		await UsersService.addDomain('demo.xyz');
 	});
 
-	context('[STEP-] login', function() {
-		it('check get all domains', (done) => {
+	context('[BINTRA-18] handle domains', function() {
+		it('[STEP-1] check get all domains', (done) => {
 			UsersService.listDomains()
 				.then(itemFound => {
 					itemFound.should.have.length(1);
 					done();
 				});
 		});
-	        it('add domain', (done) => {
+	        it('[STEP-2] add domain', (done) => {
 			UsersService.addDomain('test.eu')
 				.then(itemFound => {
 					itemFound.should.have.property('name');
                             		done();
                         	});
                 });
-		it('list added domain', (done) => {
+		it('[STEP-3] list added domain', (done) => {
                         UsersService.listDomains()
                                 .then(itemFound => {
                                         itemFound.should.have.length(2);
                                         done();
                                 });
                 });
-		it('delete domain', (done) => {
+		it('[STEP-4] delete domain', (done) => {
                         UsersService.deleteDomain('test.eu')
                                 .then(itemFound => {
                                         done();
                                 });
                 });
-		it('list with deleted domain', (done) => {
+		it('[STEP-5] list with deleted domain', (done) => {
                         UsersService.listDomains()
                                 .then(itemFound => {
                                         itemFound.should.have.length(1);

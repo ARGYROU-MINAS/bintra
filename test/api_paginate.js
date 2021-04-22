@@ -21,7 +21,7 @@ describe('Paginate', function() {
 		await PackageModel.deleteMany({});
 	});
 
-	context('[BINTRA-] show moving window of packages', function() {
+	context('[BINTRA-19] show moving window of packages', function() {
 		before(async () => {
 			var tsnow = new Date();
 			var packageNew = new PackageModel({name: 'theName', version: 'theVersion',
@@ -34,23 +34,24 @@ describe('Paginate', function() {
                                                    hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
                         await packageNew.save();
         	});
-                it('[STEP-] should have two reply', async () => {
+
+                it('[STEP-1] should have two reply', async () => {
                         var result = await PackageService.listPackages();
                         return expect(result).to.have.length(2);
                 });
-		it('[STEP-] get package start window', async () => {
+		it('[STEP-2] get package start window', async () => {
                         var result = await PackageService.listPackages(0, 2, 'tsupdated', 'up');
                         return expect(result).to.have.length(2);
                 });
-		it('[STEP-] get package start window small', async () => {
+		it('[STEP-3] get package start window small', async () => {
                         var result = await PackageService.listPackages(0, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(1);
                 });
-		it('[STEP-] get package next window small', async () => {
+		it('[STEP-4] get package next window small', async () => {
                         var result = await PackageService.listPackages(1, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(1);
                 });
-		it('[STEP-] get package empty window', async () => {
+		it('[STEP-5] get package empty window', async () => {
                         var result = await PackageService.listPackages(2, 1, 'tsupdated', 'up');
                         return expect(result).to.have.length(0);
                 });

@@ -15,13 +15,13 @@ var LoginModel = require('../models/login.js');
 
 const PackagesService = require('../service/PackagesService.js');
 
-describe('getDefault', function() {
+describe('admin only functions', function() {
 	before(async () => {
 		console.log("run before");
 		await PackageModel.deleteMany({});
 	});
 
-	context('[BINTRA-] delete package by id', function() {
+	context('[BINTRA-14] delete package by id', function() {
                 before(async () => {
 			await PackageModel.deleteMany({});
                         var tsnow = new Date();
@@ -30,7 +30,7 @@ describe('getDefault', function() {
                                                    hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
                         await packageNew.save();
                 });
-                it('[STEP-] should have one reply', async () => {
+                it('[STEP-1] should have one reply', async () => {
                         var result = await PackagesService.listPackages();
 			var theID = result[0]._id;
 			console.log("ID=" + theID);
@@ -40,7 +40,7 @@ describe('getDefault', function() {
                 });
         });
 
-	context('[BINTRA-] get full package info', function() {
+	context('[BINTRA-15] get full package info', function() {
                 before(async () => {
                         await PackageModel.deleteMany({});
                         var tsnow = new Date();
@@ -49,7 +49,7 @@ describe('getDefault', function() {
                                                    hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
                         await packageNew.save();
                 });
-                it('[STEP-] packagesFull', async () => {
+                it('[STEP-1] packagesFull', async () => {
                         var result = await PackagesService.listPackagesFull(111);
                         return expect(result).to.have.length(1);
                 });
