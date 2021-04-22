@@ -1,25 +1,21 @@
+# You can override the included template(s) by including variable overrides
+# See https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#priority-of-environment-variables
 stages:
-  - build
-  - test
-  - analyze
-  - deploy
-
-# Official framework image. Look for the different tagged releases at:
-# https://hub.docker.com/r/library/node/tags/
+- build
+- test
+- analyze
+- deploy
 image: node:14
-
-# This folder is cached between builds
-# http://docs.gitlab.com/ee/ci/yaml/README.html#cache
 cache:
   paths:
-    - node_modules/
-
+  - node_modules/
 variables:
-  versionTag: '$CI_COMMIT_SHA'
-
+  versionTag: "$CI_COMMIT_SHA"
 makedocs:
   stage: build
-  image: $CI_REGISTRY/kai/lggr:mkdocs
+  image: "$CI_REGISTRY/kai/lggr:mkdocs"
   before_script:
   - mkdir pub_mkdocs
   script:
@@ -27,50 +23,47 @@ makedocs:
   artifacts:
     paths:
     - pub_mkdocs
-
 jsdocs:
   stage: build
   before_script:
   - npm install
   script:
-  - ./node_modules/.bin/jsdoc --verbose -c jsdoc.json
+  - "./node_modules/.bin/jsdoc --verbose -c jsdoc.json"
   artifacts:
     paths:
     - out
-
 unittest:
   stage: test
-  image: $CI_REGISTRY/kai/bintra:fat
+  image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
     NODE_ENV: test
   before_script:
-  - /etc/init.d/mongodb start
+  - "/etc/init.d/mongodb start"
   - npm install
-  - ./setup_env_test.sh
+  - "./setup_env_test.sh"
   script:
   - npm run combined
-  coverage: '/Statements\s+:\s+(\d+\.\d+)%/'
+  coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   after_script:
-    - ls -l
+  - ls -l
   artifacts:
     paths:
     - mochawesome-report/
     - coverage/
-    - xunit.xml 
-
+    - xunit.xml
 sonarqube:
   stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
+    entrypoint:
+    - ''
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   before_script:
-    - git fetch --unshallow
+  - git fetch --unshallow
   script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
+  - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: false
-
 pages:
   stage: deploy
   image: alpine
@@ -87,17 +80,16 @@ pages:
     - public
   only:
     refs:
-      - master
-
+    - master
 package:
   stage: deploy
-  image: $CI_REGISTRY/kai/bintra:deb
+  image: "$CI_REGISTRY/kai/bintra:deb"
   script:
-  - cd client && chmod -R 644 . && find . -type d -exec chmod 755 {} \; && chmod 755 bintra/usr/sbin/bintra && dpkg-deb --root-owner-group --build bintra
+  - cd client && chmod -R 644 . && find . -type d -exec chmod 755 {} \; && chmod 755
+    bintra/usr/sbin/bintra && dpkg-deb --root-owner-group --build bintra
   artifacts:
     paths:
     - client/bintra.deb
-
 publish:
   stage: deploy
   image: ubuntu:latest
@@ -106,13 +98,18 @@ publish:
   cache: {}
   dependencies: []
   before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client )'
-    - mkdir -p ~/.ssh
-    - chmod 0700 ~/.ssh
-    - eval $(ssh-agent -s)
-    - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client
+    )
+  - mkdir -p ~/.ssh
+  - chmod 0700 ~/.ssh
+  - eval $(ssh-agent -s)
+  - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+  - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
   only:
-    - master
+  - master
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
