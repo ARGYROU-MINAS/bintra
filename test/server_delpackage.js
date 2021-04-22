@@ -49,8 +49,8 @@ describe('PFilter put server tests', function() {
 		console.log("Token: " + tokenUser);
 	});
 
-	context('Check PUT/DELETE action', () => {
-		it('Put one package again', (done) => {
+	context('[BINTRA-7] Check PUT/DELETE action', () => {
+		it('[STEP-1] Put one package again', (done) => {
 			request(server)
 				.put('/v1/package')
 				.query({
@@ -69,7 +69,7 @@ describe('PFilter put server tests', function() {
 					done();
 				});
 		});
-		it('remove one wrong named package', (done) => {
+		it('[STEP-2] remove one wrong named package', (done) => {
                         request(server)
                                 .delete('/v1/package')
                                 .query({
@@ -85,7 +85,7 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
-		it('remove one named package', (done) => {
+		it('[STEP-3] remove one named package', (done) => {
                         request(server)
                                 .delete('/v1/package')
                                 .query({
@@ -101,7 +101,7 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
-		it('remove one ID package which is gone already', (done) => {
+		it('[STEP-4] remove one ID package which is gone already', (done) => {
                         request(server)
                                 .delete('/v1/package/' + idPackage)
                                 .auth(tokenUser, { type: 'bearer' })
@@ -110,7 +110,7 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
-		it('Put one more package', (done) => {
+		it('[STEP-5] Put one more package', (done) => {
                         request(server)
                                 .put('/v1/package')
                                 .query({
@@ -129,7 +129,7 @@ describe('PFilter put server tests', function() {
                                         done();
                                 });
                 });
-		it('remove one ID package', (done) => {
+		it('[STEP-6] remove one ID package', (done) => {
                         request(server)
                                 .delete('/v1/package/' + idPackage)
                                 .auth(tokenUser, { type: 'bearer' })

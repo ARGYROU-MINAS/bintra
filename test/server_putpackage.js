@@ -49,8 +49,8 @@ describe('PFilter put server tests', function() {
 		console.log("Token: " + tokenUser);
 	});
 
-	context('Check PUT action', () => {
-		it('Put one package again', (done) => {
+	context('[BINTRA-10] Check PUT action', () => {
+		it('[STEP-1] Put one package again', (done) => {
 			request(server)
 				.put('/v1/package')
 				.query({
@@ -68,7 +68,7 @@ describe('PFilter put server tests', function() {
 					done();
 				});
 		});
-		it('Put defect hash package', (done) => {
+		it('[STEP-2] Put defect hash package', (done) => {
                         request(server)
                                 .put('/v1/package')
                                 .query({
@@ -87,8 +87,9 @@ describe('PFilter put server tests', function() {
                                 });
                 });
 	});
-	context('Check paging', () => {
-		it('show paging interface', (done) => {
+
+	context('[BINTRA-11] Check paging', () => {
+		it('[STEP-1] show paging interface', (done) => {
                         request(server)
                                 .get('/v1/tableview')
                                 .query({

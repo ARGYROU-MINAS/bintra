@@ -36,8 +36,8 @@ describe('server roles', () => {
                 await LoginModel.updateMany({name: 'joe'}, { $set: {role: 'user', status: 'register'} });
 	});
 
-	describe('[BINTRA-] Check login post', () => {
-                it('[STEP-] wrong passsword for MAX should get error', (done) => {
+	describe('[BINTRA-12] Check user role logins', () => {
+                it('[STEP-1] wrong passsword for MAX should get error', (done) => {
                   request(server)
                       .post('/v1/login')
 		      .set('content-type', 'application/x-www-form-urlencoded')
@@ -48,7 +48,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] inactive user JOE should get error', (done) => {
+		it('[STEP-2] inactive user JOE should get error', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -59,7 +59,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] max as user should work', (done) => {
+		it('[STEP-3] max as user should work', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -71,7 +71,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] bob as admin should work', (done) => {
+		it('[STEP-4] bob as admin should work', (done) => {
                   request(server)
                       .post('/v1/login')
                       .set('content-type', 'application/x-www-form-urlencoded')
@@ -85,8 +85,8 @@ describe('server roles', () => {
                 });
         });
 
-	describe('[BINTRA-] Check admin only api calls', () => {
-		it('[STEP-] no token should get error', (done) => {
+	describe('[BINTRA-13] Check admin only api calls', () => {
+		it('[STEP-1] no token should get error', (done) => {
                   request(server)
                       .get('/v1/packagesfull')
                       .end((err, res) => {
@@ -94,7 +94,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] user token should get error', (done) => {
+		it('[STEP-2] user token should get error', (done) => {
                   request(server)
                       .get('/v1/packagesfull')
 		      .auth(tokenUser, { type: 'bearer' })
@@ -103,7 +103,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] admintoken should work', (done) => {
+		it('[STEP-3] admintoken should work', (done) => {
                   request(server)
                       .get('/v1/packagesfull')
 		      .auth(tokenAdmin, { type: 'bearer' })
@@ -112,7 +112,7 @@ describe('server roles', () => {
                             done();
                         });
                 });
-		it('[STEP-] get versions', (done) => {
+		it('[STEP-4] get versions', (done) => {
                   request(server)
                       .get('/v1/versions')
                       .auth(tokenAdmin, { type: 'bearer' })

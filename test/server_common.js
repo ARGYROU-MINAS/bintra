@@ -21,7 +21,7 @@ describe('server', () => {
 			    done();
 		        });
 		});
-		it('[STEP-] should redirect', (done) => {
+		it('[STEP-2] should redirect', (done) => {
                   request(server)
                       .get('/')
                       .end((err, res) => {
@@ -31,8 +31,8 @@ describe('server', () => {
                 });
 	});
 
-	describe('[BINTRA-] Check default auth', () => {
-                it('[STEP-] should get default', (done) => {
+	describe('[BINTRA-4] Check default auth', () => {
+                it('[STEP-1] should get default', (done) => {
                   request(server)
                       .get('/v1/test')
                       .end((err, res) => {
@@ -43,8 +43,8 @@ describe('server', () => {
                 });
         });
 
-	describe('[BINTRA-] Check wrong login post', () => {
-                it('[STEP-] should get error', (done) => {
+	describe('[BINTRA-5] Check wrong login post', () => {
+                it('[STEP-1] should get error', (done) => {
                   request(server)
                       .post('/v1/login')
 		      .set('content-type', 'application/x-www-form-urlencoded')
@@ -57,8 +57,8 @@ describe('server', () => {
                 });
         });
 
-	describe('[BINTRA-] Check search api', () => {
-                it('[STEP-] should get empty reply 404', (done) => {
+	describe('[BINTRA-6] Check search api', () => {
+                it('[STEP-1] should get empty reply 404', (done) => {
                   request(server)
                       .post('/v1/search')
                       .set('content-type', 'application/json')

@@ -29,8 +29,8 @@ describe('PFilter server tests', function() {
 		await packageNew.save();
 	});
 
-	context('[BINTRA-] search for package', () => {
-		it('[STEP-] get package count', (done) => {
+	context('[BINTRA-9] search for package', () => {
+		it('[STEP-1] get package count', (done) => {
                   request(server)
                       .get('/v1/count')
                       .end((err, res) => {
@@ -39,7 +39,7 @@ describe('PFilter server tests', function() {
                             done();
                       });
                 });
-		it('[STEP-] get some packages listed', (done) => {
+		it('[STEP-2] get some packages listed', (done) => {
                   request(server)
                       .get('/v1/packages')
 		      .query({
@@ -55,7 +55,7 @@ describe('PFilter server tests', function() {
                             done();
                       });
                 });
-		it('[STEP-] Use wrong chars in params', (done) => {
+		it('[STEP-3] Use wrong chars in params', (done) => {
                   request(server)
                       .get('/v1/packages')
                       .query({
@@ -69,7 +69,7 @@ describe('PFilter server tests', function() {
                             done();
                       });
                 });
-		it('[STEP-] get special package data', (done) => {
+		it('[STEP-4] get special package data', (done) => {
                   request(server)
                       .get('/v1/package/' + packageid)
                       .end((err, res) => {
