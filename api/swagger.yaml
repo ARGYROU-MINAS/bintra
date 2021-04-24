@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.6
+  version: 1.0.7
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -148,6 +148,7 @@ paths:
             type: string
             enum:
               - debian
+              - CentOS
         - name: packageHash
           in: query
           description: SHA256 hash of downloaded file
@@ -211,6 +212,7 @@ paths:
             type: string
             enum:
               - debian
+              - CentOS
         - name: packageHash
           in: query
           description: SHA256 hash of downloaded file
