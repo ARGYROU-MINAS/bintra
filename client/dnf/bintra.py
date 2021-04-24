@@ -1,6 +1,7 @@
 # bintra.py
 #
-# TBD
+# CentOS / Redhat plugin for binarytransparency checking
+# https://bintra.directory
 
 from dnfpluginscore import _, logger
 import dnf
@@ -9,7 +10,6 @@ import os
 import hashlib
 import requests
 from ppretty import ppretty
-from shutil import copyfile
 
 class Bintra(dnf.Plugin):
     name = 'bintra'
@@ -41,27 +41,33 @@ class Bintra(dnf.Plugin):
         logger.info(query)
         response = self.session.put("https://api.binarytransparency.net/v1/package", params=query)
         if response.status_code == 200:
-            print(response.json())
+            _j = response.json()
+            logger.debug(_j)
+            _replyLength = len(_j)
+            if 1 == _replyLength:
+                _entry = _j[0]
+                _count = _entry['count']
+                logger.info("We got one reply with %d, seems OK", _count)
+            else:
+                logger.error("Multiple matches (%d), be alarmed", _replyLength)
+                raise dnf.exceptions.Error('Hash mismatch detected')
         else:
             print(response)
             logger.error("API failed")
+            raise dnf.exceptions.Error('API failed')
 
     def pre_transaction(self):
         logger.info('In bintra pretransaction')
-        #print(ppretty(self.base.transaction.install_set, indent='    ', width=40, seq_length=100, show_protected=False, show_static=False, show_properties=True, show_address=False))
 
         _cmd = self.cli.command._basecmd
         logger.debug('Pre transaction command %s', _cmd)
-        logger.info('JWT still %s', self.JWT)
 
         if 'install' != _cmd:
-            logger.info('Ignore command')
+            logger.debug('Ignore command %s', _cmd)
             return
 
         # loop over packages downloaded and to be installed
-        _i = 0
         for p in self.base.transaction.install_set:
-            _i = _i + 1
             _arch = p.arch
             _version = p.evr
             _pname = p.name
@@ -79,11 +85,6 @@ class Bintra(dnf.Plugin):
             }
             self._putPackage(_params)
 
-        # exit method:
-        raise dnf.exceptions.Error('Stop for test')
-
-    def transaction(self):
-        logger.info('In bintra transaction')
 
 @dnf.plugin.register_command
 class BintraCommand(dnf.cli.Command):
