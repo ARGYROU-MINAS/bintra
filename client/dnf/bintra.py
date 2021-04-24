@@ -16,7 +16,7 @@ class Bintra(dnf.Plugin):
 
     def pre_transaction(self):
         logger.info('In bintra pretransaction')
-        print(ppretty(self, indent='    ', width=40, seq_length=30, show_protected=False, show_static=False, show_properties=True, show_address=False))
+        print(ppretty(self.base.transaction.install_set, indent='    ', width=40, seq_length=50, show_protected=False, show_static=False, show_properties=True, show_address=False))
 
         _cmd = self.cli.command._basecmd
         logger.debug('Pre transaction command %s', _cmd)
@@ -24,6 +24,13 @@ class Bintra(dnf.Plugin):
         if 'install' != _cmd:
             logger.info('Ignore command')
             return
+
+        # loop over packages downloaded and to be installed
+        for p in self.base.transaction.install_set:
+            _arch = p.arch
+            _version = p.evr
+            _path = p.repo.pkgdir + '/' + p.relativepath
+            logger.info('Check version %s for architecture %s in temp path %s', _version, _arch, _path)
 
         # exit method:
         raise dnf.exceptions.Error('Stop for test')
