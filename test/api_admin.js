@@ -16,10 +16,6 @@ var LoginModel = require('../models/login.js');
 const PackagesService = require('../service/PackagesService.js');
 
 describe('admin only functions', function() {
-	before(async () => {
-		console.log("run before");
-		await PackageModel.deleteMany({});
-	});
 
 	context('[BINTRA-14] delete package by id', function() {
                 before(async () => {
