@@ -14,6 +14,7 @@ from shutil import copyfile
 class Bintra(dnf.Plugin):
     name = 'bintra'
     JWT = ''
+    session = requests.Session()
 
     def __init__(self, base, cli):
         super(Bintra, self).__init__(base, cli)
@@ -22,6 +23,10 @@ class Bintra(dnf.Plugin):
     def config(self):
         cp = self.read_config(self.base.conf)
         self.JWT = cp.get('main', 'JWT')
+        self.session.headers.update({
+            'Authorization': 'Bearer ' + self.JWT,
+            'User-Agent': 'bintra/1.0.0 (CentOS)'
+        })
 
     @staticmethod
     def _calcHash(filename):
@@ -31,13 +36,10 @@ class Bintra(dnf.Plugin):
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
 
-    @staticmethod
-    def _putPackage(JWT, query):
+    @classmethod
+    def _putPackage(self, query):
         logger.info(query)
-        _h = {
-            'Authorization': 'Bearer ' + JWT
-        }
-        response = requests.put("https://api.binarytransparency.net/v1/package", params=query, headers=_h)
+        response = self.session.put("https://api.binarytransparency.net/v1/package", params=query)
         if response.status_code == 200:
             print(response.json())
         else:
@@ -75,7 +77,7 @@ class Bintra(dnf.Plugin):
                 'packageFamily': _family,
                 'packageHash': _hash
             }
-            self._putPackage(self.JWT, _params)
+            self._putPackage(_params)
 
         # exit method:
         raise dnf.exceptions.Error('Stop for test')
