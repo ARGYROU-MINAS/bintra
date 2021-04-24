@@ -13,6 +13,7 @@ cache:
   - node_modules/
 variables:
   versionTag: "$CI_COMMIT_SHA"
+
 makedocs:
   stage: build
   image: "$CI_REGISTRY/kai/lggr:mkdocs"
@@ -23,6 +24,7 @@ makedocs:
   artifacts:
     paths:
     - pub_mkdocs
+
 jsdocs:
   stage: build
   before_script:
@@ -32,6 +34,7 @@ jsdocs:
   artifacts:
     paths:
     - out
+
 unittest:
   stage: test
   image: "$CI_REGISTRY/kai/bintra:fat"
@@ -51,6 +54,7 @@ unittest:
     - mochawesome-report/
     - coverage/
     - xunit.xml
+
 sonarqube:
   stage: analyze
   image:
@@ -64,6 +68,7 @@ sonarqube:
   script:
   - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: false
+
 pages:
   stage: deploy
   image: alpine
@@ -81,6 +86,7 @@ pages:
   only:
     refs:
     - master
+
 package:
   stage: deploy
   image: "$CI_REGISTRY/kai/bintra:deb"
@@ -90,6 +96,10 @@ package:
   artifacts:
     paths:
     - client/bintra.deb
+  only:
+    refs:
+    - master
+
 publish:
   stage: deploy
   image: ubuntu:latest
@@ -109,6 +119,7 @@ publish:
   - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
   only:
   - master
+
 sast:
   stage: test
 include:
