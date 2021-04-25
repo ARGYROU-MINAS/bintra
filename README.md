@@ -32,6 +32,22 @@ Copy the spec file from the bintra repo to SPEC subfolder.
 
 The rpm package is now in RPMS\/noarch subfolder.
 
+To add gpg signature of rpm packages, add following lines to ~\/.rpmmacros file:
+
+    %_signature gpg
+    %_gpgbin /usr/bin/gpg
+    %_gpg_name Kai KRETSCHMANN
+    %__gpg_sign_cmd %{__gpg} gpg --force-v3-sigs --batch --verbose --no-armor --no-secmem-warning -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}'
+
+Run the signature for each created rpm file like this:
+
+    rpm --addsign bintra-1.0.2-1.el8.noarch.rpm
+
+Check signature via:
+
+    $ rpm -K bintra-1.0.2-1.el8.noarch.rpm 
+    bintra-1.0.2-1.el8.noarch.rpm: digests signatures OK
+
 ## add user manually
 
     docker exec -it bintra-nodejs bash
