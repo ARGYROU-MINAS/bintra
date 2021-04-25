@@ -10,6 +10,7 @@ import dnf.cli
 import os
 import hashlib
 import requests
+#from ppretty import ppretty
 
 class Bintra(dnf.Plugin):
     name = 'bintra'
@@ -62,12 +63,24 @@ class Bintra(dnf.Plugin):
         _cmd = self.cli.command._basecmd
         logger.debug('Pre transaction command %s', _cmd)
 
-        if 'install' != _cmd:
-            logger.debug('Ignore command %s', _cmd)
+        _theset = None
+
+        if 'install' == _cmd:
+            logger.debug('Handling command %s', _cmd)
+            _theset = self.base.transaction.install_set
+        elif 'upgrade' == _cmd:
+            logger.debug('Handling command %s', _cmd)
+#            print(ppretty(self.base.transaction, indent='    ', width=40, seq_length=50))
+            _theset = self.base.transaction.install_set
+        elif 'downgrade' == _cmd:
+            logger.debug('Handling command %s', _cmd)
+            _theset = self.base.transaction.install_set
+        else:
+            logger.debug('Skipping command %s', _cmd)
             return
 
         # loop over packages downloaded and to be installed
-        for p in self.base.transaction.install_set:
+        for p in _theset:
             try: p.vendor
             except AttributeError: p.vendor='CentOS'
 
