@@ -48,6 +48,22 @@ Check signature via:
     $ rpm -K bintra-1.0.2-1.el8.noarch.rpm 
     bintra-1.0.2-1.el8.noarch.rpm: digests signatures OK
 
+## RPM install
+
+First setup a link to the download repository:
+
+    dnf config-manager --add-repo https://nexus.myocastor.de/repository/bintra_rpm/bintra.repo
+
+If the command _config-manager_ is not known you have to install some dnf plugins first and try again:
+
+    dnf install dnf-plugins-core
+
+With that new repo added you can install the latest bintra CentOS client:
+
+    dnf --nogpgcheck install bintra
+
+PS: The package is already gpg signed, adding the public key to your local system first will be better. TBD
+
 ## add user manually
 
     docker exec -it bintra-nodejs bash
