@@ -1,8 +1,10 @@
 Name:           bintra
-Version:        1.0.2
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Binary Transparency check on package install
-
+Vendor:	        Kai KRETSCHMANN
+Packager:       Kai KRETSCHMANN <kai@kretschmann.consulting>
+Group:          Applications/System
 License:        MIT
 URL:            https://bintra.directory/
 Source0:        https://gitlab.kretschmann.software/kai/bintra/-/archive/master/bintra-master.tar.gz
@@ -25,9 +27,9 @@ git clone --depth=1 https://gitlab.kretschmann.software/kai/bintra.git
 %build
 
 %install
-mkdir -p %{buildroot}%{python_sitelib}/dnf-plugins
+mkdir -p %{buildroot}%{python3_sitelib}/dnf-plugins
 mkdir -p %{buildroot}/etc/dnf/plugins
-cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python_sitelib}/dnf-plugins/
+cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python3_sitelib}/dnf-plugins/
 echo "[main]" >%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "enable=true" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "JWT=" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
@@ -43,8 +45,8 @@ pip3 install ppretty
 
 %files
 %license LICENSE
-%{python_sitelib}/dnf-plugins/%{name}.py
-/etc/dnf/plugins/%{name}.conf
+%{python3_sitelib}/dnf-plugins/%{name}.py
+%config(noreplace) /etc/dnf/plugins/%{name}.conf
 
 
 %changelog
