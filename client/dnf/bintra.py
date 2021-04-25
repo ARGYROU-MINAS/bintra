@@ -2,7 +2,7 @@
 #
 # CentOS / Redhat plugin for binarytransparency checking
 # https://bintra.directory
-# Version 1.0.2
+# Version 1.0.3
 
 from dnfpluginscore import _, logger
 import dnf
@@ -71,15 +71,17 @@ class Bintra(dnf.Plugin):
             try: p.vendor
             except AttributeError: p.vendor='CentOS'
 
-            if "Fedora Project" == p.vendor:
-                p.vendor = "Fedora"
-
             _arch = p.arch
             _version = p.evr
             _pname = p.name
             _family = p.vendor
             _path = p.repo.pkgdir + '/' + os.path.basename(p.relativepath)
+
+            if "Fedora Project" == _family:
+                _family = "Fedora"
+
             logger.info('Check package %s, version %s for architecture %s, family %s in temp path %s', _pname, _version, _arch, _family, _path)
+
             _hash = self._calcHash(_path)
             logger.info('Hash is %s', _hash)
             _params = {
