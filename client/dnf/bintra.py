@@ -71,6 +71,9 @@ class Bintra(dnf.Plugin):
             try: p.vendor
             except AttributeError: p.vendor='CentOS'
 
+            if "Fedora Project" == p.vendor:
+                p.vendor = "Fedora"
+
             _arch = p.arch
             _version = p.evr
             _pname = p.name
