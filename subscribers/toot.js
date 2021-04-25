@@ -18,7 +18,7 @@ eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, p
 
   var t;
   if(isnew) {
-    t = 'Add new hash ' + packageHash + ' for ' + packageName + ' (' + packageVersion + ') for ' + packageArch;
+    t = 'Add new hash ' + packageHash + ' for ' + packageName + ' (' + packageVersion + ') for ' + packageArch + ' #' + packageFamily;
   } else {
     console.log('Skip checks for now');
     return;
