@@ -1,5 +1,5 @@
 Name:           bintra
-Version:        1.0
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Binary Transparency check on package install
 
