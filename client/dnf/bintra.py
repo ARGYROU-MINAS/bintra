@@ -69,7 +69,7 @@ class Bintra(dnf.Plugin):
         # loop over packages downloaded and to be installed
         for p in self.base.transaction.install_set:
             try: p.vendor
-            except NameError: p.vendor='CentOS'
+            except AttributeError: p.vendor='CentOS'
 
             _arch = p.arch
             _version = p.evr
