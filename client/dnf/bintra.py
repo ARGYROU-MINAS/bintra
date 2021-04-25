@@ -2,6 +2,7 @@
 #
 # CentOS / Redhat plugin for binarytransparency checking
 # https://bintra.directory
+# Version 1.0.2
 
 from dnfpluginscore import _, logger
 import dnf
@@ -9,7 +10,6 @@ import dnf.cli
 import os
 import hashlib
 import requests
-from ppretty import ppretty
 
 class Bintra(dnf.Plugin):
     name = 'bintra'
@@ -68,6 +68,9 @@ class Bintra(dnf.Plugin):
 
         # loop over packages downloaded and to be installed
         for p in self.base.transaction.install_set:
+            try: p.vendor
+            except NameError: p.vendor='CentOS'
+
             _arch = p.arch
             _version = p.evr
             _pname = p.name

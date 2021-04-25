@@ -9,7 +9,8 @@ Source0:        https://gitlab.kretschmann.software/kai/bintra/-/archive/master/
 
 BuildArch:      noarch
 
-Requires:       python
+Requires:       python3
+Requires:       dnf-plugins-core
 
 %description
 Binary Transparency check on package install
@@ -24,9 +25,9 @@ git clone --depth=1 https://gitlab.kretschmann.software/kai/bintra.git
 %build
 
 %install
-mkdir -p %{buildroot}%{python_sitelib}
+mkdir -p %{buildroot}%{python_sitelib}/dnf-plugins
 mkdir -p %{buildroot}/etc/dnf/plugins
-cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python_sitelib}/
+cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python_sitelib}/dnf-plugins/
 echo "[main]" >%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "enable=true" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "JWT=" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
@@ -36,9 +37,13 @@ exit 0
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+pip3 install requests
+pip3 install ppretty
+
 %files
 %license LICENSE
-%{python_sitelib}/%{name}.py
+%{python_sitelib}/dnf-plugins/%{name}.py
 /etc/dnf/plugins/%{name}.conf
 
 

@@ -21,6 +21,17 @@ Add perhaps gpg key, see [gitlab wiki](https://gitlab.kretschmann.software/kai/b
     NODE_ENV=develop npm start
     NODE_ENV=test npm test
 
+## RPM building
+
+    rpmdev-setuptree
+    cd ~/rpmbuild
+
+Copy the spec file from the bintra repo to SPEC subfolder.
+
+    rpmbuild -bb SPECS/bintra.spec
+
+The rpm package is now in RPMS\/noarch subfolder.
+
 ## add user manually
 
     docker exec -it bintra-nodejs bash
