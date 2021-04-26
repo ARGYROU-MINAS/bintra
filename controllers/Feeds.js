@@ -41,6 +41,11 @@ function getInitialFeed() {
   return myfeed;
 }
 
+function createContent(entry) {
+    return "Archive " + entry.name + ", version " + entry.version + " for " +
+        entry.arch + ", " + entry.family + " with hash " + entry.hash
+}
+
 function feedRss (req, res, next) {
 	var rssfeed = getInitialFeed();
 
@@ -49,13 +54,13 @@ function feedRss (req, res, next) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 rssfeed.addItem({
-title: entry.name,
-id: "https://api.binarytransparency.net/v1/package/" + myid,
-link: "https://bintra.directory/details/?id=" + myid,
-description: entry.name,
-date: entry.tsupdated || new Date(),
-content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
-});
+                    title: entry.name,
+                    id: "https://api.binarytransparency.net/v1/package/" + myid,
+                    link: "https://bintra.directory/details/?id=" + myid,
+                    description: entry.name,
+                    date: entry.tsupdated || new Date(),
+                    content: createContent(entry)
+                });
             });
             res.writeHead(200, { "Content-Type": "application/rss+xml" });
             return res.end(rssfeed.rss2());
@@ -74,12 +79,12 @@ function feedAtom(req, res, next) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 atomfeed.addItem({
-title: entry.name,
-link: "https://api.binarytransparency.net/v1/package/" + myid,
-description: entry.name,
-content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash,
-date: entry.tsupdated || new Date()
-});
+                    title: entry.name,
+                    link: "https://api.binarytransparency.net/v1/package/" + myid,
+                    description: entry.name,
+                    date: entry.tsupdated || new Date(),
+                    content: createContent(entry)
+                });
             });
             res.writeHead(200, { "Content-Type": "application/rss+xml" });
             return res.end(atomfeed.atom1());
@@ -99,13 +104,13 @@ function feedJson(req, res, next) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 jsonfeed.addItem({
-title: entry.name,
-id: entry._id,
-link: "https://api.binarytransparency.net/v1/package/" + myid,
-description: entry.name,
-date: entry.tsupdated || new Date(),
-content: "Archive " + entry.name + ", version " + entry.version + " for " + entry.arch + " with hash " + entry.hash
-});
+                    title: entry.name,
+                    id: entry._id,
+                    link: "https://api.binarytransparency.net/v1/package/" + myid,
+                    description: entry.name,
+                    date: entry.tsupdated || new Date(),
+                    content: createContent(entry)
+                });
             });
             res.writeHead(200, { "Content-Type": "application/json" });
             return res.end(jsonfeed.json1());
