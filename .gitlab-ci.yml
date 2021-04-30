@@ -100,6 +100,23 @@ package:
     refs:
     - master
 
+rpmfedora:
+  stage: deploy
+  image: fedora:34
+  before_script:
+  - dnf update
+  - dnf install git rpm-build rpmdevtools rpm-sign
+  script:
+  - rpmdev-setuptree
+  - cd ~/rpmbuild
+  - cp ~/bintra/client/dnf/bintra.spec SPECS/
+  - rpmbuild -bb SPECS/bintra.spec
+  artifacts:
+    paths:
+    - rpmbuild/RPMS/noarch/*.rpm
+  only:
+  - master
+
 publish:
   stage: deploy
   image: ubuntu:latest
