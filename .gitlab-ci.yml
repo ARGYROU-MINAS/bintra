@@ -14,6 +14,7 @@ cache:
   - node_modules/
 variables:
   versionTag: "$CI_COMMIT_SHA"
+  NEXUS_URL: "https://nexus.myocastor.de/repository/bintra_rpm/"
 
 makedocs:
   stage: build
@@ -110,6 +111,7 @@ rpmfedora:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
+  - "curl -v -i ${NEXUS_USER}:${NESUS_PASSWD} --upload-file rpmbuild/RPMS/noarch/*.rpm ${NEXUS_URL}"
   artifacts:
     paths:
     - rpmbuild/RPMS/noarch/
@@ -121,12 +123,13 @@ rpmcentos:
   image: centos:8
   before_script:
   - dnf -y -q update
-  - dnf -y -q install git rpm-build rpmdevtools rpm-sign
+  - dnf -y -q install git curl rpm-build rpmdevtools rpm-sign
   script:
   - rpmdev-setuptree
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
+  - "curl -v -i ${NEXUS_USER}:${NESUS_PASSWD} --upload-file rpmbuild/RPMS/noarch/*.rpm ${NEXUS_URL}"
   artifacts:
     paths:
     - rpmbuild/RPMS/noarch/
@@ -157,5 +160,8 @@ sast:
   stage: analyze
 include:
 - template: Security/SAST.gitlab-ci.yml
+
+.secret-analyzer:
+  stage: anaylze
 - template: Security/Secret-Detection.gitlab-ci.yml
 
