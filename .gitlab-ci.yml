@@ -7,6 +7,7 @@ stages:
 - test
 - analyze
 - deploy
+
 image: node:14
 cache:
   paths:
@@ -47,8 +48,6 @@ unittest:
   script:
   - npm run combined
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
-  after_script:
-  - ls -l
   artifacts:
     paths:
     - mochawesome-report/
@@ -157,7 +156,7 @@ publish:
   - master
 
 sast:
-  stage: test
+  stage: analyze
 include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
