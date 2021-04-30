@@ -8,11 +8,11 @@ stages:
 - analyze
 - deploy
 
-.sourcechanged
+.sourcechanged:
   rules:
     - changes:
       - api/*
-      - *.js
+      - ./*.js
       - config/*.js
       - controllers/*.js
       - models/*.js
