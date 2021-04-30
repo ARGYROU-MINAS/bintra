@@ -104,11 +104,8 @@ rpmfedora:
   stage: deploy
   image: fedora:34
   before_script:
-  - dnf -y update
-  - dnf -y install git rpm-build rpmdevtools rpm-sign
-  - ls -l /builds
-  - ls -l /builds/kai
-  - ls -l /builds/kai/bintra
+  - dnf -y -q update
+  - dnf -y -q install git rpm-build rpmdevtools rpm-sign
   script:
   - rpmdev-setuptree
   - cd ~/rpmbuild
@@ -116,7 +113,24 @@ rpmfedora:
   - rpmbuild -bb SPECS/bintra.spec
   artifacts:
     paths:
-    - rpmbuild/RPMS/noarch/*.rpm
+    - ~/rpmbuild/RPMS/noarch/*.rpm
+  only:
+  - master
+
+rpmcentos:
+  stage: deploy
+  image: centos:8
+  before_script:
+  - dnf -y -q update
+  - dnf -y -q install git rpm-build rpmdevtools rpm-sign
+  script:
+  - rpmdev-setuptree
+  - cd ~/rpmbuild
+  - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
+  - rpmbuild -bb SPECS/bintra.spec
+  artifacts:
+    paths:
+    - ~/rpmbuild/RPMS/noarch/*.rpm
   only:
   - master
 
