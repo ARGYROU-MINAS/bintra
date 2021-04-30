@@ -27,9 +27,11 @@ git clone --depth=1 https://gitlab.kretschmann.software/kai/bintra.git
 %build
 
 %install
-mkdir -p %{buildroot}%{python3_sitelib}/dnf-plugins
+mkdir -p %{buildroot}%{python_sitelib}/dnf-plugins
 mkdir -p %{buildroot}/etc/dnf/plugins
-cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python3_sitelib}/dnf-plugins/
+cp %{_sourcedir}/%{name}/client/dnf/%{name}.py %{buildroot}%{python_sitelib}/dnf-plugins/
+mkdir -p %{buildroot}%{_licensedir}/%{name}
+cp %{_sourcedir}/%{name}/LICENSE %{buildroot}%{_licensedir}/%{name}/
 echo "[main]" >%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "enable=true" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
 echo "JWT=" >>%{buildroot}/etc/dnf/plugins/%{name}.conf
@@ -44,8 +46,8 @@ pip3 install requests
 pip3 install ppretty
 
 %files
-%license LICENSE
-%{python3_sitelib}/dnf-plugins/%{name}.py
+%license %{_licensedir}/%{name}/LICENSE
+%{python_sitelib}/dnf-plugins/%{name}.py
 %config(noreplace) /etc/dnf/plugins/%{name}.conf
 
 
