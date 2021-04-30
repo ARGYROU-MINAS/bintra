@@ -160,8 +160,5 @@ sast:
   stage: analyze
 include:
 - template: Security/SAST.gitlab-ci.yml
-
-.secret-analyzer:
-  stage: anaylze
 - template: Security/Secret-Detection.gitlab-ci.yml
 
