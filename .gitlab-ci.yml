@@ -104,12 +104,15 @@ rpmfedora:
   stage: deploy
   image: fedora:34
   before_script:
-  - dnf update
-  - dnf install git rpm-build rpmdevtools rpm-sign
+  - dnf -y update
+  - dnf -y install git rpm-build rpmdevtools rpm-sign
+  - ls -l /builds
+  - ls -l /builds/kai
+  - ls -l /builds/kai/bintra
   script:
   - rpmdev-setuptree
   - cd ~/rpmbuild
-  - cp ~/bintra/client/dnf/bintra.spec SPECS/
+  - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
   artifacts:
     paths:
