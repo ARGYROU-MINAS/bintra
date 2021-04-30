@@ -85,6 +85,7 @@ sonarqube:
   allow_failure: false
 
 pages:
+  extends: .sourcechanged
   stage: deploy
   image: alpine
   before_script:
@@ -98,9 +99,6 @@ pages:
   artifacts:
     paths:
     - public
-  only:
-    refs:
-    - master
 
 debDebian:
   stage: deploy
@@ -127,9 +125,9 @@ rpmFedora:
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
   - 'curl --user "${NEXUS_USER}:${NESUS_PASSWD}" --upload-file `find RPMS/ -type f` -X PUT ${NEXUS_URL}'
-  artifacts:
-    paths:
-    - /root/rpmbuild/RPMS/noarch/
+#  artifacts:
+#    paths:
+#    - /root/rpmbuild/RPMS/noarch/
   only:
     refs:
     - master
@@ -146,9 +144,9 @@ rpmCentos:
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
   - 'curl --user "${NEXUS_USER}:${NESUS_PASSWD}" --upload-file `find RPMS/ -type f` -X PUT ${NEXUS_URL}'
-  artifacts:
-    paths:
-    - /root/rpmbuild/RPMS/noarch/
+#  artifacts:
+#    paths:
+#    - /root/rpmbuild/RPMS/noarch/
   only:
     refs:
     - master
