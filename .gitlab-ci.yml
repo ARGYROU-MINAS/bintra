@@ -128,6 +128,8 @@ rpmcentos:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
+  - pwd
+  - ls -l RPMS
   artifacts:
     paths:
     - ~/rpmbuild/RPMS/noarch/*.rpm
