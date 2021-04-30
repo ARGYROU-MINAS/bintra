@@ -8,6 +8,19 @@ stages:
 - analyze
 - deploy
 
+.sourcechanged
+  rules:
+    - changes:
+      - api/*
+      - *.js
+      - config/*.js
+      - controllers/*.js
+      - models/*.js
+      - service/*.js
+      - static/
+      - subscribers/*.js
+      - utils/*.js
+
 image: node:14
 cache:
   paths:
@@ -38,6 +51,7 @@ jsdocs:
     - out
 
 unittest:
+  extends: .sourcechanged
   stage: test
   image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
@@ -56,6 +70,7 @@ unittest:
     - xunit.xml
 
 sonarqube:
+  extends: .sourcechanged
   stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
@@ -111,10 +126,10 @@ rpmFedora:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
-  - 'curl -v -i ${NEXUS_USER}:${NESUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user "${NEXUS_USER}:${NESUS_PASSWD}" --upload-file `find RPMS/ -type f` -X PUT ${NEXUS_URL}'
   artifacts:
     paths:
-    - rpmbuild/RPMS/noarch/
+    - /root/rpmbuild/RPMS/noarch/
   only:
     refs:
     - master
@@ -130,10 +145,10 @@ rpmCentos:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
-  - 'curl -v -i ${NEXUS_USER}:${NESUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user "${NEXUS_USER}:${NESUS_PASSWD}" --upload-file `find RPMS/ -type f` -X PUT ${NEXUS_URL}'
   artifacts:
     paths:
-    - rpmbuild/RPMS/noarch/
+    - /root/rpmbuild/RPMS/noarch/
   only:
     refs:
     - master
@@ -159,9 +174,11 @@ publish:
   - master
 
 sast:
+  extends: .sourcechanged
   stage: analyze
 include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
 .secret-analyzer:
+  extends: .sourcechanged
   stage: analyze
