@@ -124,7 +124,7 @@ rpmFedora:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
-  - 'curl -v -i --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
 #  artifacts:
 #    paths:
 #    - /root/rpmbuild/RPMS/noarch/
@@ -143,7 +143,7 @@ rpmCentos:
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
-  - 'curl -v -i --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
 #  artifacts:
 #    paths:
 #    - /root/rpmbuild/RPMS/noarch/
