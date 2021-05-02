@@ -106,6 +106,7 @@ debDebian:
   before_script:
   - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
+  - echo "${GPG_SIGNER_PASSWD}" >/pwd.txt
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
   script:
@@ -115,7 +116,7 @@ debDebian:
   - find . -type d -exec chmod 755 {} \;
   - chmod 755 bintra/usr/sbin/bintra
   - dpkg-deb --root-owner-group --build bintra
-  - export GPG_TTY=$(tty) && echo "${GPG_SIGNER_PASSWD}" | dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase-fd 0"
+  - export GPG_TTY=$(tty) && dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase ${GPG_SIGNER_PASSWD}"
   - dpkg-sig --verify bintra.deb
   - 'cp bintra.deb bintra_$CVER_all.deb'
   - ls -l
