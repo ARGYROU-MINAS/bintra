@@ -132,7 +132,7 @@ rpmFedora:
   - dnf -y -q install git rpm-build rpmdevtools rpm-sign gpg
   - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-  - echo "${GPG_SIGNER_PASSWD}" >~/passphrase.txt
+  - echo "${GPG_SIGNER_PASSWD}" >/passphrase.txt
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
   - rpm --import public.asc
@@ -159,7 +159,7 @@ rpmCentos:
   - dnf -y -q install git curl rpm-build rpmdevtools rpm-sign
   - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-  - echo "${GPG_SIGNER_PASSWD}" >~/passphrase.txt
+  - echo "${GPG_SIGNER_PASSWD}" >/passphrase.txt
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
   - rpm --import public.asc
