@@ -27,7 +27,8 @@ cache:
   - node_modules/
 variables:
   versionTag: "$CI_COMMIT_SHA"
-  NEXUS_URL: "https://nexus.myocastor.de/repository/bintra_rpm/"
+  NEXUS_URL_RPM: "https://nexus.myocastor.de/repository/bintra_rpm/"
+  NEXUS_URL_DEB: "https://nexus.myocastor.de/repository/bintra/"
 
 makedocs:
   stage: build
@@ -119,6 +120,7 @@ debDebian:
   - dpkg-sig --verify bintra.deb
   - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
   - ls -l
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file bintra_*.deb ${NEXUS_URL_DEB}'
   artifacts:
     paths:
     - client/*.deb
@@ -145,7 +147,7 @@ rpmFedora:
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
   - rpm --addsign RPMS/noarch/*.rpm
-  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
 #  artifacts:
 #    paths:
 #    - /root/rpmbuild/RPMS/noarch/
@@ -173,7 +175,7 @@ rpmCentos:
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
   - rpm --addsign RPMS/noarch/*.rpm
-  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL}'
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
 #  artifacts:
 #    paths:
 #    - /root/rpmbuild/RPMS/noarch/
