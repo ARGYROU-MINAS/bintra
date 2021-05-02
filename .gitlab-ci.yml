@@ -120,7 +120,7 @@ debDebian:
   - dpkg-sig --verify bintra.deb
   - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
   - ls -l
-  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file bintra_*.deb ${NEXUS_URL_DEB}'
+  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} -H "Content-Type: multipart/form-data" --data-binary @$(ls -1 bintra*deb) ${NEXUS_URL_DEB}'
   artifacts:
     paths:
     - client/*.deb
