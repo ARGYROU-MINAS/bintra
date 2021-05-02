@@ -103,9 +103,20 @@ pages:
 debDebian:
   stage: deploy
   image: "$CI_REGISTRY/kai/bintra:deb"
+  before_script:
+  - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
+  - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
+  - gpg --import public.asc
+  - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
+  - echo "${GPG_SIGNER_PASSWD}" >passphrase.txt
   script:
-  - cd client && chmod -R 644 . && find . -type d -exec chmod 755 {} \; && chmod 755
-    bintra/usr/sbin/bintra && dpkg-deb --root-owner-group --build bintra
+  - cd client
+  - chmod -R 644 .
+  - find . -type d -exec chmod 755 {} \;
+  - chmod 755 bintra/usr/sbin/bintra
+  - dpkg-deb --root-owner-group --build bintra
+  - dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder --passphrase-file ../passprase.txt bintra.deb
+  - dpkg-sig --verify bintra.deb
   artifacts:
     paths:
     - client/bintra.deb
@@ -123,7 +134,7 @@ rpmFedora:
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
-  -- rpm --import public.asc
+  - rpm --import public.asc
   script:
   - rpmdev-setuptree
   - cat client/dnf/append_rpmmacros >>~/.rpmmacros
