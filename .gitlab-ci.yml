@@ -111,18 +111,17 @@ debDebian:
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
   script:
   - cd client
-  - 'export CVER=$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)'
   - chmod -R 644 .
   - find . -type d -exec chmod 755 {} \;
   - chmod 755 bintra/usr/sbin/bintra
   - dpkg-deb --root-owner-group --build bintra
   - export GPG_TTY=$(tty) && dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase ${GPG_SIGNER_PASSWD}"
   - dpkg-sig --verify bintra.deb
-  - 'cp bintra.deb bintra_$CVER_all.deb'
+  - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
   - ls -l
   artifacts:
     paths:
-    - client/bintra.deb
+    - client/*.deb
   only:
     refs:
     - master
