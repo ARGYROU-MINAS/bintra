@@ -123,9 +123,10 @@ rpmFedora:
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
+  -- rpm --import public.asc
   script:
   - rpmdev-setuptree
-  - cat client/dnf/append_rpmmacros >>.rpmmacros
+  - cat client/dnf/append_rpmmacros >>~/.rpmmacros
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
@@ -148,9 +149,11 @@ rpmCentos:
   - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
   - gpg --import public.asc
   - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
+  - rpm --import public.asc
   script:
   - rpmdev-setuptree
-  - cat client/dnf/append_rpmmacros >>.rpmmacros
+  - cat client/dnf/append_rpmmacros >>~/.rpmmacros
+  - cat ~/.rpmmacros
   - cd ~/rpmbuild
   - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
   - rpmbuild -bb SPECS/bintra.spec
