@@ -145,11 +145,7 @@ paths:
           description: package family, like debian, etc.
           required: true
           schema:
-            type: string
-            enum:
-              - debian
-              - CentOS
-              - Fedora
+            $ref: '#/components/schemas/Families'
         - name: packageHash
           in: query
           description: SHA256 hash of downloaded file
@@ -210,11 +206,7 @@ paths:
           description: package family like debian, etc.
           required: true
           schema:
-            type: string
-            enum:
-              - debian
-              - CentOS
-              - Fedora
+            $ref: '#/components/schemas/Families'
         - name: packageHash
           in: query
           description: SHA256 hash of downloaded file
@@ -993,6 +985,14 @@ components:
         type: string
 
   schemas:
+    Families:
+      type: string
+      enum:
+        - debian
+        - CentOS
+        - Fedora
+        - Windows
+
     SearchRequest:
       type: object
       properties:
@@ -1003,7 +1003,7 @@ components:
         packageArch:
           type: string
         packageFamily:
-          type: string
+          $ref: '#/components/schemas/Families'
         packageHash:
           type: string
         count:
@@ -1021,6 +1021,7 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/PatchEntry'
+
     PatchEntry:
       required:
         - op
@@ -1047,6 +1048,7 @@ components:
           type: string
           description: A string containing a JSON Pointer value
       description: A JSONPatch document as RFC 6902
+
     Registration:
       required:
         - email
@@ -1068,6 +1070,7 @@ components:
           type: string
           format: email
           example: me@example.com
+
     TokenItem:
       type: object
       properties:
@@ -1099,6 +1102,7 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/LoginItem'
+
     LoginItem:
       type: object
       properties:
@@ -1115,6 +1119,7 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
     DomainItem:
       type: object
       properties:
@@ -1124,6 +1129,7 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
     PackageItem:
       required:
         - arch
@@ -1144,7 +1150,7 @@ components:
         arch:
           type: string
         family:
-          type: string
+          $ref: '#/components/schemas/Families'
         count:
           type: integer
           example: 123
@@ -1152,6 +1158,7 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
     PackageVariants:
       type: object
       properties:
@@ -1168,7 +1175,7 @@ components:
         packageArch:
           type: string
         packageFamily:
-          type: string
+          $ref: '#/components/schemas/Families'
         packageHash:
           type: string
         count:
@@ -1178,6 +1185,7 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
     PackageCount:
       required:
         - count
@@ -1186,16 +1194,19 @@ components:
         count:
           type: integer
           example: 123
+
     Token:
       type: object
       properties:
         token:
           type: string
+
     Message:
       type: object
       properties:
         message:
           type: string
+
     Error:
       type: object
       properties:
