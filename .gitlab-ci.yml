@@ -101,7 +101,7 @@ pages:
     paths:
     - public
 
-debDebian:
+debPublish:
   stage: deploy
   image: "$CI_REGISTRY/kai/bintra:deb"
   before_script:
@@ -132,7 +132,7 @@ rpmPublish:
   stage: deploy
   parallel:
     matrix:
-      - FAMILY: ['fedora:34', 'centos:8']
+            - FAMILY: ['fedora:33', 'fedora:34', 'centos:8']
   image: ${FAMILY}
   before_script:
   - dnf -y -q update
