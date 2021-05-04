@@ -107,6 +107,126 @@ describe('PFilter put server tests', function() {
                 });
 	});
 
+	context('[BINTRA-] Add families', () => {
+		it('[STEP-1] Put debian package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'debian',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        done();
+                                });
+                });
+		it('[STEP-2] Put CentOS package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'CentOS',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        done();
+                                });
+                });
+		it('[STEP-3] Put Fedora package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'Fedora',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        done();
+                                });
+                });
+		it('[STEP-4] Put RedHat package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'RedHat',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        done();
+                                });
+                });
+		it('[STEP-5] Put Windows package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'Windows',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(200);
+                                        var reply = res.body[0];
+                                        done();
+                                });
+                });
+		it('[STEP-6] Put wrong case wINDows package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'wINDows',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(400);
+                                        done();
+                                });
+                });
+		it('[STEP-] Put very wrong package', (done) => {
+                        request(server)
+                                .put('/v1/package')
+                                .query({
+                                        packageName: pName,
+                                        packageVersion: pVersion,
+                                        packageArch: pArch,
+                                        packageFamily: 'lalala',
+                                        packageHash: pHash
+                                })
+                                .auth(tokenUser, { type: 'bearer' })
+                                .end((err, res) => {
+                                        res.should.have.status(400);
+                                        done();
+                                });
+                });
+	});
+
 	after(async () => {
 		console.log("after run");
 		await PackageModel.deleteMany({});
