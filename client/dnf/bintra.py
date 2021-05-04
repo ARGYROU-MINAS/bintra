@@ -2,7 +2,7 @@
 #
 # CentOS / Redhat plugin for binarytransparency checking
 # https://bintra.directory
-# Version 1.0.3
+# Version 1.0.4
 
 from dnfpluginscore import _, logger
 import dnf
@@ -26,7 +26,7 @@ class Bintra(dnf.Plugin):
         self.JWT = cp.get('main', 'JWT')
         self.session.headers.update({
             'Authorization': 'Bearer ' + self.JWT,
-            'User-Agent': 'bintra/1.0.0 (CentOS)'
+            'User-Agent': 'bintra/1.0.4 (CentOS/RedHat)'
         })
 
     @staticmethod
@@ -79,10 +79,18 @@ class Bintra(dnf.Plugin):
             logger.debug('Skipping command %s', _cmd)
             return
 
+        # get system family
+        if os.path.isfile("/etc/centos-release"):
+            fileFamily = "CentOS"
+        elif os.path.isfile("/etc/redhat-release"):
+            fileFamily = "RedHat"
+        else:
+            fileFamily = "CentOS"
+
         # loop over packages downloaded and to be installed
         for p in _theset:
             try: p.vendor
-            except AttributeError: p.vendor='CentOS'
+            except AttributeError: p.vendor=fileFamily
 
             _arch = p.arch
             _version = p.evr
