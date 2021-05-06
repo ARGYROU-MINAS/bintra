@@ -297,6 +297,14 @@ exports.listPackagesFull = function(count) {
   });
 }
 
+function optionalWildcard(searchvalue) {
+  if(searchvalue.endsWith("*")) {
+    return new RegExp('^' + searchvalue.replace("*", ""), 'i');
+  } else {
+    return searchvalue;
+  }
+}
+
 /**
  * @method
  * Search for packages by given query
@@ -313,19 +321,11 @@ exports.searchPackages = function(jsearch) {
     const queryObj = {};
 
     if(jsearch.hasOwnProperty('packageName')) {
-      if(jsearch.packageName.endsWith("*")) {
-        queryObj['name'] = new RegExp('^' + jsearch.packageName.replace("*", ""), 'i');
-      } else {
-        queryObj['name'] = jsearch.packageName;
-      }
+      queryObj['name'] = optionalWildcard(jsearch.packageName);
     }
 
     if(jsearch.hasOwnProperty('packageVersion')) {
-      if(jsearch.packageVersion.endsWith("*")) {
-        queryObj['version'] = new RegExp('^' + jsearch.packageVersion.replace("*", ""), 'i');
-      } else {
-        queryObj['version'] = jsearch.packageVersion;
-      }
+      queryObj['version'] = optionalWildcard(jsearch.packageVersion);
     }
 
     if(jsearch.hasOwnProperty('packageArch')) {
