@@ -67,7 +67,7 @@ exports.verifyToken = async function(req, scopes, schema) {
 
 exports.issueToken = function(username, role) {
   console.log("user " + username + ", role" + role);
-  var token = jwt.sign(
+  return jwt.sign(
     {
       sub: username,
       iss: issuer,
@@ -78,5 +78,4 @@ exports.issueToken = function(username, role) {
       expiresIn: "365d"
     }
   );
-  return token;
 };

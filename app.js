@@ -15,7 +15,7 @@ require('custom-env').env(true);
 
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
-var oas3Tools = require('./myoas/'); //require('oas3-tools');
+var oas3Tools = require('./myoas/'); // here was required the oas3-tools before
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");

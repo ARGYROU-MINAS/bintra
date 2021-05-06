@@ -25,9 +25,6 @@ PackageSchema.index({name: 1, version: 1, arch: 1, family: 1}, {unique: false});
 PackageSchema.index({tscreated: 1});
 PackageSchema.index({count: 1});
 
-//PackageSchema.virtual('idsomething').get(function() {
-//	return this.whateverToDo
-//});
 
 module.exports = mongoose.model('PackageModel', PackageSchema);
 

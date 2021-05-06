@@ -26,7 +26,7 @@ module.exports.loginPost = function loginPost(args, res, next) {
   var password = args.body.password;
   var response;
 
-  //eventEmitter.emit('apihit', req);
+  eventEmitter.emit('posthit', 'login');
 
   UsersService.checkUser(username, password)
     .then(function (useritem) {

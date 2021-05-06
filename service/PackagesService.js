@@ -41,7 +41,7 @@ function getUserObject(username) {
 }
 
 function renameAttributes(item) {
-    var r = {
+    return {
         id: item._id,
         packageName: item.name,
         packageVersion: item.version,
@@ -51,7 +51,6 @@ function renameAttributes(item) {
         count: item.count,
         creationDate: item.tscreated
     };
-    return r;
 }
 
 function findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily)
@@ -114,6 +113,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                   })
                 })
                 .catch(err => {
+		      console.error("Some error occured?", err);
                 });
             } else {
               console.log("Did exist already");

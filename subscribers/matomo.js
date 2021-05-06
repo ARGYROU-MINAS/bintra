@@ -17,7 +17,6 @@ var baseUrl = 'https://api.binarytransparency.net';
  * @returns {string} IP number
  */
 function getRemoteAddr(req) {
-  // console.log(req.headers);
   if(req.headers['x-forwarded-for']) {
     var aIPs = req.headers['x-forwarded-for'].split(',');
     var firstIP = aIPs[0];
@@ -37,9 +36,12 @@ eventEmitter.on('apihit', function getApiHit(req) {
   console.debug("In subscriber");
 
   if(null == piwik) return;
+
   var url = req.url;
   var urlparts = url.split('/');
   var urlMethod = urlparts[0] + '/' + urlparts[1] + '/' + urlparts[2];
+  var reqMethod = req.method;
+
   console.log("log " + urlMethod);
   piwik.track({
     url: baseUrl + urlMethod,
@@ -50,10 +52,22 @@ eventEmitter.on('apihit', function getApiHit(req) {
     lang: req.headers['accept-language'],
     cvar: JSON.stringify({
       '1': ['API version', urlparts[1]],
-      '2': ['HTTP method', req.method]
+      '2': ['HTTP method', reqMethod]
     })
   });
 
+});
+
+eventEmitter.on('posthit', function getPostHit(urlpath) {
+  console.debug("In subscriber");
+
+  if(null == piwik) return;
+
+   piwik.track({
+    url: baseUrl + urlpath,
+    action_name: 'POST call',
+    token_auth: process.env.MATOMO_TOKEN_AUTH,
+  });
 });
 
 module.exports = {}
