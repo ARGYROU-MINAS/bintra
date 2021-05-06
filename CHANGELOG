@@ -3,3 +3,6 @@ Add JWT authorization filter for destructive actions.
 
 2021.02.11
 Add gpg signing of deb package and commits.
+
+2021.05.06
+Upgrade Sonarqube to 8.9LTS

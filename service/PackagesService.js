@@ -54,6 +54,20 @@ function renameAttributes(item) {
     return r;
 }
 
+function findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily)
+{
+	PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
+                              {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
+                          .then(itemOthers => {
+                              console.info("Found others");
+                              resolve(itemOthers);
+                          })
+                          .catch(err => {
+                              console.error("Not found others: ", err);
+                              reject("bahh");
+                          });
+}
+
 
 /**
  * @method
@@ -92,16 +106,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                       console.log("Added fresh entry");
                       eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, true);
 
-                      PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
-		              {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
-                          .then(itemOthers => {
-                              console.info("Found others");
-                              resolve(itemOthers);
-                          })
-                          .catch(err => {
-                              console.error("Not found others: ", err);
-                              reject("bahh");
-                          });
+		      findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily);
                   })
                   .catch(err => {
                       console.error("Not saved fresh: ", err);
@@ -120,16 +125,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                 .then(itemUpdated => {
                     console.log("Did update counter");
                     eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, false);
-                    PackageModel.find({name: packageName, version: packageVersion, arch: packageArch, family: packageFamily},
-		            {name: 1, version: 1, arch: 1, family: 1, hash: 1, count: 1, tscreated: 1, tsupdated: 1})
-                        .then(itemOthers => {
-                            console.info("Found others");
-                            resolve(itemOthers);
-                        })
-                        .catch(err => {
-                            console.error("Not found others: ", err);
-                            reject("bahh");
-                        });
+		    findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily);
                 })
                 .catch(err => {
                     console.error("Not updated: ", err);
