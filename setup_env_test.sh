@@ -13,9 +13,9 @@ echo JWT_SECRET=SomeSecret >>.env.test
 echo JWT_ISSUER=127.0.0.1 >>.env.test
 echo TOOTAPI=https:// >>.env.test
 echo TOOTAUTH=XXX >>.env.test
-echo MATOMO_URL=https://stat.myocastor.de/piwik.php >>env.test
-echo MATOMO_ID=141 >>env.test
-echo MATOMO_TOKEN_AUTH=SOMETHINGWRONG >>env.test
+echo MATOMO_URL=https://stat.myocastor.de/piwik.php >>.env.test
+echo MATOMO_ID=141 >>.env.test
+echo MATOMO_TOKEN_AUTH=SOMETHINGWRONG >>.env.test
 
 echo "Content of .env.test"
 ls -la |grep .env
