@@ -3,10 +3,10 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#priority-of-environment-variables
 stages:
-- build
-- test
-- analyze
-- deploy
+  - build
+  - test
+  - analyze
+  - deploy
 
 .sourcechanged:
   rules:
@@ -24,7 +24,7 @@ stages:
 image: node:14
 cache:
   paths:
-  - node_modules/
+    - node_modules/
 variables:
   versionTag: "$CI_COMMIT_SHA"
   NEXUS_URL_RPM: "https://nexus.myocastor.de/repository/bintra_rpm/"
@@ -34,22 +34,22 @@ makedocs:
   stage: build
   image: "$CI_REGISTRY/kai/lggr:mkdocs"
   before_script:
-  - mkdir pub_mkdocs
+    - mkdir pub_mkdocs
   script:
-  - mkdocs build
+    - mkdocs build
   artifacts:
     paths:
-    - pub_mkdocs
+      - pub_mkdocs
 
 jsdocs:
   stage: build
   before_script:
-  - npm install
+    - npm install
   script:
-  - "./node_modules/.bin/jsdoc --verbose -c jsdoc.json"
+    - "./node_modules/.bin/jsdoc --verbose -c jsdoc.json"
   artifacts:
     paths:
-    - out
+      - out
 
 unittest:
   extends: .sourcechanged
@@ -58,17 +58,19 @@ unittest:
   variables:
     NODE_ENV: test
   before_script:
-  - "/etc/init.d/mongodb start"
-  - npm install
-  - "./setup_env_test.sh"
+    - "/etc/init.d/mongodb start"
+    - npm install
+    - "./setup_env_test.sh"
   script:
-  - npm run combined
+    - npm run combined
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   artifacts:
     paths:
-    - mochawesome-report/
-    - coverage/
-    - xunit.xml
+      - mochawesome-report/
+      - coverage/
+      - xunit.xml
+    reports:
+      junit: junit-custom.xml
 
 sonarqube:
   extends: .sourcechanged
@@ -76,13 +78,13 @@ sonarqube:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint:
-    - ''
+      - ''
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   before_script:
-  - git fetch --unshallow
+    - git fetch --unshallow
   script:
-  - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: false
 
 pages:
@@ -90,70 +92,70 @@ pages:
   stage: deploy
   image: alpine
   before_script:
-  - mkdir public
-  - mkdir public/jsdoc
-  - mkdir public/mocha
+    - mkdir public
+    - mkdir public/jsdoc
+    - mkdir public/mocha
   script:
-  - cp -a pub_mkdocs/* public/
-  - cp -a out/* public/jsdoc/
-  - cp -a mochawesome-report/* public/mocha/
+    - cp -a pub_mkdocs/* public/
+    - cp -a out/* public/jsdoc/
+    - cp -a mochawesome-report/* public/mocha/
   artifacts:
     paths:
-    - public
+      - public
 
 debPublish:
   stage: deploy
   image: "$CI_REGISTRY/kai/bintra:deb"
   before_script:
-  - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
-  - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-  - echo "${GPG_SIGNER_PASSWD}" >/pwd.txt
-  - gpg --import public.asc
-  - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
+    - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
+    - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
+    - echo "${GPG_SIGNER_PASSWD}" >/pwd.txt
+    - gpg --import public.asc
+    - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
   script:
-  - cd client
-  - chmod -R 644 .
-  - find . -type d -exec chmod 755 {} \;
-  - chmod 755 bintra/usr/sbin/bintra
-  - dpkg-deb --root-owner-group --build bintra
-  - export GPG_TTY=$(tty) && dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase ${GPG_SIGNER_PASSWD}"
-  - dpkg-sig --verify bintra.deb
-  - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
-  - ls -l
-  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} -H "Content-Type: multipart/form-data" --data-binary @$(ls -1 bintra*deb) ${NEXUS_URL_DEB}'
+    - cd client
+    - chmod -R 644 .
+    - find . -type d -exec chmod 755 {} \;
+    - chmod 755 bintra/usr/sbin/bintra
+    - dpkg-deb --root-owner-group --build bintra
+    - export GPG_TTY=$(tty) && dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase ${GPG_SIGNER_PASSWD}"
+    - dpkg-sig --verify bintra.deb
+    - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
+    - ls -l
+    - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} -H "Content-Type: multipart/form-data" --data-binary @$(ls -1 bintra*deb) ${NEXUS_URL_DEB}'
   artifacts:
     paths:
-    - client/*.deb
+      - client/*.deb
   only:
     refs:
-    - master
+      - master
 
 rpmPublish:
   stage: deploy
   parallel:
     matrix:
-            - FAMILY: ['fedora:33', 'fedora:34', 'centos:8']
+      - FAMILY: ['fedora:33', 'fedora:34', 'centos:8']
   image: ${FAMILY}
   before_script:
-  - dnf -y -q update
-  - dnf -y -q install git rpm-build rpmdevtools rpm-sign gpg
-  - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
-  - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-  - echo "${GPG_SIGNER_PASSWD}" >/passphrase.txt
-  - gpg --import public.asc
-  - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
-  - rpm --import public.asc
+    - dnf -y -q update
+    - dnf -y -q install git rpm-build rpmdevtools rpm-sign gpg
+    - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
+    - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
+    - echo "${GPG_SIGNER_PASSWD}" >/passphrase.txt
+    - gpg --import public.asc
+    - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
+    - rpm --import public.asc
   script:
-  - rpmdev-setuptree
-  - cat client/dnf/append_rpmmacros >>~/.rpmmacros
-  - cd ~/rpmbuild
-  - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
-  - rpmbuild -bb SPECS/bintra.spec
-  - rpm --addsign RPMS/noarch/*.rpm
-  - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
+    - rpmdev-setuptree
+    - cat client/dnf/append_rpmmacros >>~/.rpmmacros
+    - cd ~/rpmbuild
+    - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
+    - rpmbuild -bb SPECS/bintra.spec
+    - rpm --addsign RPMS/noarch/*.rpm
+    - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
   only:
     refs:
-    - master
+      - master
 
 publish:
   stage: deploy
@@ -163,24 +165,23 @@ publish:
   cache: {}
   dependencies: []
   before_script:
-  - which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client
-    )
-  - mkdir -p ~/.ssh
-  - chmod 0700 ~/.ssh
-  - eval $(ssh-agent -s)
-  - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client)
+    - mkdir -p ~/.ssh
+    - chmod 0700 ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-  - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
   only:
-  - master
+    - master
 
 sast:
   extends: .sourcechanged
   stage: analyze
 include:
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
 .secret-analyzer:
   extends: .sourcechanged
   stage: analyze
