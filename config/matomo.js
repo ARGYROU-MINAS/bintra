@@ -3,7 +3,7 @@
 require('dotenv').config()
 
 export default {
-	url: process.env.MATOMO_URL,
-	id: process.env.MATOMO_ID,
-	token: process.env.MATOMO_TOKEN_AUTH,
+    url: process.env.MATOMO_URL,
+    id: process.env.MATOMO_ID,
+    token: process.env.MATOMO_TOKEN_AUTH,
 }

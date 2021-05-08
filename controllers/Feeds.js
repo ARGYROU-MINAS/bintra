@@ -8,37 +8,37 @@ const sortItemFeed = 'tsupdated';
 const sortDirectionFeed = 'down';
 
 function getInitialFeed() {
-  const myfeed = new Feed({
-    title: "Binary Transparency Directory",
-    description: "Feed for hash code monitoring",
-    id: "https://bintra.directory/",
-    link: "https://bintra.directory/",
-    language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-    image: "https://bintra.directory/image.png",
-    favicon: "https://bintra.directory/favicon.ico",
-    copyright: "All rights reserved 2021, Kai KRETSCHMANN",
-    updated: new Date(),
-    generator: "Feed for bintra", // optional, default = 'Feed for Node.js'
-    feedLinks: {
-      json: "https://api.binarytransparency.net/v1/feed.json",
-      rss: "https://api.binarytransparency.net/v1/feed.rss",
-      atom: "https://api.binarytransparency.net/v1/feed.atom"
-    },
-    author: {
-      name: "Kai KRETSCHMANN",
-      email: "kai@kretschmann.consulting",
-      link: "https://kai.kretschmann.consulting"
-    }
-  });
+    const myfeed = new Feed({
+        title: "Binary Transparency Directory",
+        description: "Feed for hash code monitoring",
+        id: "https://bintra.directory/",
+        link: "https://bintra.directory/",
+        language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+        image: "https://bintra.directory/image.png",
+        favicon: "https://bintra.directory/favicon.ico",
+        copyright: "All rights reserved 2021, Kai KRETSCHMANN",
+        updated: new Date(),
+        generator: "Feed for bintra", // optional, default = 'Feed for Node.js'
+        feedLinks: {
+            json: "https://api.binarytransparency.net/v1/feed.json",
+            rss: "https://api.binarytransparency.net/v1/feed.rss",
+            atom: "https://api.binarytransparency.net/v1/feed.atom"
+        },
+        author: {
+            name: "Kai KRETSCHMANN",
+            email: "kai@kretschmann.consulting",
+            link: "https://kai.kretschmann.consulting"
+        }
+    });
 
-  myfeed.addCategory("Technology");
-  myfeed.addContributor({
-    name: "Kai KRETSCHMANN",
-    email: "kai@kretschmann.consulting",
-    link: "https://kai.kretschmann.consulting"
-  });
+    myfeed.addCategory("Technology");
+    myfeed.addContributor({
+        name: "Kai KRETSCHMANN",
+        email: "kai@kretschmann.consulting",
+        link: "https://kai.kretschmann.consulting"
+    });
 
-  return myfeed;
+    return myfeed;
 }
 
 function createContent(entry) {
@@ -46,11 +46,11 @@ function createContent(entry) {
         entry.arch + ", " + entry.family + " with hash " + entry.hash
 }
 
-function feedRss (req, res, next) {
-	var rssfeed = getInitialFeed();
+function feedRss(req, res, next) {
+    var rssfeed = getInitialFeed();
 
     PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
-        .then(function (items) {
+        .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 rssfeed.addItem({
@@ -62,20 +62,24 @@ function feedRss (req, res, next) {
                     content: createContent(entry)
                 });
             });
-            res.writeHead(200, { "Content-Type": "application/rss+xml" });
+            res.writeHead(200, {
+                "Content-Type": "application/rss+xml"
+            });
             return res.end(rssfeed.rss2());
         })
-        .catch(function (payload) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
+        .catch(function(payload) {
+            res.writeHead(500, {
+                "Content-Type": "text/plain"
+            });
             return res.end("error" + payload);
         });
 }
 
 function feedAtom(req, res, next) {
-	var atomfeed = getInitialFeed();
+    var atomfeed = getInitialFeed();
 
     PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
-        .then(function (items) {
+        .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 atomfeed.addItem({
@@ -86,21 +90,25 @@ function feedAtom(req, res, next) {
                     content: createContent(entry)
                 });
             });
-            res.writeHead(200, { "Content-Type": "application/rss+xml" });
+            res.writeHead(200, {
+                "Content-Type": "application/rss+xml"
+            });
             return res.end(atomfeed.atom1());
         })
-        .catch(function (payload) {
+        .catch(function(payload) {
             console.error(payload);
-            res.writeHead(500, { "Content-Type": "text/plain" });
+            res.writeHead(500, {
+                "Content-Type": "text/plain"
+            });
             return res.end("error" + payload);
         });
 }
 
 function feedJson(req, res, next) {
-        var jsonfeed = getInitialFeed();
+    var jsonfeed = getInitialFeed();
 
     PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
-        .then(function (items) {
+        .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
                 jsonfeed.addItem({
@@ -112,17 +120,21 @@ function feedJson(req, res, next) {
                     content: createContent(entry)
                 });
             });
-            res.writeHead(200, { "Content-Type": "application/json" });
+            res.writeHead(200, {
+                "Content-Type": "application/json"
+            });
             return res.end(jsonfeed.json1());
         })
-        .catch(function (payload) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
+        .catch(function(payload) {
+            res.writeHead(500, {
+                "Content-Type": "text/plain"
+            });
             return res.end("error" + payload);
         });
 }
 
-module.exports.bintraFeed = function bintraFeed (req, res, next, type) {
-    switch(type) {
+module.exports.bintraFeed = function bintraFeed(req, res, next, type) {
+    switch (type) {
         case 'rss':
             feedRss(req, res, next);
             break;
@@ -136,4 +148,3 @@ module.exports.bintraFeed = function bintraFeed (req, res, next, type) {
             console.error("Wrong type " + type);
     }
 }
-

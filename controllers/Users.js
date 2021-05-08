@@ -19,17 +19,21 @@ var UsersService = require('../service/UsersService');
  * Validate package, store information and return alternatives.
  * @public
  */
-module.exports.checkToken = function checkToken (req, res, next) {
-  console.log("In check");
-  eventEmitter.emit('apihit', req);
-  console.log(req.auth);
+module.exports.checkToken = function checkToken(req, res, next) {
+    console.log("In check");
+    eventEmitter.emit('apihit', req);
+    console.log(req.auth);
 
-  var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
-  var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
+    var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
+    var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
 
-  var payload = {name: req.auth.sub, tsfrom: tsfrom, tsto: tsto};
-  console.log(payload);
-  utils.writeJson(res, payload, 200);
+    var payload = {
+        name: req.auth.sub,
+        tsfrom: tsfrom,
+        tsto: tsto
+    };
+    console.log(payload);
+    utils.writeJson(res, payload, 200);
 };
 
 /**
@@ -37,18 +41,18 @@ module.exports.checkToken = function checkToken (req, res, next) {
  * Validate package, store information and return alternatives.
  * @public
  */
-module.exports.validatePackage = function validatePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
-  var username = req.auth.sub;
+module.exports.validatePackage = function validatePackage(req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
+    var username = req.auth.sub;
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 /**
@@ -56,17 +60,17 @@ module.exports.validatePackage = function validatePackage (req, res, next, packa
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackage = function listPackage (req, res, next, packageName, packageVersion, packageArch, packageFamily) {
+module.exports.listPackage = function listPackage(req, res, next, packageName, packageVersion, packageArch, packageFamily) {
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.listPackage(packageName, packageVersion, packageArch, packageFamily)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.listPackage(packageName, packageVersion, packageArch, packageFamily)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 /**
@@ -74,17 +78,17 @@ module.exports.listPackage = function listPackage (req, res, next, packageName, 
  * List package data for arguments matching.
  * @public
  */
-module.exports.listPackageSingle = function listPackage (req, res, next, id) {
+module.exports.listPackageSingle = function listPackage(req, res, next, id) {
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.listPackageSingle(id)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeText(res, payload.msg, payload.code);
-    });
+    PackagesService.listPackageSingle(id)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeText(res, payload.msg, payload.code);
+        });
 };
 
 /**
@@ -92,18 +96,18 @@ module.exports.listPackageSingle = function listPackage (req, res, next, id) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackages = function listPackage (req, res, next, skip, count, sort, direction) {
-  console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction);
+module.exports.listPackages = function listPackage(req, res, next, skip, count, sort, direction) {
+    console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction);
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.listPackages(skip, count, sort, direction)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.listPackages(skip, count, sort, direction)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 /**
@@ -111,18 +115,18 @@ module.exports.listPackages = function listPackage (req, res, next, skip, count,
  * List all packages and variations.
  * @public
  */
-module.exports.listPagePackages = function listPagePackage (req, res, next, page, size, sorters, filter) {
-  console.log("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
+module.exports.listPagePackages = function listPagePackage(req, res, next, page, size, sorters, filter) {
+    console.log("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.listPagePackages(page, size, sorters, filter)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.listPagePackages(page, size, sorters, filter)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 /**
@@ -130,20 +134,20 @@ module.exports.listPagePackages = function listPagePackage (req, res, next, page
  * List all packages and variations.
  * @public
  */
-module.exports.listPackagesFull = function listPackage (req, res, next, count) {
-  if(!count) {
-    count = 100;
-  }
+module.exports.listPackagesFull = function listPackage(req, res, next, count) {
+    if (!count) {
+        count = 100;
+    }
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.listPackagesFull(count)
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.listPackagesFull(count)
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 /**
@@ -151,17 +155,17 @@ module.exports.listPackagesFull = function listPackage (req, res, next, count) {
  * Return total number of package variations.
  * @public
  */
-module.exports.countPackage = function countPackage (req, res, next) {
+module.exports.countPackage = function countPackage(req, res, next) {
 
-  eventEmitter.emit('apihit', req);
+    eventEmitter.emit('apihit', req);
 
-  PackagesService.countPackage()
-    .then(function (payload) {
-      utils.writeJson(res, payload, 200);
-    })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
-    });
+    PackagesService.countPackage()
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
 };
 
 
@@ -170,13 +174,15 @@ module.exports.countPackage = function countPackage (req, res, next) {
  * Test function
  * @public
  */
-module.exports.testDefault = function testDefault (req, res, next) {
+module.exports.testDefault = function testDefault(req, res, next) {
 
-  eventEmitter.emit('apihit', req);
-console.log(req.openapi.schema.security);
+    eventEmitter.emit('apihit', req);
+    console.log(req.openapi.schema.security);
 
-  var payload = {message: "you called default"};
-  utils.writeJson(res, payload, 200);
+    var payload = {
+        message: "you called default"
+    };
+    utils.writeJson(res, payload, 200);
 };
 
 /**
@@ -184,11 +190,13 @@ console.log(req.openapi.schema.security);
  * Test function
  * @public
  */
-module.exports.testAdmin = function testAdmin (req, res, next) {
+module.exports.testAdmin = function testAdmin(req, res, next) {
 
-  eventEmitter.emit('apihit', req);
-console.log(req.openapi.schema.security);
+    eventEmitter.emit('apihit', req);
+    console.log(req.openapi.schema.security);
 
-  var payload = {message: "you called admin"};
-  utils.writeJson(res, payload, 200);
+    var payload = {
+        message: "you called admin"
+    };
+    utils.writeJson(res, payload, 200);
 };

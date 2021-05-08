@@ -6,3 +6,6 @@ Add gpg signing of deb package and commits.
 
 2021.05.06
 Upgrade Sonarqube to 8.9LTS
+
+2021.05.08
+js-beautify rewrites

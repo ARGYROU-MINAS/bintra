@@ -14,46 +14,52 @@ chai.use(chaiHttp);
 
 describe('server', () => {
 
-	describe('[BINTRA-8] GET feeds', () => {
-		 before(async () => {
-                        var tsnow = new Date();
-                        var packageNew = new PackageModel({name: 'theName', version: 'theVersion',
-                                                   arch: 'theArchitecture', family: 'theFamily',
-                                                   hash: 'theHash', tscreated: tsnow, tsupdated: tsnow});
-                        await packageNew.save();
-                });
-
-		it('[STEP-1] get rss', (done) => {
-		  request(server)
-		      .get('/v1/feed.rss')
-		      .end((err, res) => {
-			    res.should.have.status(200);
-			    res.should.have.header('content-type', 'application/rss+xml');
-			    done();
-		        });
-		});
-		it('[STEP-2] get atom', (done) => {
-                  request(server)
-                      .get('/v1/feed.atom')
-                      .end((err, res) => {
-                            res.should.have.status(200);
-			    res.should.have.header('content-type', 'application/rss+xml');
-                            done();
-                        });
-                });
-		it('[STEP-3] get json', (done) => {
-                  request(server)
-                      .get('/v1/feed.json')
-                      .end((err, res) => {
-                            res.should.have.status(200);
-			    res.should.have.header('content-type', 'application/json');
-                            done();
-                        });
-                });
-	});
-
-	after(async () => {
-                console.log("after run");
-                await PackageModel.deleteMany({});
+    describe('[BINTRA-8] GET feeds', () => {
+        before(async () => {
+            var tsnow = new Date();
+            var packageNew = new PackageModel({
+                name: 'theName',
+                version: 'theVersion',
+                arch: 'theArchitecture',
+                family: 'theFamily',
+                hash: 'theHash',
+                tscreated: tsnow,
+                tsupdated: tsnow
+            });
+            await packageNew.save();
         });
+
+        it('[STEP-1] get rss', (done) => {
+            request(server)
+                .get('/v1/feed.rss')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.have.header('content-type', 'application/rss+xml');
+                    done();
+                });
+        });
+        it('[STEP-2] get atom', (done) => {
+            request(server)
+                .get('/v1/feed.atom')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.have.header('content-type', 'application/rss+xml');
+                    done();
+                });
+        });
+        it('[STEP-3] get json', (done) => {
+            request(server)
+                .get('/v1/feed.json')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.have.header('content-type', 'application/json');
+                    done();
+                });
+        });
+    });
+
+    after(async () => {
+        console.log("after run");
+        await PackageModel.deleteMany({});
+    });
 });

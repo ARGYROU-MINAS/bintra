@@ -35,9 +35,18 @@ var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
 require('./subscribers/toot');
 
-const { mongoHost, mongoPort, mongoDb, mongoUrl } = require('./conf');
+const {
+    mongoHost,
+    mongoPort,
+    mongoDb,
+    mongoUrl
+} = require('./conf');
 console.log(mongoHost + mongoUrl);
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+});
 mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -45,17 +54,17 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // default CORS domain
 const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080'];
 var corsOptions = {
-  origin: function(origin, callback) {
-      if(!(origin)) {
-        callback(null, true);
-      } else {
-        console.log("cors check on " + origin);
-        if(corsWhitelist.indexOf(origin) !== -1) {
-          callback(null, true);
+    origin: function(origin, callback) {
+        if (!(origin)) {
+            callback(null, true);
         } else {
-          callback(new Error('Not allowed by CORS'));
+            console.log("cors check on " + origin);
+            if (corsWhitelist.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
         }
-      }
     }
 };
 
@@ -67,23 +76,25 @@ app.use(cors(corsOptions));
 
 // Redirect root to docs UI
 app.use('/', function doRedir(req, res, next) {
-  if(req.url != '/') {
-    next();
-  } else {
-    res.writeHead(301, {Location: '/docs/'});
-    res.end();
-  }
+    if (req.url != '/') {
+        next();
+    } else {
+        res.writeHead(301, {
+            Location: '/docs/'
+        });
+        res.end();
+    }
 });
 
 app.use(function(req, res, next) {
-  if (toobusy()) {
-    res.send(503, "I'm busy right now, sorry.");
-  } else {
-    next();
-  }
+    if (toobusy()) {
+        res.send(503, "I'm busy right now, sorry.");
+    } else {
+        next();
+    }
 });
 toobusy.onLag(function(currentLag) {
-  console.error("Event loop lag detected! Latency: " + currentLag + "ms");
+    console.error("Event loop lag detected! Latency: " + currentLag + "ms");
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
@@ -93,20 +104,20 @@ app.use(serveStatic(path.join(__dirname, 'static')));
 
 // Add some mongoose data to request for later use
 app.use(function(req, res, next) {
-  req.mcdadmin = mongoose.connection;
-  next();
+    req.mcdadmin = mongoose.connection;
+    next();
 });
 
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
-var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
+var spec = fs.readFileSync(path.join(__dirname, 'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
-var swaggerDocJson = YAML.load(path.join(__dirname,'api/swagger.yaml'));
+var swaggerDocJson = YAML.load(path.join(__dirname, 'api/swagger.yaml'));
 
 var uioptions = {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customJs: '/matomo.js',
-  customSiteTitle: "Bintra directory API - binarytransparency",
-  customfavIcon: "/favicon.ico"
+    customCss: '.swagger-ui .topbar { display: none }',
+    customJs: '/matomo.js',
+    customSiteTitle: "Bintra directory API - binarytransparency",
+    customfavIcon: "/favicon.ico"
 };
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocJson, uioptions));
 
@@ -121,8 +132,7 @@ var options = {
     },
     theapp: app,
     openApiValidator: {
-	validateSecurity:
-	    {
+        validateSecurity: {
             handlers: {
                 bearerauth: auth.verifyToken
             }
@@ -134,9 +144,9 @@ var options = {
 
 // No "/v1" pattern, so it is wrong from here on
 app.use(/^(?!\/v1).+/, function(req, res) {
-  console.error('No API call');
-  res.status(404);
-  res.send('No API call');
+    console.error('No API call');
+    res.status(404);
+    res.send('No API call');
 });
 
 // Filter all parameters known
@@ -151,17 +161,17 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
 var serverPort = process.env.BIND_PORT;
 var serverHost = process.env.BIND_HOST;
 console.log("Bind to %s : %d", serverHost, serverPort);
-var server = http.createServer(app).listen(serverPort, serverHost, function () {
-  console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
-  console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
+var server = http.createServer(app).listen(serverPort, serverHost, function() {
+    console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
+    console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
 });
 
 process.on('SIGINT', function() {
-  console.error("SIGINT received, quit");
-  server.close();
-  // calling .shutdown allows your process to exit normally
-  toobusy.shutdown();
-  process.exit();
+    console.error("SIGINT received, quit");
+    server.close();
+    // calling .shutdown allows your process to exit normally
+    toobusy.shutdown();
+    process.exit();
 });
 
 module.exports = app; // for testing

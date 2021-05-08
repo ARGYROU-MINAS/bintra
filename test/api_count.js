@@ -14,23 +14,22 @@ const PackagesService = require('../service/PackagesService.js');
 
 describe('getCount', function() {
 
-	context('[BINTRA-1] get count', function() {
-		it('[STEP-1] should generate number property', async () => {
-			const countSchema = {
-				title: 'count schema',
-				type: 'object',
-				required: ['count'],
-				properties: {
-					count: {
-						type: 'number',
-						minimum: 0
-					}
-				}
-			};
-			var result = await PackagesService.countPackage();
-			return expect(result).to.be.jsonSchema(countSchema);
-		});
-	})
+    context('[BINTRA-1] get count', function() {
+        it('[STEP-1] should generate number property', async () => {
+            const countSchema = {
+                title: 'count schema',
+                type: 'object',
+                required: ['count'],
+                properties: {
+                    count: {
+                        type: 'number',
+                        minimum: 0
+                    }
+                }
+            };
+            var result = await PackagesService.countPackage();
+            return expect(result).to.be.jsonSchema(countSchema);
+        });
+    })
 
 });
-

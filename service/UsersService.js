@@ -14,7 +14,7 @@ require("datejs");
 var jsonpatch = require('json-patch');
 var LoginModel = require('../models/login.js');
 var DomainModel = require('../models/domain.js');
-const bcrypt = require ('bcrypt');
+const bcrypt = require('bcrypt');
 
 var eventEmitter = require('../utils/eventer').em;
 
@@ -27,19 +27,19 @@ var eventEmitter = require('../utils/eventer').em;
  * @returns array of domain entries
  **/
 exports.listDomains = function() {
-  return new Promise(function(resolve, reject) {
-    console.log("In list domains service");
+    return new Promise(function(resolve, reject) {
+        console.log("In list domains service");
 
-    DomainModel.find({})
-          .then(item => {
-                  console.info("Was OK");
-                  resolve(item);
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+        DomainModel.find({})
+            .then(item => {
+                console.info("Was OK");
+                resolve(item);
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 /**
@@ -51,25 +51,25 @@ exports.listDomains = function() {
  * @returns array of domain entries
  **/
 exports.addDomain = function(domainname) {
-  return new Promise(function(resolve, reject) {
-    console.log("In add domain service");
+    return new Promise(function(resolve, reject) {
+        console.log("In add domain service");
 
-    var tsnow = new Date();
-    var d = new DomainModel({
-        name: domainname,
-        tscreated: tsnow
+        var tsnow = new Date();
+        var d = new DomainModel({
+            name: domainname,
+            tscreated: tsnow
+        });
+
+        d.save()
+            .then(item => {
+                console.info("Was OK");
+                resolve(item);
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
     });
-
-    d.save()
-          .then(item => {
-                  console.info("Was OK");
-                  resolve(item);
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
 }
 
 /**
@@ -81,23 +81,31 @@ exports.addDomain = function(domainname) {
  * @returns domain object before deleting
  **/
 exports.deleteDomain = function(domainname) {
-  return new Promise(function(resolve, reject) {
-    console.log("In delete domain service");
+    return new Promise(function(resolve, reject) {
+        console.log("In delete domain service");
 
-    DomainModel.deleteOne({name: domainname})
-          .then(item => {
-		  if(item.deletedCount != 1) {
-                        console.error("not found, not deleted");
-                        reject({code:404, msg:"not found"});
-                  } else {
-                        resolve("OK");
-                  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject({code:400, msg:"bahh"});
-          });
-  });
+        DomainModel.deleteOne({
+                name: domainname
+            })
+            .then(item => {
+                if (item.deletedCount != 1) {
+                    console.error("not found, not deleted");
+                    reject({
+                        code: 404,
+                        msg: "not found"
+                    });
+                } else {
+                    resolve("OK");
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject({
+                    code: 400,
+                    msg: "bahh"
+                });
+            });
+    });
 }
 
 /**
@@ -109,23 +117,25 @@ exports.deleteDomain = function(domainname) {
  * @returns domain object before deleting
  **/
 exports.checkDomain = function(domainname) {
-  return new Promise(function(resolve, reject) {
-    console.log("In check domain service");
+    return new Promise(function(resolve, reject) {
+        console.log("In check domain service");
 
-    DomainModel.find({name: domainname})
-          .then(item => {
-                  console.info("Was OK");
-		  if(item.length == 1) {
-			  resolve(item[0]);
-		  } else {
-			  resolve(null);
-		  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+        DomainModel.find({
+                name: domainname
+            })
+            .then(item => {
+                console.info("Was OK");
+                if (item.length == 1) {
+                    resolve(item[0]);
+                } else {
+                    resolve(null);
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 
@@ -137,19 +147,25 @@ exports.checkDomain = function(domainname) {
  * @returns array of user entries
  **/
 exports.listUsers = function() {
-  return new Promise(function(resolve, reject) {
-    console.log("In list users service");
+    return new Promise(function(resolve, reject) {
+        console.log("In list users service");
 
-    LoginModel.find({}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
-          .then(item => {
-                  console.info("Was OK");
-                  resolve(item);
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+        LoginModel.find({}, {
+                role: 1,
+                status: 1,
+                name: 1,
+                email: 1,
+                tscreated: 1
+            })
+            .then(item => {
+                console.info("Was OK");
+                resolve(item);
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 /**
@@ -162,36 +178,46 @@ exports.listUsers = function() {
  * @returns updates user object
  **/
 exports.putUserStatus = function(id, newStatus) {
-  return new Promise(function(resolve, reject) {
-    console.log("In put user status service " + id + newStatus);
+    return new Promise(function(resolve, reject) {
+        console.log("In put user status service " + id + newStatus);
 
-    LoginModel.findOneAndUpdate({_id: id}, {status: newStatus})
-          .then(item => {
-                  console.info("Was OK");
-		  console.log(item);
-                  resolve(item);
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+        LoginModel.findOneAndUpdate({
+                _id: id
+            }, {
+                status: newStatus
+            })
+            .then(item => {
+                console.info("Was OK");
+                console.log(item);
+                resolve(item);
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 function checkGetUserStatus(resolve, reject, query) {
-    LoginModel.find(query, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
-          .then(item => {
-                  console.info("Was OK");
-                  if(item.length > 0) {
-                        resolve(item[0]);
-                } else {
-                        reject("not found");
-                }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
+    LoginModel.find(query, {
+            role: 1,
+            status: 1,
+            name: 1,
+            email: 1,
+            tscreated: 1
+        })
+        .then(item => {
+            console.info("Was OK");
+            if (item.length > 0) {
+                resolve(item[0]);
+            } else {
+                reject("not found");
+            }
+        })
+        .catch(err => {
+            console.error("Not OK: ", err);
+            reject("bahh");
+        });
 }
 
 /**
@@ -203,11 +229,13 @@ function checkGetUserStatus(resolve, reject, query) {
  * @returns object with user data
  **/
 exports.listUser = function(idUser) {
-  return new Promise(function(resolve, reject) {
-    console.log("In list user service");
+    return new Promise(function(resolve, reject) {
+        console.log("In list user service");
 
-    checkGetUserStatus(resolve, reject, {_id: idUser});
-  });
+        checkGetUserStatus(resolve, reject, {
+            _id: idUser
+        });
+    });
 }
 
 /**
@@ -219,11 +247,13 @@ exports.listUser = function(idUser) {
  * @returns object with user data
  **/
 exports.getUser = function(name) {
-  return new Promise(function(resolve, reject) {
-    console.log("In get user service");
+    return new Promise(function(resolve, reject) {
+        console.log("In get user service");
 
-    checkGetUserStatus(resolve, reject, {name: name});
-  });
+        checkGetUserStatus(resolve, reject, {
+            name: name
+        });
+    });
 }
 
 
@@ -237,26 +267,34 @@ exports.getUser = function(name) {
  * @returns object of updated user data
  **/
 exports.patchUser = function(idUser, jpatch) {
-  return new Promise(function(resolve, reject) {
-    console.log("In patch user service");
+    return new Promise(function(resolve, reject) {
+        console.log("In patch user service");
 
-    LoginModel.find({_id: idUser}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
-          .then(item => {
-                  console.info("Was OK");
-                  if(item.length > 0) {
-			  var userDoc = item[0];
-			  var patchedUser = jsonpatch.apply(userDoc, jpatch);
-			  patchedUser.save();
-                        resolve(patchedUser);
+        LoginModel.find({
+                _id: idUser
+            }, {
+                role: 1,
+                status: 1,
+                name: 1,
+                email: 1,
+                tscreated: 1
+            })
+            .then(item => {
+                console.info("Was OK");
+                if (item.length > 0) {
+                    var userDoc = item[0];
+                    var patchedUser = jsonpatch.apply(userDoc, jpatch);
+                    patchedUser.save();
+                    resolve(patchedUser);
                 } else {
-                        reject("not found");
+                    reject("not found");
                 }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 /**
@@ -268,35 +306,43 @@ exports.patchUser = function(idUser, jpatch) {
  * @returns object of user entry for the very last time
  **/
 exports.deleteUser = function(idUser) {
-  return new Promise(function(resolve, reject) {
-    console.log("In delete user service");
+    return new Promise(function(resolve, reject) {
+        console.log("In delete user service");
 
-    LoginModel.find({_id: idUser}, {role: 1, status: 1, name: 1, email: 1, tscreated: 1})
-          .then(item => {
-                  console.info("Query OK");
-                  if(item.length > 0) {
-			  console.log("Items found");
-                          var userDoc = item[0];
-			  console.log(userDoc);
-			  userDoc.status = "deleted";
-			  console.log(userDoc);
-                          userDoc.save().then(itemSave => {
-		            console.log("Updated item saved");
+        LoginModel.find({
+                _id: idUser
+            }, {
+                role: 1,
+                status: 1,
+                name: 1,
+                email: 1,
+                tscreated: 1
+            })
+            .then(item => {
+                console.info("Query OK");
+                if (item.length > 0) {
+                    console.log("Items found");
+                    var userDoc = item[0];
+                    console.log(userDoc);
+                    userDoc.status = "deleted";
+                    console.log(userDoc);
+                    userDoc.save().then(itemSave => {
+                            console.log("Updated item saved");
                             resolve(userDoc);
-			  })
-			  .catch(err => {
-		 	    console.error("Not OK" + err);
-		            reject("error");
-			  });
+                        })
+                        .catch(err => {
+                            console.error("Not OK" + err);
+                            reject("error");
+                        });
                 } else {
-                        reject("not found");
+                    reject("not found");
                 }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 /**
@@ -308,48 +354,50 @@ exports.deleteUser = function(idUser) {
  * @returns object of created user
  **/
 exports.createUser = function(user) {
-  return new Promise(function(resolve, reject) {
-    console.log("In create user service");
+    return new Promise(function(resolve, reject) {
+        console.log("In create user service");
 
-    var domain = user.email.split('@')[1];
-    console.log("Check domain " + domain);
-    DomainModel.find({name: domain})
-	  .then(item => {
-                  console.info("Was OK");
-                  if(item.length == 1) {
-			  console.error("Domain black listed: " + domain);
-                          reject("bahh");
-                  } else {
-			  const saltRounds = 10;
-      			  var tsnow = new Date();
-      			  bcrypt.hash(user.password, saltRounds, function(err, hash) {
-        		  var u = new LoginModel({
-          		    name: user.username,
-          		    passwd: hash,
-          		    email: user.email,
-          		    role: "user",
-          		    status: "register",
-          		    tscreated: tsnow
-        		  });
+        var domain = user.email.split('@')[1];
+        console.log("Check domain " + domain);
+        DomainModel.find({
+                name: domain
+            })
+            .then(item => {
+                console.info("Was OK");
+                if (item.length == 1) {
+                    console.error("Domain black listed: " + domain);
+                    reject("bahh");
+                } else {
+                    const saltRounds = 10;
+                    var tsnow = new Date();
+                    bcrypt.hash(user.password, saltRounds, function(err, hash) {
+                        var u = new LoginModel({
+                            name: user.username,
+                            passwd: hash,
+                            email: user.email,
+                            role: "user",
+                            status: "register",
+                            tscreated: tsnow
+                        });
 
-        		  u.save()
-          			.then(item2 => {
-                  			console.info("Was OK");
-                  			resolve(u);
-          			})
-          			.catch(errSave => {
-                  			console.error("Not OK: ", errSave);
-                  			reject("bahh");
-          			});
-      			  });
-                  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
+                        u.save()
+                            .then(item2 => {
+                                console.info("Was OK");
+                                resolve(u);
+                            })
+                            .catch(errSave => {
+                                console.error("Not OK: ", errSave);
+                                reject("bahh");
+                            });
+                    });
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
 
-  });
+    });
 }
 
 /**
@@ -362,38 +410,41 @@ exports.createUser = function(user) {
  * @returns object of athenticated user
  **/
 exports.checkUser = function(name, passwd) {
-  return new Promise(function(resolve, reject) {
-    console.log("In check users service");
+    return new Promise(function(resolve, reject) {
+        console.log("In check users service");
 
-    LoginModel.find({name: name, status: "active"})
-          .then(item => {
-		  if(item.length > 0) {
-                  console.info("Was OK: " + item);
-                  var pwhash = item[0].passwd;
-                  console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
-                  bcrypt.compare(passwd, pwhash, function(err, result) {
-			  if(err) {
-				  console.error("Some error during compare: " + err);
-				  reject("bahh");
-			  }
-	                  if(result) {
-				  console.log("matched");
-				  resolve(item[0]);
-			  } else {
-		                  console.error("Pwd mismatch");
-                                  reject("bahh");
-			  }
-                  });
-                  } else {
+        LoginModel.find({
+                name: name,
+                status: "active"
+            })
+            .then(item => {
+                if (item.length > 0) {
+                    console.info("Was OK: " + item);
+                    var pwhash = item[0].passwd;
+                    console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
+                    bcrypt.compare(passwd, pwhash, function(err, result) {
+                        if (err) {
+                            console.error("Some error during compare: " + err);
+                            reject("bahh");
+                        }
+                        if (result) {
+                            console.log("matched");
+                            resolve(item[0]);
+                        } else {
+                            console.error("Pwd mismatch");
+                            reject("bahh");
+                        }
+                    });
+                } else {
                     console.error("No entry found or perhaps not yet activated");
                     reject("bahh");
-                  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject("bahh");
-          });
-  });
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject("bahh");
+            });
+    });
 }
 
 /**
@@ -405,24 +456,27 @@ exports.checkUser = function(name, passwd) {
  * @returns boolean
  **/
 exports.isActiveUser = function(uname) {
-  return new Promise(function(resolve, reject) {
-    console.log("In isActiveUser service");
+    return new Promise(function(resolve, reject) {
+        console.log("In isActiveUser service");
 
-    LoginModel.find({name: uname, status: "active"})
-          .then(item => {
-		  if(item.length > 0) {
+        LoginModel.find({
+                name: uname,
+                status: "active"
+            })
+            .then(item => {
+                if (item.length > 0) {
                     console.info("Was found OK");
                     resolve(true);
-		  } else {
+                } else {
                     console.error("No match found");
                     reject(false);
-		  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject(false);
-          });
-  });
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject(false);
+            });
+    });
 }
 
 /**
@@ -435,28 +489,30 @@ exports.isActiveUser = function(uname) {
  * @returns boolean
  **/
 exports.hasRole = function(uname, aRoles) {
-  return new Promise(function(resolve, reject) {
-    console.log("In hasRole service");
+    return new Promise(function(resolve, reject) {
+        console.log("In hasRole service");
 
-    LoginModel.find({name: uname})
-          .then(item => {
-                  if(item.length > 0) {
+        LoginModel.find({
+                name: uname
+            })
+            .then(item => {
+                if (item.length > 0) {
                     console.info("Was found OK");
                     var uRole = item[0].role;
                     console.log("USer " + uname + " has role " + uRole);
-                    if(-1 == aRoles.indexOf(uRole)) {
-                      console.error("User does not have one of the wanted roles");
-                      reject(false);
+                    if (-1 == aRoles.indexOf(uRole)) {
+                        console.error("User does not have one of the wanted roles");
+                        reject(false);
                     }
                     resolve(true);
-                  } else {
+                } else {
                     console.error("No match found");
                     reject(false);
-                  }
-          })
-          .catch(err => {
-                  console.error("Not OK: ", err);
-                  reject(false);
-          });
-  });
+                }
+            })
+            .catch(err => {
+                console.error("Not OK: ", err);
+                reject(false);
+            });
+    });
 }
