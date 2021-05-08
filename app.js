@@ -71,7 +71,6 @@ var corsOptions = {
 var app = express();
 
 app.use(hpp());
-
 app.use(cors(corsOptions));
 
 // Redirect root to docs UI
