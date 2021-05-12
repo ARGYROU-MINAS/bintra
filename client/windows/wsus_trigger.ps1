@@ -30,7 +30,7 @@ ForEach ($update in $updates) {
   $CurrentFilePercent = 100 - ((($updates.Count - $CurrentFile) / $updates.Count) * 100)
   "Checking $($update.Update.Title)" | Out-File $log -append 
 
-  $doApprove = false
+  $doApprove = $false
   $update.Update.GetInstallableItems().Files | foreach {
     $_ | Out-File $log -append 
     if ($_.Type -eq [Microsoft.UpdateServices.Administration.FileType]::SelfContained -and ($_.FileUri -match '[cab|msu]$'))
@@ -65,7 +65,7 @@ ForEach ($update in $updates) {
 
       #$api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.1 (Windows)"
       #Write-Output $api
-	  $doApprove = true
+	  $doApprove = $true
     }
   }
   if ($doApprove)
