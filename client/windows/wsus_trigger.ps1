@@ -1,54 +1,79 @@
 Add-Type -AssemblyName System.Web
 
+$log = "D:\Logs\Approved_Updates.txt"
+
 $WsusContentFolder = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').WSUSContentFolder
 $JWT = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').JWT
-$WsusContentFolder
+$GroupName = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').GroupName
+$WsusContentFolder | Out-File $log -append 
 $JWT
 
 $wsus = Get-WsusServer
-$wsus
+$wsus | Out-File $log -append 
 
 $headers = @{
     'Authorization' = 'Bearer ' + $JWT
 }
 
+$wgroup = $wsus.GetComputerTargetGroups() | where {$_.Name -eq $GroupName}
+$wgroup
+
 #Get all updates
-$updates = Get-WsusUpdate -Approval Approved
+# filter perhaps this: -and ($_.ProductFamilyTitles -eq "Windows" -or $_.ProductFamilyTitles -eq "Office")
+$updates = Get-WsusUpdate -Approval Unapproved | ? {( $_.PublicationState -ne "Expired" ) }
+
 
 #Iterate every update and output some basic info about it
 $CurrentFile = 0
 ForEach ($update in $updates) {
   $CurrentFile += 1
   $CurrentFilePercent = 100 - ((($updates.Count - $CurrentFile) / $updates.Count) * 100)
-  Write-Output "Checking $($update.Update.Title)"
+  "Checking $($update.Update.Title)" | Out-File $log -append 
 
+  $doApprove = false
   $update.Update.GetInstallableItems().Files | foreach {
-    Write-Output $_
+    $_ | Out-File $log -append 
     if ($_.Type -eq [Microsoft.UpdateServices.Administration.FileType]::SelfContained -and ($_.FileUri -match '[cab|msu]$'))
     {
       $LocalName = $_.Name
       $LocalFileName = ($_.FileUri -replace '.*/Content', $WsusContentFolder) -replace '/', '\'
-      Write-Output $LocalFileName
+      $LocalFileName | Out-File $log -append 
 
       $LocalVersion = "NA" #[System.Diagnostics.FileVersionInfo]::GetVersionInfo($LocalFileName).FileVersion
-      Write-Output $LocalVersion
+      $LocalVersion | Out-File $log -append 
 
       $LocalHash = Get-FileHash $LocalFileName
-      Write-Output $LocalHash.Hash
+      $LocalHash.Hash | Out-File $log -append 
+
+      $LocalArch = "x86"
+      if ($LocalFileName.Contains("x64.cab") -or $LocalFileName.Contains("x64-NDP48.cab"))
+	  {
+		  $LocalArch = "x64"
+	  }
+      if ($LocalFileName.Contains("arm64.cab") -or $LocalFileName.Contains("arm64-NDP48.cab"))
+	  {
+		  $LocalArch = "arm64"
+	  }
 
       $uri = "https://api.binarytransparency.net/v1/package?" +
         "packageName=" + [System.Web.HttpUtility]::UrlEncode($LocalName) +
         "&packageVersion=" + [System.Web.HttpUtility]::UrlEncode($LocalVersion) +
-        "&packageArch=x86" +
+        "&packageArch=" + $LocalArch +
         "&packageFamily=Windows" +
         "&packageHash=" + [System.Web.HttpUtility]::UrlEncode($LocalHash.Hash)
-      Write-Output $uri
-      $api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.1 (Windows)"
-      Write-Output $api
+      $uri | Out-File $log -append 
+
+      #$api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.1 (Windows)"
+      #Write-Output $api
+	  $doApprove = true
     }
-    #Write-Verbose ('Adding "{0}" to the list of available patches.' -f $update.Update.Title)
+  }
+  if ($doApprove)
+  {
+	  "Will approve that update" | Out-File $log -append 
+	  $update.Approve("Install", $wgroup)
   }
   #break
 }
 
-Write-Output 'Ende'
+"Ende" | Out-File $log -append
