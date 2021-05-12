@@ -32,40 +32,44 @@ ForEach ($update in $updates) {
 
   $doApprove = $false
   $update.Update.GetInstallableItems().Files | foreach {
-    $_ | Out-File $log -append 
+    # $_ | Out-File $log -append 
     if ($_.Type -eq [Microsoft.UpdateServices.Administration.FileType]::SelfContained -and ($_.FileUri -match '[cab|msu]$'))
     {
       $LocalName = $_.Name
       $LocalFileName = ($_.FileUri -replace '.*/Content', $WsusContentFolder) -replace '/', '\'
       $LocalFileName | Out-File $log -append 
-
-      $LocalVersion = "NA" #[System.Diagnostics.FileVersionInfo]::GetVersionInfo($LocalFileName).FileVersion
-      $LocalVersion | Out-File $log -append 
-
-      $LocalHash = Get-FileHash $LocalFileName
-      $LocalHash.Hash | Out-File $log -append 
-
-      $LocalArch = "x86"
-      if ($LocalFileName.Contains("x64.cab") -or $LocalFileName.Contains("x64-NDP48.cab"))
+	  if (Test-Path $LocalFileName -PathType leaf)
 	  {
-		  $LocalArch = "x64"
-	  }
-      if ($LocalFileName.Contains("arm64.cab") -or $LocalFileName.Contains("arm64-NDP48.cab"))
-	  {
-		  $LocalArch = "arm64"
-	  }
+        $LocalVersion = "NA" #[System.Diagnostics.FileVersionInfo]::GetVersionInfo($LocalFileName).FileVersion
+        $LocalVersion | Out-File $log -append 
 
-      $uri = "https://api.binarytransparency.net/v1/package?" +
-        "packageName=" + [System.Web.HttpUtility]::UrlEncode($LocalName) +
-        "&packageVersion=" + [System.Web.HttpUtility]::UrlEncode($LocalVersion) +
-        "&packageArch=" + $LocalArch +
-        "&packageFamily=Windows" +
-        "&packageHash=" + [System.Web.HttpUtility]::UrlEncode($LocalHash.Hash)
-      $uri | Out-File $log -append 
+        $LocalHash = Get-FileHash $LocalFileName
+        $LocalHash.Hash | Out-File $log -append 
 
-      #$api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.1 (Windows)"
-      #Write-Output $api
-	  $doApprove = $true
+        $LocalArch = "x86"
+        if ($LocalFileName.Contains("x64.cab") -or $LocalFileName.Contains("x64-NDP48.cab"))
+	    {
+		    $LocalArch = "x64"
+	    }
+        if ($LocalFileName.Contains("arm64.cab") -or $LocalFileName.Contains("arm64-NDP48.cab"))
+	    {
+		    $LocalArch = "arm64"
+	    }
+
+        $uri = "https://api.binarytransparency.net/v1/package?" +
+          "packageName=" + [System.Web.HttpUtility]::UrlEncode($LocalName) +
+          "&packageVersion=" + [System.Web.HttpUtility]::UrlEncode($LocalVersion) +
+          "&packageArch=" + $LocalArch +
+          "&packageFamily=Windows" +
+          "&packageHash=" + [System.Web.HttpUtility]::UrlEncode($LocalHash.Hash)
+        $uri | Out-File $log -append 
+
+        $api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.1 (Windows)"
+        $api | Out-File $log -append 
+	    $doApprove = $true
+	  } else {
+		"File not there" | Out-File $log -append
+	  }
     }
   }
   if ($doApprove)
