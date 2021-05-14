@@ -855,6 +855,35 @@ paths:
         - admin
       x-codegen-request-body-name: jpatch
 
+  /summary/arch:
+    get:
+      tags:
+        - default
+      summary: get aggregated number of entries by architecture
+      operationId: summaryArch
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: Json reply
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /summary/family:
+    get:
+      tags:
+        - default
+      summary: get aggregated number of entries by family
+      operationId: summaryFamily
+      x-swagger-router-controller: Users
+      responses:
+        200:
+          description: Json reply
+          content:
+            application/json:
+              schema:
+                type: object
 
   /search:
     post:

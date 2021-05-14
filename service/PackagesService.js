@@ -563,3 +563,61 @@ exports.countPackage = function() {
         });
     });
 }
+
+/**
+ * @method
+ * Count number of entries in database.
+ * @public
+ *
+ * @returns object with count attribute
+ **/
+exports.summaryArch = function() {
+    return new Promise(function(resolve, reject) {
+        console.log("In summaryArch service");
+
+        PackageModel.aggregate( [
+  {
+    $group: {
+       _id: "$arch",
+       count: { $sum: 1 }
+    }
+  }
+] 
+		    , function(err, answer) {
+            var examples = {};
+            examples['application/json'] = {
+                summary: answer
+            };
+            resolve(examples[Object.keys(examples)[0]]);
+        });
+    });
+}
+
+/**
+ * @method
+ * Count number of entries in database.
+ * @public
+ *
+ * @returns object with count attribute
+ **/
+exports.summaryFamily = function() {
+    return new Promise(function(resolve, reject) {
+        console.log("In summaryFamily service");
+
+        PackageModel.aggregate( [
+  {
+    $group: {
+       _id: "$family",
+       count: { $sum: 1 }
+    }
+  }
+]
+                    , function(err, answer) {
+            var examples = {};
+            examples['application/json'] = {
+                summary: answer
+            };
+            resolve(examples[Object.keys(examples)[0]]);
+        });
+    });
+}

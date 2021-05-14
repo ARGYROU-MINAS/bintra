@@ -200,3 +200,39 @@ module.exports.testAdmin = function testAdmin(req, res, next) {
     };
     utils.writeJson(res, payload, 200);
 };
+
+/**
+ * @method
+ * Return total number of package variations.
+ * @public
+ */
+module.exports.summaryArch = function summaryArch(req, res, next) {
+
+    eventEmitter.emit('apihit', req);
+
+    PackagesService.summaryArch()
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
+};
+
+/**
+ * @method
+ * Return total number of package variations.
+ * @public
+ */
+module.exports.summaryFamily = function summaryFamily(req, res, next) {
+
+    eventEmitter.emit('apihit', req);
+
+    PackagesService.summaryFamily()
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
+};
