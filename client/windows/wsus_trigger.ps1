@@ -56,6 +56,7 @@ ForEach ($Update in $Updates)
         $LocalArch = ""
 
         $doApprove = $false
+        $hasFiles = $false
         $hashBuffer = ""
         $Update.GetInstallableItems().Files | foreach {
             $_ | Out-File $log -append 
@@ -66,6 +67,7 @@ ForEach ($Update in $Updates)
                 $LocalFileName | Out-File $log -append 
 	            if (Test-Path $LocalFileName -PathType leaf)
 	            {
+                    $hasFiles = $true
                     $iFiles ++
 
                     $LocalHash = Get-FileHash $LocalFileName
@@ -92,22 +94,32 @@ ForEach ($Update in $Updates)
             } #if
         } # foreach inner file of one update
 
-        # get hash of concatenated hashes
-        $mystream = [IO.MemoryStream]::new([byte[]][char[]]$hashBuffer)
-        $LocalHash = Get-FileHash -InputStream $mystream -Algorithm SHA256
-        $LocalHash.Hash | Out-File $log -append
+        if ($hasFiles)
+        {
+            # get hash of concatenated hashes
+            $mystream = [IO.MemoryStream]::new([byte[]][char[]]$hashBuffer)
+            $LocalHash = Get-FileHash -InputStream $mystream -Algorithm SHA256
+            $LocalHash.Hash | Out-File $log -append
 
-        $uri = "https://api.binarytransparency.net/v1/package?" +
-          "packageName=" + [System.Web.HttpUtility]::UrlEncode($LocalName) +
-          "&packageVersion=" + [System.Web.HttpUtility]::UrlEncode($LocalVersion) +
-          "&packageArch=" + $LocalArch +
-          "&packageFamily=Windows" +
-          "&packageHash=" + [System.Web.HttpUtility]::UrlEncode($LocalHash.Hash)
-        $uri | Out-File $log -append 
+            $LocalTitle = $Update.Title
+            $LocalTitle = $LocalTitle.replace('(Version '+$LocalVersion+')', '')
+            $LocalTitle = $LocalTitle.replace('v'+$LocalVersion, '')
+            $LocalTitle = $LocalTitle -replace '[ \(\)]','_'
+            $LocalTitle = $LocalTitle.Trim()
+            $LocalTitle | Out-File $log -append
 
-        $api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.3 (Windows)"
-        $api | Out-File $log -append 
-	    $doApprove = $true
+            $uri = "https://api.binarytransparency.net/v1/package?" +
+              "packageName=" + [System.Web.HttpUtility]::UrlEncode($LocalTitle) +
+              "&packageVersion=" + [System.Web.HttpUtility]::UrlEncode($LocalVersion) +
+              "&packageArch=" + $LocalArch +
+              "&packageFamily=Windows" +
+              "&packageHash=" + [System.Web.HttpUtility]::UrlEncode($LocalHash.Hash)
+            $uri | Out-File $log -append 
+
+            $api = Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -UserAgent "Bintra 0.0.3 (Windows)"
+            $api | Out-File $log -append 
+	        $doApprove = $true
+        } # has Files
 
         if ($doApprove)
         {
