@@ -111,8 +111,8 @@ ForEach ($Update in $Updates)
             $LocalTitle = $LocalTitle.replace('(Version '+$LocalVersion+')', '')
             $LocalTitle = $LocalTitle.replace('v'+$LocalVersion, '')
             $LocalTitle = $LocalTitle.replace('- '+$LocalVersion, '')
-            $LocalTitle = $LocalTitle -replace '[ \(\)]','_'
             $LocalTitle = $LocalTitle.Trim()
+            $LocalTitle = $LocalTitle -replace '[ \(\)]','_'
             $LocalTitle | Out-File $log -append
 
             $uri = "https://api.binarytransparency.net/v1/package?" +
