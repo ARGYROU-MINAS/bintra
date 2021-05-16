@@ -39,6 +39,7 @@ ForEach ($Update in $Updates)
         $LocalVersion = "NA"
         $match1 = select-string " (v[0-9]+\.[0-9]+) " -inputobject $Update.Title
         $match2 = select-string " \(Version ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\)" -inputobject $Update.Title
+        $match3 = select-string " - ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$" -inputobject $Update.Title
         if ($match1.matches.Success)
         {
             $LocalVersion = $match1.Matches.groups[1].value
@@ -47,7 +48,12 @@ ForEach ($Update in $Updates)
 			{
 				$LocalVersion = $match2.Matches.groups[1].value
 			} else {
-				"No version match found" | Out-File $log -append
+                if ($match3.matches.Success)
+                {
+    				$LocalVersion = $match3.Matches.groups[1].value
+                } else {
+				    "No version match found" | Out-File $log -append
+                }
 			}
         }
         $LocalVersion | Out-File $log -append
@@ -104,6 +110,7 @@ ForEach ($Update in $Updates)
             $LocalTitle = $Update.Title
             $LocalTitle = $LocalTitle.replace('(Version '+$LocalVersion+')', '')
             $LocalTitle = $LocalTitle.replace('v'+$LocalVersion, '')
+            $LocalTitle = $LocalTitle.replace('- '+$LocalVersion, '')
             $LocalTitle = $LocalTitle -replace '[ \(\)]','_'
             $LocalTitle = $LocalTitle.Trim()
             $LocalTitle | Out-File $log -append
