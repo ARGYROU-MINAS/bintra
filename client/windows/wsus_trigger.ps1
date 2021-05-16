@@ -7,7 +7,12 @@ $WsusSourceGroup = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').SourceGroupN
 $WsusTargetGroup = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').TargetGroupName
 $WsusContentFolder = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').WSUSContentFolder
 $JWT = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').JWT
+$MailFrom = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').MailFrom
+$MailTo = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').MailTo
+$MailServer = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').MailServer
+$MailPort = (Get-ItemProperty -path 'HKLM:\SOFTWARE\Bintra').MailPort
 
+Get-Date | Out-File $log -append
 $WsusContentFolder | Out-File $log -append 
 
 $headers = @{
@@ -22,12 +27,14 @@ $WsusTargetGroupObj = $Groups | Where {$_.Name -eq $WsusTargetGroup}
 
 $Updates = $wsus.GetUpdates()
 $i = 0
+$iFiles = 0
 ForEach ($Update in $Updates)
 {
     if ($Update.GetUpdateApprovals($WsusSourceGroupObj).Count -ne 0 -and $Update.GetUpdateApprovals($WsusTargetGroupObj).Count -eq 0)
     {
         $i ++
         Write-Host (“Validation ” + $Update.Title)
+		$Update.Title | Out-File $log -append
 
         $doApprove = $false
         $Update.GetInstallableItems().Files | foreach {
@@ -39,8 +46,24 @@ ForEach ($Update in $Updates)
                 $LocalFileName | Out-File $log -append 
 	            if (Test-Path $LocalFileName -PathType leaf)
 	            {
-                    $LocalVersion = "NA" #[System.Diagnostics.FileVersionInfo]::GetVersionInfo($LocalFileName).FileVersion
-                    $LocalVersion | Out-File $log -append 
+                    $iFiles ++
+					"Lookup version in title" | Out-File $log -append
+                    $LocalVersion = "NA"
+                    $match1 = select-string " (v[0-9]+\.[0-9]+) " -inputobject $Update.Title
+                    $match2 = select-string " \(Version ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\)" -inputobject $Update.Title
+                    if ($match1.matches.Success)
+                    {
+                        $LocalVersion = $match1.Matches.groups[1].value
+                    } else {
+						if ($match2.matches.Success)
+						{
+							$LocalVersion = $match2.Matches.groups[1].value
+						} else {
+							"No version match found" | Out-File $log -append
+						}
+                    }
+                    $LocalVersion | Out-File $log -append
+					Write-Host (“Version ” + $LocalVersion)
 
                     $LocalHash = Get-FileHash $LocalFileName
                     $LocalHash.Hash | Out-File $log -append
@@ -83,4 +106,12 @@ ForEach ($Update in $Updates)
     } # if
 } # foreach
 
-Write-Output (“Approved {0} updates for target group {1}” -f $i, $WsusTargetGroup)
+$msg = "Approved {0} updates with {1} files for target group {2}" -f $i, $iFiles, $WsusTargetGroup
+Write-Output ($msg)
+$msg | Out-File $log -append
+Get-Date | Out-File $log -append
+
+if ($i -gt 0)
+{
+    Send-MailMessage -To $MailTo -From $MailFrom -Subject "Bintra WSUS script" -Body $msg -SmtpServer $MailServer -Port $MailPort
+}
