@@ -1,4 +1,4 @@
-== Configuration by registry file
+## Configuration by registry file
 
 Most properties are configured by adding some keys to the registry.
 
