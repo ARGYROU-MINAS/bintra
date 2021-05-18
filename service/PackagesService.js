@@ -81,6 +81,14 @@ function findPackage(resolve, reject, packageName, packageVersion, packageArch, 
         });
 }
 
+function replyWithError(reject, err) {
+    console.error("Not OK: ", err);
+    reject({
+        code: 400,
+        msg: "bahh"
+    });
+}
+
 
 /**
  * @method
@@ -468,11 +476,7 @@ exports.searchPackages = function(jsearch) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
-                reject({
-                    code: 400,
-                    msg: "bahh"
-                });
+		replyWithError(reject, err);
             });
     });
 }
@@ -491,11 +495,7 @@ function checkDeleteStatus(resolve, reject, query) {
             }
         })
         .catch(err => {
-            console.error("Not OK: ", err);
-            reject({
-                code: 400,
-                msg: "bahh"
-            });
+	    replyWithError(reject, err);
         });
 }
 
