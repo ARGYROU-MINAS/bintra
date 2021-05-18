@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.8
+  version: 1.0.9
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -855,31 +855,26 @@ paths:
         - admin
       x-codegen-request-body-name: jpatch
 
-  /summary/arch:
+  /summary/{bywhat}:
     get:
       tags:
         - default
-      summary: get aggregated number of entries by architecture
-      operationId: summaryArch
+      summary: get aggregated number of entries by parametric criteria
+      operationId: summaryByWhat
       x-swagger-router-controller: Users
+      parameters:
+        - name: bywhat
+          in: path
+          description: Summary of data grouped by criteria
+          required: true
+          schema:
+            type: string
+            enum:
+              - family
+              - arch
       responses:
         200:
-          description: Json reply
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /summary/family:
-    get:
-      tags:
-        - default
-      summary: get aggregated number of entries by family
-      operationId: summaryFamily
-      x-swagger-router-controller: Users
-      responses:
-        200:
-          description: Json reply
+          description: Json reply, summary object with array
           content:
             application/json:
               schema:
