@@ -7,35 +7,41 @@ const maxFeedItems = 25;
 const sortItemFeed = 'tsupdated';
 const sortDirectionFeed = 'down';
 
+const API_BASE_URL = "https://api.binarytransparency.net/v1/";
+const WEB_URL = "https://bintra.directory/";
+const MY_NAME = "Kai KRETSCHMANN";
+const MY_EMAIL = "kai@kretschmann.consulting";
+const MY_WEB_URL = "https://kai.kretschmann.consulting";
+
 function getInitialFeed() {
     const myfeed = new Feed({
         title: "Binary Transparency Directory",
         description: "Feed for hash code monitoring",
-        id: "https://bintra.directory/",
-        link: "https://bintra.directory/",
+        id: WEB_URL,
+        link: WEB_URL,
         language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-        image: "https://bintra.directory/image.png",
-        favicon: "https://bintra.directory/favicon.ico",
-        copyright: "All rights reserved 2021, Kai KRETSCHMANN",
+        image: WEB_URL + "image.png",
+        favicon: WEB_URL + "favicon.ico",
+        copyright: "All rights reserved 2021, " + MY_NAME,
         updated: new Date(),
         generator: "Feed for bintra", // optional, default = 'Feed for Node.js'
         feedLinks: {
-            json: "https://api.binarytransparency.net/v1/feed.json",
-            rss: "https://api.binarytransparency.net/v1/feed.rss",
-            atom: "https://api.binarytransparency.net/v1/feed.atom"
+            json: API_BASE_URL + "feed.json",
+            rss: API_BASE_URL + "feed.rss",
+            atom: API_BASE_URL + "feed.atom"
         },
         author: {
-            name: "Kai KRETSCHMANN",
-            email: "kai@kretschmann.consulting",
-            link: "https://kai.kretschmann.consulting"
+            name: MY_NAME,
+            email: MY_EMAIL,
+            link: MY_WEB_URL
         }
     });
 
     myfeed.addCategory("Technology");
     myfeed.addContributor({
-        name: "Kai KRETSCHMANN",
-        email: "kai@kretschmann.consulting",
-        link: "https://kai.kretschmann.consulting"
+        name: MY_NAME,
+        email: MY_EMAIL,
+        link: MY_WEB_URL
     });
 
     return myfeed;
@@ -44,6 +50,11 @@ function getInitialFeed() {
 function createContent(entry) {
     return "Archive " + entry.name + ", version " + entry.version + " for " +
         entry.arch + ", " + entry.family + " with hash " + entry.hash
+}
+
+function replyWithError(res, payload) {
+    res.writeHead(500, {"Content-Type": "text/plain"});
+    return res.end("error " + payload);
 }
 
 function feedRss(req, res, next) {
@@ -55,8 +66,8 @@ function feedRss(req, res, next) {
                 var myid = entry._id;
                 rssfeed.addItem({
                     title: entry.name,
-                    id: "https://api.binarytransparency.net/v1/package/" + myid,
-                    link: "https://bintra.directory/details/?id=" + myid,
+                    id: API_BASE_URL + "package/" + myid,
+                    link: WEB_URL + "details/?id=" + myid,
                     description: entry.name,
                     date: entry.tsupdated || new Date(),
                     content: createContent(entry)
@@ -68,10 +79,7 @@ function feedRss(req, res, next) {
             return res.end(rssfeed.rss2());
         })
         .catch(function(payload) {
-            res.writeHead(500, {
-                "Content-Type": "text/plain"
-            });
-            return res.end("error" + payload);
+	    return replyWithError(res, payload);
         });
 }
 
@@ -84,7 +92,7 @@ function feedAtom(req, res, next) {
                 var myid = entry._id;
                 atomfeed.addItem({
                     title: entry.name,
-                    link: "https://api.binarytransparency.net/v1/package/" + myid,
+                    link: API_BASE_URL + "package/" + myid,
                     description: entry.name,
                     date: entry.tsupdated || new Date(),
                     content: createContent(entry)
@@ -96,11 +104,7 @@ function feedAtom(req, res, next) {
             return res.end(atomfeed.atom1());
         })
         .catch(function(payload) {
-            console.error(payload);
-            res.writeHead(500, {
-                "Content-Type": "text/plain"
-            });
-            return res.end("error" + payload);
+	    return replyWithError(res, payload);
         });
 }
 
@@ -114,7 +118,7 @@ function feedJson(req, res, next) {
                 jsonfeed.addItem({
                     title: entry.name,
                     id: entry._id,
-                    link: "https://api.binarytransparency.net/v1/package/" + myid,
+                    link: API_BASE_URL + "package/" + myid,
                     description: entry.name,
                     date: entry.tsupdated || new Date(),
                     content: createContent(entry)
@@ -126,10 +130,7 @@ function feedJson(req, res, next) {
             return res.end(jsonfeed.json1());
         })
         .catch(function(payload) {
-            res.writeHead(500, {
-                "Content-Type": "text/plain"
-            });
-            return res.end("error" + payload);
+	    return replyWithError(res, payload);
         });
 }
 
