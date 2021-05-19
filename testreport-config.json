@@ -1,5 +1,5 @@
 {
-    "reporterEnabled": "mochawesome,mocha-junit-reporter,mocha-sonarqube-reporter",
+    "reporterEnabled": "mochawesome,mocha-junit-reporter,mocha-sonarqube-reporter,testlinkreporter",
     "mochaJunitReporterReporterOptions": {
         "mochaFile": "junit-custom.xml"
     },

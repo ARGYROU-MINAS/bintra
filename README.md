@@ -21,6 +21,9 @@ Add perhaps gpg key, see [gitlab wiki](https://gitlab.kretschmann.software/kai/b
     NODE_ENV=develop npm start
     NODE_ENV=test npm test
     NODE_ENV=test npm run testlink
+    NODE_ENV=test npm run combined
+
+The combined is a special testrun, configured by an additional json file runnin gmultiple output formats from onw testrun.
 
 ## RPM building
 

@@ -69,6 +69,7 @@ unittest:
       - mochawesome-report/
       - coverage/
       - xunit.xml
+      - testlink.xml
     reports:
       junit: junit-custom.xml
 
