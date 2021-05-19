@@ -10,7 +10,7 @@
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "combined": "nyc --reporter=lcov --reporter=text-summary mocha --reporter mocha-multi-reporters --reporter-options configFile=testreport-config.json --exit",
-    "testlink": "mocha --reporter=xunit --exit",
+    "testlink": "mocha --reporter=testlinkreporter --exit",
     "adduser": "node local/adduser.js",
     "addadmin": "node local/addadmin.js"
   },
@@ -42,6 +42,7 @@
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.14.1",
     "swagger-ui-express": "^4.1.6",
+    "testlinkreporter": "git+https://gitlab.kretschmann.software/kai/testlinkimporter.git",
     "toobusy-js": "^0.5.1",
     "yamljs": "^0.3.0"
   },

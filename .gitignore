@@ -8,6 +8,7 @@ out/
 mochawesome-report/
 coverage/
 xunit.xml
+testlink.xml
 junit-custom.xml
 .nyc_output/
 *.deb

@@ -20,6 +20,7 @@ Add perhaps gpg key, see [gitlab wiki](https://gitlab.kretschmann.software/kai/b
 
     NODE_ENV=develop npm start
     NODE_ENV=test npm test
+    NODE_ENV=test npm run testlink
 
 ## RPM building
 
