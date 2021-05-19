@@ -4,5 +4,12 @@
         "mochaFile": "junit-custom.xml"
     },
     "MochaSonarqubeReporterOptions": {
+    },
+    "testlinkreporterOptions": {
+        "prefix": "BINTRA",
+	"name": "bintra",
+	"testplan": "smoke",
+	"build": "1.0",
+	"platform": "default"
     }
 }
