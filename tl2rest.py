@@ -2,12 +2,17 @@
 import xml.etree.ElementTree as Xet
 import requests
 import os
+import datetime
 from pprint import pprint
 
 headers = {
     'Apikey': os.environ['APIKEY'],
     'Content-type': 'application/json'
 }
+buildID=0
+dtnow=datetime.datetime.now()
+dtstring=dtnow.strftime("%d/%m/%Y %H:%M:%S")
+dtreleasedate=dtnow.strftime("%Y-%m-%d")
 
 def parseXML(xmlfile):
     reqitems = []
@@ -25,20 +30,50 @@ def parseXML(xmlfile):
     return reqitems
 
 def updateBuild(aItems):
-    payload = {
-        "commit_id": os.environ['COMMIT_ID'],
-        "name": os.environ['TAGSHORT'],
-        "tag": os.environ['TAGFULL'],
-        "notes": "Updated build"
-    }
-    r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/1", json=payload, headers=headers)
-    print("result", r.text)
+    tpapikey = os.environ['TPAPIKEY']
+    currenttag = os.environ['TAGSHORT']
+    r = requests.get("https://testlink.kretschmann.software/lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
+    j = r.json()
+    pprint(j)
+    isNewTag = True
+    for i in j['items']:
+        build = j['items'][i]
+        pprint(build)
+        buildname = build['name']
+        if (buildname == currenttag):
+            print("Found existing tag in build #", i)
+            buildID = i
+            isNewTag = False
+
+    if isNewTag:
+        print("Create new build")
+        payload = {
+            "name": os.environ['TAGSHORT'],
+            "testplan": 2,
+            "commit_id": os.environ['COMMIT_ID'],
+            "tag": os.environ['TAGFULL'],
+            "branch": "master",
+            "release_date": dtreleasedate,
+            "notes": "Created build at " +dtstring
+        }
+        r = requests.post("https://testlink.kretschmann.software/lib/api/rest/v3/builds", json=payload, headers=headers)
+        print("result", r.text)
+        buildID = r.json()['id']
+    else:
+        print("Update existing build")
+        payload = {
+            "commit_id": os.environ['COMMIT_ID'],
+            "name": os.environ['TAGSHORT'],
+            "tag": os.environ['TAGFULL'],
+            "notes": "Updated build at " + dtstring
+        }
+        r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/"+buildID, json=payload, headers=headers)
+        print("result", r.text)
 
 def submit(aResults):
     platformID = 1
     executionType = 2
     testPlanID = 2
-    buildID = 1
     for r in aResults:
         print("submit", r['tcid']);
         payload = {
@@ -57,7 +92,6 @@ def submit(aResults):
 
 def main():
     items = parseXML('testlink.xml')
-    pprint(items);
     updateBuild(items);
     submit(items);
 
