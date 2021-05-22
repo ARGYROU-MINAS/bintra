@@ -14,6 +14,7 @@ stages:
     - changes:
       - api/*
       - ./*.js
+      - .gitlab-ci.yml
       - config/*.js
       - controllers/*.js
       - models/*.js
@@ -53,7 +54,7 @@ jsdocs:
       - out
 
 unittest:
-        #extends: .sourcechanged
+  extends: .sourcechanged
   stage: test
   image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
@@ -75,7 +76,7 @@ unittest:
       junit: junit-custom.xml
 
 testlink:
-        #extends: .sourcechanged
+  extends: .sourcechanged
   stage: report
   image: python:3
   variables:
