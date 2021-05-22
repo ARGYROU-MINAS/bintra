@@ -52,7 +52,7 @@ jsdocs:
       - out
 
 unittest:
-  extends: .sourcechanged
+        #extends: .sourcechanged
   stage: test
   image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
@@ -72,6 +72,16 @@ unittest:
       - testlink.xml
     reports:
       junit: junit-custom.xml
+
+testlink:
+        #extends: .sourcechanged
+  stage: test
+  image: python
+  needs: ["unittest"]
+  variables:
+    APIKEY: "${TESTLINK_APIKEY}"
+  script:
+    - python tl2rest.py
 
 sonarqube:
   extends: .sourcechanged
