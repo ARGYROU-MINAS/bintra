@@ -30,6 +30,8 @@ def parseXML(xmlfile):
     return reqitems
 
 def updateBuild(aItems):
+    global buildID
+
     tpapikey = os.environ['TPAPIKEY']
     currenttag = os.environ['TAGSHORT']
     r = requests.get("https://testlink.kretschmann.software/lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
