@@ -14,7 +14,7 @@ dtnow=datetime.datetime.now()
 dtstring=dtnow.strftime("%d/%m/%Y %H:%M:%S")
 dtreleasedate=dtnow.strftime("%Y-%m-%d")
 
-def parseXML(xmlfile):
+def parse_xml(xmlfile):
     reqitems = []
     # Parsing the XML file
     xmlparse = Xet.parse(xmlfile)
@@ -29,7 +29,7 @@ def parseXML(xmlfile):
         reqitems.append(package)
     return reqitems
 
-def updateBuild(aItems):
+def update_build(aitems):
     global buildID
 
     tpapikey = os.environ['TPAPIKEY']
@@ -37,7 +37,7 @@ def updateBuild(aItems):
     r = requests.get("https://testlink.kretschmann.software/lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
     j = r.json()
     pprint(j)
-    isNewTag = True
+    is_new_tag = True
     for i in j['items']:
         build = j['items'][i]
         pprint(build)
@@ -45,9 +45,9 @@ def updateBuild(aItems):
         if (buildname == currenttag):
             print("Found existing tag in build #", i)
             buildID = i
-            isNewTag = False
+            is_new_tag = False
 
-    if isNewTag:
+    if is_new_tag:
         print("Create new build")
         payload = {
             "name": os.environ['TAGSHORT'],
@@ -72,16 +72,16 @@ def updateBuild(aItems):
         r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/"+buildID, json=payload, headers=headers)
         print("result", r.text)
 
-def submit(aResults):
-    platformID = 1
-    executionType = 2
-    testPlanID = 2
-    for r in aResults:
+def submit(aresults):
+    platform_id = 1
+    execution_type = 2
+    testplan_id = 2
+    for r in aresults:
         print("submit", r['tcid']);
         payload = {
-            "platformID": platformID,
-            "executionType": executionType,
-            "testPlanID": testPlanID,
+            "platformID": platform_id,
+            "executionType": execution_type,
+            "testPlanID": testplan_id,
             "buildID": buildID,
             "statusCode": r['result'].lower(),
             "notes": r['notes'],
@@ -93,8 +93,8 @@ def submit(aResults):
 
 
 def main():
-    items = parseXML('testlink.xml')
-    updateBuild(items);
+    items = parse_xml('testlink.xml')
+    update_build(items);
     submit(items);
 
 
