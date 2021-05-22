@@ -4,6 +4,11 @@ import requests
 import os
 from pprint import pprint
 
+headers = {
+    'Apikey': os.environ['APIKEY'],
+    'Content-type': 'application/json'
+}
+
 def parseXML(xmlfile):
     reqitems = []
     # Parsing the XML file
@@ -17,18 +22,22 @@ def parseXML(xmlfile):
         package['result'] = item.find('./result').text
         package['notes'] = item.find('./notes').text
         reqitems.append(package)
-
     return reqitems
+
+def updateBuild(aItems):
+    payload = {
+        "commit_id": os.environ['COMMIT_ID'],
+        "tag": "1.0.7",
+        "notes": "Updated build"
+    }
+    r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/1", json=payload, headers=headers)
+    print("result", r.text)
 
 def submit(aResults):
     platformID = 1
     executionType = 2
     testPlanID = 2
     buildID = 1
-    headers = {
-        'Apikey': os.environ['APIKEY'],
-        'Content-type': 'application/json'
-    }
     for r in aResults:
         print("submit", r['tcid']);
         payload = {
@@ -48,6 +57,7 @@ def submit(aResults):
 def main():
     items = parseXML('testlink.xml')
     pprint(items);
+    updateBuild(items);
     submit(items);
 
 
