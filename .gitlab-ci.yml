@@ -5,6 +5,7 @@
 stages:
   - build
   - test
+  - report
   - analyze
   - deploy
 
@@ -75,10 +76,12 @@ unittest:
 
 testlink:
         #extends: .sourcechanged
-  stage: test
-  image: python
+  stage: report
+  image: python:3
   variables:
     APIKEY: "${TESTLINK_APIKEY}"
+  before_script:
+    - pip install --no-cache-dir requests
   script:
     - python tl2rest.py
 
