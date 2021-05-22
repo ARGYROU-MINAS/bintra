@@ -27,7 +27,8 @@ def parseXML(xmlfile):
 def updateBuild(aItems):
     payload = {
         "commit_id": os.environ['COMMIT_ID'],
-        "tag": "1.0.7",
+        "name": os.environ['TAGSHORT'],
+        "tag": os.environ['TAGFULL'],
         "notes": "Updated build"
     }
     r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/1", json=payload, headers=headers)

@@ -83,6 +83,8 @@ testlink:
     COMMIT_ID: "${CI_COMMIT_SHA}"
   before_script:
     - pip install --no-cache-dir requests
+    - TAGFULL=$(git describe)
+    - TAGSHORT=$(git describe --abbrev=0)
   script:
     - python tl2rest.py
 
