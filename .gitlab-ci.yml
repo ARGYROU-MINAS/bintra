@@ -77,7 +77,6 @@ testlink:
         #extends: .sourcechanged
   stage: test
   image: python
-  needs: ["unittest"]
   variables:
     APIKEY: "${TESTLINK_APIKEY}"
   script:
