@@ -10,9 +10,12 @@ let server = require('../app');
 let should = chai.should();
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiHttp);
 
 describe('server', () => {
+    captureLogs();
 
     describe('[BINTRA-8] GET feeds', () => {
         before(async () => {

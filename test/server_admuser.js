@@ -9,6 +9,8 @@ let server = require('../app');
 let should = chai.should();
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 var PackageModel = require('../models/package.js');
 
 chai.use(chaiHttp);
@@ -33,6 +35,8 @@ const pHash = '44e978970ac5a511d4ba83364a76d81041ccd71129e57cdd8384cd460ff9bd35'
 const dName = 'example.xyz';
 
 describe('PFilter put server tests', function() {
+    captureLogs();
+
     before(async () => {
         console.log("run before");
         await DomainModel.deleteMany({});

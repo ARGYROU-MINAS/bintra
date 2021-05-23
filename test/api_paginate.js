@@ -7,6 +7,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var chaiAsPromised = require('chai-as-promised');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
@@ -16,6 +18,8 @@ var LoginModel = require('../models/login.js');
 const PackageService = require('../service/PackagesService.js');
 
 describe('Paginate', function() {
+    captureLogs();
+
     before(async () => {
         console.log("run before");
         await PackageModel.deleteMany({});

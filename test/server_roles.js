@@ -8,6 +8,8 @@ let server = require('../app');
 let should = chai.should();
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 var LoginModel = require('../models/login.js');
 const UsersService = require('../service/UsersService.js');
 
@@ -17,6 +19,8 @@ var tokenUser = "";
 var tokenAdmin = "";
 
 describe('server roles', () => {
+    captureLogs();
+
     before(async () => {
         console.log("prepare DB before");
 

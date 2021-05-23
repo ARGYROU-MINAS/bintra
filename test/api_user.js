@@ -9,6 +9,8 @@ var chaiAsPromised = require('chai-as-promised');
 let server = require('../app');
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
@@ -21,6 +23,8 @@ const PackagesService = require('../service/PackagesService.js');
 var JWT;
 
 describe('User stuff', function() {
+    captureLogs();
+
     before(async () => {
         console.log("run before");
 

@@ -1,14 +1,20 @@
 {
     "reporterEnabled": "mochawesome,mocha-junit-reporter,mocha-sonarqube-reporter,testlinkreporter",
     "mochaJunitReporterReporterOptions": {
-        "mochaFile": "junit-custom.xml"
+        "mochaFile": "junit-custom.xml",
+	"outputs": true,
+	"properties": {
+            "prefix": "BINTRA",
+	    "name": "bintra",
+	    "testplan": "CI"
+	}
     },
     "MochaSonarqubeReporterOptions": {
     },
     "testlinkreporterReporterOptions": {
         "prefix": "BINTRA",
 	"name": "bintra",
-	"testplan": "smoke",
+	"testplan": "CI",
 	"build": "1.0",
 	"platform": "default"
     }

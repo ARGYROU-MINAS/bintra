@@ -9,6 +9,8 @@ let server = require('../app');
 let should = chai.should();
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 var PackageModel = require('../models/package.js');
 
 chai.use(chaiHttp);
@@ -18,6 +20,8 @@ const PackageService = require('../service/PackagesService.js');
 var packageid = "";
 
 describe('PFilter server tests', function() {
+    captureLogs();
+
     before(async () => {
         console.log("run before");
         await PackageModel.deleteMany({});

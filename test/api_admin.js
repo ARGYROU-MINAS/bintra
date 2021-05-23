@@ -7,6 +7,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var chaiAsPromised = require('chai-as-promised');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
@@ -16,6 +18,7 @@ var LoginModel = require('../models/login.js');
 const PackagesService = require('../service/PackagesService.js');
 
 describe('admin only functions', function() {
+    captureLogs();
 
     context('[BINTRA-14] delete package by id', function() {
         before(async () => {

@@ -2,6 +2,7 @@
 process.env.NODE_ENV = 'test';
 
 var PackageModel = require('../models/package.js');
+var util = require('util');
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -10,9 +11,12 @@ let server = require('../app');
 let should = chai.should();
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiHttp);
 
 describe('server', () => {
+    captureLogs();
 
     describe('[BINTRA-] GET summary', () => {
         before(async () => {
@@ -39,9 +43,11 @@ describe('server', () => {
                 });
         });
         it('[STEP-] get family', (done) => {
+            console.log("Call family API");
             request(server)
                 .get('/v1/summary/family')
                 .end((err, res) => {
+                    console.log("did get reply");
                     res.should.have.status(200);
 		    res.body.should.have.property('summary');
                     done();

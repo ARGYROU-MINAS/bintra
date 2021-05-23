@@ -9,6 +9,8 @@ var chaiAsPromised = require('chai-as-promised');
 let server = require('../app');
 let request = require('supertest');
 
+const captureLogs = require('../testutils/capture-logs');
+
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
@@ -19,6 +21,8 @@ const UsersService = require('../service/UsersService.js');
 var JWT;
 
 describe('Domain stuff', function() {
+    captureLogs();
+
     before(async () => {
         console.log("run before");
         await DomainModel.deleteMany({});
