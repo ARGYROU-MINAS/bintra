@@ -1,4 +1,5 @@
 # bintra gitlab CI definition
+# use testlink
 
 stages:
   - build
