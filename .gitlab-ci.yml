@@ -70,6 +70,7 @@ unittest:
     paths:
       - mochawesome-report/
       - coverage/
+      - junit-custom.xml
       - xunit.xml
       - testlink.xml
     reports:
