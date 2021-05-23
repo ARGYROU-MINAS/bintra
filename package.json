@@ -60,6 +60,6 @@
     "mochawesome": "^6.2.1",
     "nyc": "^15.1.0",
     "supertest": "^6.0.1",
-    "testlinkreporter": "git+https://gitlab.kretschmann.software/kai/testlinkimporter.git#1.0.4"
+    "testlinkreporter": "git+https://gitlab.kretschmann.software/kai/testlinkimporter.git#1.0.5"
   }
 }
