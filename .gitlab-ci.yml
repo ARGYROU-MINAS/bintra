@@ -116,7 +116,7 @@ pages:
   extends: .sourcechanged
   stage: deploy
   image: alpine
-  needs: ["makedocs","jsdocs"]
+  needs: ["makedocs","jsdocs","unittest"]
   before_script:
     - mkdir public
     - mkdir public/jsdoc
@@ -211,3 +211,4 @@ include:
 .secret-analyzer:
   extends: .sourcechanged
   stage: analyze
+  needs: []
