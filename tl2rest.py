@@ -28,6 +28,17 @@ def parse_xml(xmlfile):
         package['tcid'] = tcid
         package['result'] = item.find('./result').text
         package['notes'] = item.find('./notes').text
+        steps = []
+        for xstep in item.findall('./steps/step'):
+            s_number = xstep.find('./step_number').text
+            s_notes = xstep.find('./notes').text
+            s_result = xstep.find('./result').text
+            step = {}
+            step['stepNumber'] = s_number
+            step['notes'] = s_notes
+            step['statusCode'] = s_result
+            steps.append(step)
+        package['steps'] = steps
         reqitems.append(package)
     return reqitems
 
@@ -86,7 +97,8 @@ def submit(aresults):
             "buildID": buildID,
             "statusCode": r['result'].lower(),
             "notes": r['notes'],
-            "testCaseExternalID": r['tcid']
+            "testCaseExternalID": r['tcid'],
+            "steps": r['steps']
         }
         pprint(payload)
         r = requests.post(testlink_host + "lib/api/rest/v3/executions", json=payload, headers=headers)
@@ -95,6 +107,7 @@ def submit(aresults):
 
 def main():
     items = parse_xml('testlink.xml')
+    pprint(items)
     update_build(items);
     submit(items);
 
