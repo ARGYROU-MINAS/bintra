@@ -5,6 +5,8 @@ import os
 import datetime
 from pprint import pprint
 
+testlink_host = os.environ['TESTLINK_HOST']
+execution_type_auto = 2
 headers = {
     'Apikey': os.environ['APIKEY'],
     'Content-type': 'application/json'
@@ -34,7 +36,7 @@ def update_build(aitems):
 
     tpapikey = os.environ['TPAPIKEY']
     currenttag = os.environ['TAGSHORT']
-    r = requests.get("https://testlink.kretschmann.software/lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
+    r = requests.get(testlink_host + "lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
     j = r.json()
     pprint(j)
     is_new_tag = True
@@ -51,14 +53,14 @@ def update_build(aitems):
         print("Create new build")
         payload = {
             "name": os.environ['TAGSHORT'],
-            "testplan": 2,
+            "testplan": os.environ['TESTLINK_TESTPLANID'],
             "commit_id": os.environ['COMMIT_ID'],
             "tag": os.environ['TAGFULL'],
             "branch": "master",
             "release_date": dtreleasedate,
             "notes": "Created build at " +dtstring
         }
-        r = requests.post("https://testlink.kretschmann.software/lib/api/rest/v3/builds", json=payload, headers=headers)
+        r = requests.post(testlink_host + "lib/api/rest/v3/builds", json=payload, headers=headers)
         print("result", r.text)
         buildID = r.json()['id']
     else:
@@ -69,18 +71,17 @@ def update_build(aitems):
             "tag": os.environ['TAGFULL'],
             "notes": "Updated build at " + dtstring
         }
-        r = requests.put("https://testlink.kretschmann.software/lib/api/rest/v3/builds/"+buildID, json=payload, headers=headers)
+        r = requests.put(testlink_host + "lib/api/rest/v3/builds/"+buildID, json=payload, headers=headers)
         print("result", r.text)
 
 def submit(aresults):
-    platform_id = 1
-    execution_type = 2
-    testplan_id = 2
+    platform_id = os.environ['TESTLINK_PLATFORMID']
+    testplan_id = os.environ['TESTLINK_TESTPLANID']
     for r in aresults:
         print("submit", r['tcid']);
         payload = {
             "platformID": platform_id,
-            "executionType": execution_type,
+            "executionType": execution_type_auto,
             "testPlanID": testplan_id,
             "buildID": buildID,
             "statusCode": r['result'].lower(),
@@ -88,7 +89,7 @@ def submit(aresults):
             "testCaseExternalID": r['tcid']
         }
         pprint(payload)
-        r = requests.post("https://testlink.kretschmann.software/lib/api/rest/v3/executions", json=payload, headers=headers)
+        r = requests.post(testlink_host + "lib/api/rest/v3/executions", json=payload, headers=headers)
         print("result", r.text)
 
 

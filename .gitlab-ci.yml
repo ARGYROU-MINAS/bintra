@@ -84,6 +84,9 @@ testlink:
     APIKEY: "${TESTLINK_APIKEY}"
     TPAPIKEY: "${TESTLINK_TESTPLAN_APIKEY}"
     COMMIT_ID: "${CI_COMMIT_SHA}"
+    TESTLINK_HOST: "${TESTLINK_HOST}"
+    TESTLINK_TESTPLANID: "${TESTLINK_TESTPLANID}"
+    TESTLINK_PLATFORMID: "${TESTLINK_PLATFORMID}"
   before_script:
     - pip install --no-cache-dir requests
     - export TAGFULL=$(git describe)
