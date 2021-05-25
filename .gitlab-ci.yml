@@ -59,6 +59,7 @@ unittest:
   image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
     NODE_ENV: test
+  needs: []
   before_script:
     - "/etc/init.d/mongodb start"
     - npm install
@@ -87,6 +88,7 @@ testlink:
     TESTLINK_HOST: "${TESTLINK_HOST}"
     TESTLINK_TESTPLANID: "${TESTLINK_TESTPLANID}"
     TESTLINK_PLATFORMID: "${TESTLINK_PLATFORMID}"
+  needs: ["unittest"]
   before_script:
     - pip install --no-cache-dir requests
     - export TAGFULL=$(git describe)
@@ -103,6 +105,7 @@ sonarqube:
       - ''
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  needs: ["unittest"]
   before_script:
     - git fetch --unshallow
   script:
@@ -113,6 +116,7 @@ pages:
   extends: .sourcechanged
   stage: deploy
   image: alpine
+  needs: ["makedocs","jsdocs"]
   before_script:
     - mkdir public
     - mkdir public/jsdoc
