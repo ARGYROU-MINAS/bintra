@@ -1,0 +1,6 @@
+FROM node:14
+MAINTAINER Kai Kretschmann
+
+RUN apt-get update && apt-get install -y \
+        mongodb
+
