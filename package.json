@@ -37,6 +37,7 @@
     "mastodon": "^1.2.2",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
+    "mqtt": "^4.2.8",
     "oas3-tools": "^2.2.2",
     "piwik-tracker": "^1.1.2",
     "serve-favicon": "^2.5.0",

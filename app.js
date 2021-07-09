@@ -34,6 +34,7 @@ var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
 require('./subscribers/toot');
+require('./subscribers/mqttclient.js');
 
 const {
     mongoHost,
