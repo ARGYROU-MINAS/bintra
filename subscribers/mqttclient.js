@@ -4,22 +4,27 @@ var emitter = require('events').EventEmitter;
 var eventEmitter = require('../utils/eventer').em;
 
 var mqtt=require('mqtt');
-var client = mqtt.connect("mqtts://" + process.env.MQTT_HOSTNAME + ":8883",
-  {
-    clientId: "bintraService",
-    username: process.env.MQTT_USERNAME,
-    password: process.env.MQTT_PASSWORD
-  });
-client.on("connect", function() {
-  console.log("MQTT connected");
-});
-client.on("error", function(error) {
-  console.error("MQTT error " + error);
-});
-
-var baseUrl = 'https://api.binarytransparency.net';
+var client=null;
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
+
+  if(!client || !client.connected) {
+    console.log("MQTT do connect");
+    client = mqtt.connect("mqtts://" + process.env.MQTT_HOSTNAME + ":8883",
+    {
+      clientId: "bintraService",
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD
+    });
+    client.on("connect", function() {
+      console.log("MQTT connected");
+    });
+    client.on("error", function(error) {
+      console.error("MQTT error " + error);
+    });
+  } else {
+    console.log("Reuse MQTT client connection");
+  }
 
   if(!client.connected) {
     console.log("MQTT not connected, skipping publish");
