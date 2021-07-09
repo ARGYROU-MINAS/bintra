@@ -2,7 +2,7 @@
 
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('../utils/eventer').em;
-
+var os = require('os');
 var mqtt=require('mqtt');
 var client=null;
 
@@ -15,7 +15,7 @@ if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME
   console.log("MQTT do connect");
 
   let mqttOptions = {
-    clientId: "bintraService"
+    clientId: "bintraService" + os.hostname()
   };
 
   if(process.env.MQTT_USERNAME != "") {
