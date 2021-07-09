@@ -15,12 +15,18 @@ if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME
   if(typeof client === 'undefined' || client === null || !client.connected) {
     console.log("MQTT do connect");
 
-    client = mqtt.connect("mqtts://" + process.env.MQTT_HOSTNAME,
-    {
-      clientId: "bintraService",
-      username: process.env.MQTT_USERNAME,
-      password: process.env.MQTT_PASSWORD
-    });
+    let mqttOptions = {
+      clientId: "bintraService"
+    };
+
+    if(process.env.MQTT_USERNAME != "") {
+      mqttOptions.username = process.env.MQTT_USERNAME;
+      mqttOptions.password = process.env.MQTT_PASSWORD;
+    }
+
+    let mqttUrl = process.env.MQTT_PROTO + "://" + process.env.MQTT_HOSTNAME;
+    console.log(mqttUrl);
+    client = mqtt.connect(mqttUrl, mqttOptions);
     client.on("error", function(error) {
       console.error("MQTT error " + error);
     });
@@ -45,6 +51,7 @@ eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, p
     msg = 'Verify hash ' + packageHash + ' for ' + packageName + ' (' + packageVersion + ') for ' + packageArch + ' #' + packageFamily;
   }
 
+  console.log("MQTT publish to " + topic);
   client.publish(topic, msg, {qos:0});
 
 });
