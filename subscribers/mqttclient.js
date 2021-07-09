@@ -15,7 +15,7 @@ if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME
   if(typeof client === 'undefined' || client === null || !client.connected) {
     console.log("MQTT do connect");
 
-    client = mqtt.connect("mqtt://" + process.env.MQTT_HOSTNAME,
+    client = mqtt.connect("mqtts://" + process.env.MQTT_HOSTNAME,
     {
       clientId: "bintraService",
       username: process.env.MQTT_USERNAME,
