@@ -4,12 +4,18 @@ var emitter = require('events').EventEmitter;
 var eventEmitter = require('../utils/eventer').em;
 
 var mqtt=require('mqtt');
-var client=null;
+var client;
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
 
-  if(!client || !client.connected) {
+  if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null) {
+    console.debug("No MQTT defined");
+    return;
+  }
+
+  if(typeof client === 'undefined' || client === null || !client.connected) {
     console.log("MQTT do connect");
+
     client = mqtt.connect("mqtts://" + process.env.MQTT_HOSTNAME + ":8883",
     {
       clientId: "bintraService",
