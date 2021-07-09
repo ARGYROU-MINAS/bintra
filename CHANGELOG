@@ -9,3 +9,6 @@ Upgrade Sonarqube to 8.9LTS
 
 2021.05.08
 js-beautify rewrites
+
+2021.07.09
+Add MQTT logging
