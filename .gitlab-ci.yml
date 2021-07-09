@@ -62,6 +62,7 @@ unittest:
   needs: []
   before_script:
     - "/etc/init.d/mongodb start"
+    - "/etc/init.d/mosquitto start"
     - npm install
     - "./setup_env_test.sh"
   script:
