@@ -12,27 +12,24 @@ console.log("In mqttclient initial init");
 if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null) {
   console.warn("No MQTT defined");
 } else {
-  if(typeof client === 'undefined' || client === null || !client.connected) {
-    console.log("MQTT do connect");
+  console.log("MQTT do connect");
 
-    let mqttOptions = {
-      clientId: "bintraService"
-    };
+  let mqttOptions = {
+    clientId: "bintraService"
+  };
 
-    if(process.env.MQTT_USERNAME != "") {
-      mqttOptions.username = process.env.MQTT_USERNAME;
-      mqttOptions.password = process.env.MQTT_PASSWORD;
-    }
-
-    let mqttUrl = process.env.MQTT_PROTO + "://" + process.env.MQTT_HOSTNAME;
-    console.log(mqttUrl);
-    client = mqtt.connect(mqttUrl, mqttOptions);
-    client.on("error", function(error) {
-      console.error("MQTT error " + error);
-    });
-  } else {
-    console.log("Reuse MQTT client connection");
+  if(process.env.MQTT_USERNAME != "") {
+    mqttOptions.username = process.env.MQTT_USERNAME;
+    mqttOptions.password = process.env.MQTT_PASSWORD;
+    console.log("MQTT using login " + mqttOptions.username);
   }
+
+  let mqttUrl = process.env.MQTT_PROTO + "://" + process.env.MQTT_HOSTNAME;
+  console.log(mqttUrl);
+  client = mqtt.connect(mqttUrl, mqttOptions);
+  client.on("error", function(error) {
+    console.error("MQTT error " + error);
+  });
 }
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
