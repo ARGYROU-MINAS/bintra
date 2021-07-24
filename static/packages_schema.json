@@ -1,11 +1,12 @@
 {
 	"type": "array",
-	"$schema": "http://json-schema.org/draft-06/schema#",
+	"$schema": "http://json-schema.org/draft-07/schema#",
 	"title": "Bintra packages",
-	"$id": "https://api.binarytransparency.net/packages_schema.json", 
+	"$id": "https://api.binarytransparency.net/packages_schema.json",
 	"description": "JSON schema generated with JSONBuddy https://www.json-buddy.com",
 	"items": {
 		"type": "object",
+		"minItems": 1, 
 		"properties": {
 			"_id": {
 				"type": "string"
@@ -14,22 +15,32 @@
 				"type": "string"
 			},
 			"count": {
-				"type": "integer"
+				"type": "integer",
+				"minimum": 1 
 			},
 			"family": {
-				"enum": ["debian", "CentOS", "Fedora", "RedHat", "Windows"]
+				"enum": [
+					"debian",
+					"CentOS",
+					"Fedora",
+					"RedHat",
+					"Windows"
+				]
 			},
 			"hash": {
-				"type": "string"
+				"type": "string",
+				"pattern": "^[a-fA-F0-9]+$" 
 			},
 			"name": {
 				"type": "string"
 			},
 			"tscreated": {
-				"type": "string"
+				"type": "string",
+				"format": "date-time"
 			},
 			"tsupdated": {
-				"type": "string"
+				"type": "string",
+				"format": "date-time"
 			},
 			"version": {
 				"type": "string"
@@ -37,7 +48,14 @@
 		}
 	},
 	"required": [
-		"_id", "arch", "count", "family", "hash", "name", "tscreated", "tsupdated", "version"
+		"arch",
+		"count",
+		"family",
+		"hash",
+		"name",
+		"tscreated",
+		"tsupdated",
+		"version"
 	],
 	"definitions": {
 
