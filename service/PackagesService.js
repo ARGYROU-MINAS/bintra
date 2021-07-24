@@ -81,12 +81,31 @@ function findPackage(resolve, reject, packageName, packageVersion, packageArch, 
         });
 }
 
+/**
+ * @method
+ * Local helper function
+ * @private
+ **/
 function replyWithError(reject, err) {
     console.error("Not OK: ", err);
     reject({
         code: 400,
         msg: "bahh"
     });
+}
+
+/**
+ * @method
+ * Reply with structure
+ * @private
+ **/
+function replyWithSummary(resolve, answer) {
+    var examples = {};
+
+    examples['application/json'] = {
+        summary: answer
+    };
+    resolve(examples[Object.keys(examples)[0]]);
 }
 
 
@@ -266,11 +285,7 @@ exports.listPackageSingle = function(packageId) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
-                reject({
-                    code: 400,
-                    msg: "bahh"
-                });
+		replyWithError(reject, err);
             });
     });
 }
@@ -584,11 +599,7 @@ exports.summaryArch = function() {
   }
 ] 
 		    , function(err, answer) {
-            var examples = {};
-            examples['application/json'] = {
-                summary: answer
-            };
-            resolve(examples[Object.keys(examples)[0]]);
+            replyWithSummary(resolve, answer);
         });
     });
 }
@@ -613,11 +624,7 @@ exports.summaryFamily = function() {
   }
 ]
                     , function(err, answer) {
-            var examples = {};
-            examples['application/json'] = {
-                summary: answer
-            };
-            resolve(examples[Object.keys(examples)[0]]);
+            replyWithSummary(resolve, answer);
         });
     });
 }
