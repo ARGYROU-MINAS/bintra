@@ -27,7 +27,7 @@ describe('get default role funtions', function() {
 
     context('[BINTRA-16] get packages from empty db', function() {
         it('[STEP-1] should have empty reply', async () => {
-            var result = await PackagesService.listPackages();
+            var result = await PackagesService.listPackagesFull();
             return expect(result).to.have.length(0);
         });
     });
@@ -48,7 +48,7 @@ describe('get default role funtions', function() {
             await packageNew.save();
         });
         it('[STEP-1] should have one reply', async () => {
-            var result = await PackagesService.listPackages();
+            var result = await PackagesService.listPackagesFull();
             return expect(result).to.have.length(1);
         });
         it('[STEP-2] get package by values', async () => {

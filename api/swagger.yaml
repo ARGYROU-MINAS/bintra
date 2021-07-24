@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.0.9
+  version: 1.1.1
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -561,6 +561,13 @@ paths:
               - up
               - down
             default: down
+        - name: age
+          in: query
+          description: maximum age in days to match
+          required: false
+          schema:
+            type: integer
+            minimum: 1
       responses:
         200:
           description: positive result we hope

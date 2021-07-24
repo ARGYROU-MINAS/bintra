@@ -299,16 +299,20 @@ exports.listPackageSingle = function(packageId) {
  * @param {number} count - Limit replies
  * @param {string} sort - Sort by property
  * @param {string} direction - Sort up or down
+ * @param {number} age - maximum age of tsupdated in days to be included
  * @returns array of entries
  **/
-exports.listPackages = function(skip, count, sort, direction) {
+exports.listPackages = function(skip, count, sort, direction, age) {
     return new Promise(function(resolve, reject) {
         console.log("In list service");
 
         var sdir = -1;
         if ('up' == direction) sdir = 1;
 
-        PackageModel.find({}, {
+        var date = new Date();
+        var marginDate = new Date(date.setDate(date.getDate() - age));
+        console.log("Show from " + marginDate);
+        PackageModel.find({tsupdated: {$gt: marginDate} }, {
                 name: 1,
                 version: 1,
                 arch: 1,

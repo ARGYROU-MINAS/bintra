@@ -96,12 +96,16 @@ module.exports.listPackageSingle = function listPackage(req, res, next, id) {
  * List all packages and variations.
  * @public
  */
-module.exports.listPackages = function listPackage(req, res, next, skip, count, sort, direction) {
-    console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction);
+module.exports.listPackages = function listPackage(req, res, next, skip, count, sort, direction, age) {
+    console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction + ", " + age);
 
     eventEmitter.emit('apihit', req);
 
-    PackagesService.listPackages(skip, count, sort, direction)
+    if(age == null) {
+        age = 9999; // might be enough for any
+    }
+
+    PackagesService.listPackages(skip, count, sort, direction, age)
         .then(function(payload) {
             utils.writeJson(res, payload, 200);
         })

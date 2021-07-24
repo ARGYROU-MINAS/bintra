@@ -52,23 +52,23 @@ describe('Paginate', function() {
         });
 
         it('[STEP-1] should have two reply', async () => {
-            var result = await PackageService.listPackages();
+            var result = await PackageService.listPackages(0, 10, 'tsupdated', 'up', 99);
             return expect(result).to.have.length(2);
         });
         it('[STEP-2] get package start window', async () => {
-            var result = await PackageService.listPackages(0, 2, 'tsupdated', 'up');
+            var result = await PackageService.listPackages(0, 2, 'tsupdated', 'up', 99);
             return expect(result).to.have.length(2);
         });
         it('[STEP-3] get package start window small', async () => {
-            var result = await PackageService.listPackages(0, 1, 'tsupdated', 'up');
+            var result = await PackageService.listPackages(0, 1, 'tsupdated', 'up', 99);
             return expect(result).to.have.length(1);
         });
         it('[STEP-4] get package next window small', async () => {
-            var result = await PackageService.listPackages(1, 1, 'tsupdated', 'up');
+            var result = await PackageService.listPackages(1, 1, 'tsupdated', 'up', 99);
             return expect(result).to.have.length(1);
         });
         it('[STEP-5] get package empty window', async () => {
-            var result = await PackageService.listPackages(2, 1, 'tsupdated', 'up');
+            var result = await PackageService.listPackages(2, 1, 'tsupdated', 'up', 99);
             return expect(result).to.have.length(0);
         });
     });

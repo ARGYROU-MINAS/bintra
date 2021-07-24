@@ -36,11 +36,11 @@ describe('admin only functions', function() {
             await packageNew.save();
         });
         it('[STEP-1] should have one reply', async () => {
-            var result = await PackagesService.listPackages();
+            var result = await PackagesService.listPackagesFull();
             var theID = result[0]._id;
             console.log("ID=" + theID);
             await PackagesService.deletePackageById(theID);
-            result = await PackagesService.listPackages();
+            result = await PackagesService.listPackagesFull();
             return expect(result).to.have.length(0);
         });
     });

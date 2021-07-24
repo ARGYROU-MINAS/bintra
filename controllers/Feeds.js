@@ -60,7 +60,7 @@ function replyWithError(res, payload) {
 function feedRss(req, res, next) {
     var rssfeed = getInitialFeed();
 
-    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
+    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed, 30)
         .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -86,7 +86,7 @@ function feedRss(req, res, next) {
 function feedAtom(req, res, next) {
     var atomfeed = getInitialFeed();
 
-    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
+    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed, 30)
         .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
@@ -111,7 +111,7 @@ function feedAtom(req, res, next) {
 function feedJson(req, res, next) {
     var jsonfeed = getInitialFeed();
 
-    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed)
+    PackagesService.listPackages(0, maxFeedItems, sortItemFeed, sortDirectionFeed, 30)
         .then(function(items) {
             items.forEach(function(entry) {
                 var myid = entry._id;
