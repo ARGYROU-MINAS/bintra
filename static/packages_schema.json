@@ -1,0 +1,45 @@
+{
+	"type": "array",
+	"$schema": "http://json-schema.org/draft-06/schema#",
+	"title": "Bintra packages",
+	"$id": "https://api.binarytransparency.net/packages_schema.json", 
+	"description": "JSON schema generated with JSONBuddy https://www.json-buddy.com",
+	"items": {
+		"type": "object",
+		"properties": {
+			"_id": {
+				"type": "string"
+			},
+			"arch": {
+				"type": "string"
+			},
+			"count": {
+				"type": "integer"
+			},
+			"family": {
+				"enum": ["debian", "CentOS", "Fedora", "RedHat", "Windows"]
+			},
+			"hash": {
+				"type": "string"
+			},
+			"name": {
+				"type": "string"
+			},
+			"tscreated": {
+				"type": "string"
+			},
+			"tsupdated": {
+				"type": "string"
+			},
+			"version": {
+				"type": "string"
+			}
+		}
+	},
+	"required": [
+		"_id", "arch", "count", "family", "hash", "name", "tscreated", "tsupdated", "version"
+	],
+	"definitions": {
+
+	}
+}
