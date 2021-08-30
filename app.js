@@ -20,6 +20,12 @@ var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
+const client = require('prom-client');
+const Registry = client.Registry;
+const register = new Registry();
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({register});
+
 const toobusy = require('toobusy-js');
 const hpp = require('hpp');
 const express = require("express");
@@ -98,6 +104,11 @@ toobusy.onLag(function(currentLag) {
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
+
+app.get('/metrics', async(req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(serveStatic(path.join(__dirname, 'static')));
