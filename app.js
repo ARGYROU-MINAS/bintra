@@ -21,13 +21,15 @@ var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
 const client = require('prom-client');
-const appCounter = new client.Counter({
-  name: 'app_requests_counter',
-  help: 'all api requests',
-});
 const Registry = client.Registry;
 const register = new Registry();
 const collectDefaultMetrics = client.collectDefaultMetrics;
+const appCounter = new client.Counter({
+  name: 'app_requests_counter',
+  help: 'all api requests',
+  registers: [register],
+});
+console.log(appCounter);
 collectDefaultMetrics({register});
 
 const toobusy = require('toobusy-js');
@@ -121,6 +123,7 @@ app.use(serveStatic(path.join(__dirname, 'static')));
 // Add some mongoose data to request for later use
 app.use(function(req, res, next) {
     req.mcdadmin = mongoose.connection;
+    req.appCounter = appCounter;
     next();
 });
 
@@ -192,7 +195,6 @@ process.on('SIGINT', function() {
 });
 
 module.exports = {
-    app: app,
-    appCounter: appCounter
+    app: app
 }
 
