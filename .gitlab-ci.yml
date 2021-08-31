@@ -172,7 +172,7 @@ rpmPublish:
     - gpg --import public.asc
     - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
     - rpm --import public.asc
-    - echo "URL to publish to: ${NEXUS_URL_RPM}"
+    - echo "URL to publish to ${NEXUS_URL_RPM}"
   script:
     - rpmdev-setuptree
     - cat client/dnf/append_rpmmacros >>~/.rpmmacros
