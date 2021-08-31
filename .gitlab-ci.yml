@@ -172,6 +172,7 @@ rpmPublish:
     - gpg --import public.asc
     - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
     - rpm --import public.asc
+    - echo "URL to publish to: ${NEXUS_URL_RPM}"
   script:
     - rpmdev-setuptree
     - cat client/dnf/append_rpmmacros >>~/.rpmmacros
@@ -210,7 +211,7 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
 variables:
-  SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas
+  SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
 .secret-analyzer:
   extends: .sourcechanged
   stage: analyze
