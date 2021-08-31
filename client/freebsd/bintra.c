@@ -21,6 +21,7 @@ static const char ARG_name[] = "packageName";
 static const char ARG_version[] = "packageVersion";
 static const char ARG_arch[] = "packageArch";
 static const char ARG_hash[] = "packageHash";
+static const size_t BUFSIZE = 300;
 
 /* Maintain a reference to ourself */
 static struct pkg_plugin *self;
@@ -190,7 +191,7 @@ my_callback1(void *data, struct pkgdb *db)
 	CURL *curl;
 	CURLcode res;
 	struct curl_slist *curlheaders = NULL;
-	char headbuf[300];
+	char headbuf[BUFSIZE];
 	void *pIter=NULL;
 	struct pkg *pPkgN;
 	struct pkg *pPkgO;
@@ -211,7 +212,7 @@ my_callback1(void *data, struct pkgdb *db)
 	pkg_plugin_info(self, "  Token: '%s'", jwt);
 	pkg_plugin_info(self, "  Count: %i", count);
 
-	sprintf(headbuf, "Authorization: Bearer %s", jwt);
+	snprintf(headbuf, BUFSIZE, "Authorization: Bearer %s", jwt);
 
 	if (data == NULL)
 		pkg_plugin_info(self, "Hmm.. no data for me today, guess I'll just go and grab a mohito then..");
