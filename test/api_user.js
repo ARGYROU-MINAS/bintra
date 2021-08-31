@@ -6,7 +6,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var chaiAsPromised = require('chai-as-promised');
-let server = require('../app');
+let server = require('../app').app;
 let request = require('supertest');
 
 const captureLogs = require('../testutils/capture-logs');

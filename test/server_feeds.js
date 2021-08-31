@@ -6,7 +6,7 @@ var PackageModel = require('../models/package.js');
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../app');
+let server = require('../app').app;
 let should = chai.should();
 let request = require('supertest');
 

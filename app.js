@@ -21,6 +21,10 @@ var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
 const client = require('prom-client');
+const appCounter = new client.Counter({
+  name: 'app_requests_counter',
+  help: 'all api requests',
+});
 const Registry = client.Registry;
 const register = new Registry();
 const collectDefaultMetrics = client.collectDefaultMetrics;
@@ -41,6 +45,7 @@ var eventEmitter = require('./utils/eventer').em;
 require('./subscribers/matomo');
 require('./subscribers/toot');
 require('./subscribers/mqttclient.js');
+require('./subscribers/prometheus.js');
 
 const {
     mongoHost,
@@ -186,4 +191,8 @@ process.on('SIGINT', function() {
     process.exit();
 });
 
-module.exports = app; // for testing
+module.exports = {
+    app: app,
+    appCounter: appCounter
+}
+
