@@ -210,8 +210,9 @@ sast:
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
-variables:
-  SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
+semgrep-sast:
+  variables:
+    SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
 .secret-analyzer:
   extends: .sourcechanged
   stage: analyze
