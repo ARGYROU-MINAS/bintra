@@ -13,7 +13,7 @@ const jsyaml = require("js-yaml");
 const OpenApiValidator = require("express-openapi-validator");
 class ExpressAppConfig {
     constructor(definitionPath, appOptions) {
-	this.app = appOptions.theapp;
+	    this.app = appOptions.theapp;
         this.definitionPath = definitionPath;
         this.routingOptions = appOptions.routing;
         this.setOpenApiValidatorOptions(definitionPath, appOptions);
