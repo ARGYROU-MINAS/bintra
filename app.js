@@ -59,7 +59,8 @@ console.log(mongoHost + mongoUrl);
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    connectWithNoPrimary: true
 });
 mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
