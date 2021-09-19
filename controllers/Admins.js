@@ -340,3 +340,21 @@ module.exports.getVersions = function getVersions(req, res, next) {
         return res.end(payload);
     });
 };
+
+/**
+ * @method
+ * Get count per creator.
+ * @public
+ **/
+module.exports.getCountPerCreator = function getVersions(req, res, next) {
+    eventEmitter.emit('apihit', req);
+
+    PackagesService.countPerCreator()
+        .then(function(payload) {
+            utils.writeJson(res, payload, 200);
+        })
+        .catch(function(payload) {
+            utils.writeJson(res, payload, 400);
+        });
+};
+

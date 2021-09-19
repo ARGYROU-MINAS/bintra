@@ -887,6 +887,25 @@ paths:
               schema:
                 type: object
 
+  /countPerCreator:
+    get:
+      tags:
+        - admin
+      summary: get aggregated number of entries per creator
+      operationId: getCountPerCreator
+      x-swagger-router-controller: Admins
+      responses:
+        200:
+          description: Json reply, summary object with array
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryReply'
+      security:
+        - bearerauth: []
+      x-security-scopes:
+        - admin
+
   /search:
     post:
       tags:
@@ -1048,6 +1067,25 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
+    SummaryReply:
+      type: object
+      properties:
+        summary:
+          $ref: '#/components/schemas/SummaryArray'
+
+    SummaryArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/SummaryEntry'
+
+    SummaryEntry:
+      type: object
+      properties:
+        _id:
+          type: string
+        count:
+          type: number
 
     PatchRequest:
       type: array

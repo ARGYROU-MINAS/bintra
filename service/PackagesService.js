@@ -632,3 +632,23 @@ exports.summaryFamily = function() {
         });
     });
 }
+
+/**
+ * @method
+ * Count objects per creator
+ * @public
+ *
+ * @returns array of _id count tuples
+ **/
+exports.countPerCreator = function() {
+    return new Promise(function(resolve, reject) {
+        console.log("In countPerCreator service");
+
+        PackageModel.aggregate([
+            {"$group": {_id:"$creator", count:{$sum:1}}}
+        ], function(err, answer) {
+            replyWithSummary(resolve, answer);
+        });
+    });
+}
+
