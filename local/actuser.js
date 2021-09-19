@@ -1,23 +1,6 @@
-const {
-    loginModel,
-    cmdArgs
-} = require('./common.js');
+const c = require('./common.js');
 
-var username = cmdArgs[0];
+var username = c.cmdArgs[0];
 console.log("Enable user name=" + username);
 
-// store
-loginModel.updateOne(
-    { name: username },
-    { $set: {status: "active"} }
-).then(result => {
-    console.log(result);
-    if(result.nModified != 1) {
-        console.log("Entry not found");
-    }
-    process.exit();
-}).catch(error => {
-    console.log("Had an error " + error);
-    process.exit();
-});
-
+c.setUserStatus(username, "active");

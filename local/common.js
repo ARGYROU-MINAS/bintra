@@ -14,12 +14,28 @@ mongoose.connect(mongoUrl, {
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var LoginModel = require('../models/login.js');
+var loginModel = require('../models/login.js');
 
 var cmdArgs = process.argv.slice(2);
 
-module.exports = {
-    loginModel: LoginModel,
-    cmdArgs: cmdArgs,
-    saltRounds: saltRounds
-};
+exports.loginModel = loginModel;
+exports.cmdArgs = cmdArgs;
+exports.saltRounds = saltRounds;
+
+const setUserStatus = (username, newstatus) => {
+loginModel.updateOne(
+    { name: username },
+    { $set: {status: newstatus} }
+).then(result => {
+    console.log(result);
+    if(result.nModified != 1) {
+        console.log("Entry not found");
+    }
+    process.exit();
+}).catch(error => {
+    console.log("Had an error " + error);
+    process.exit();
+});
+}
+exports.setUserStatus = setUserStatus;
+
