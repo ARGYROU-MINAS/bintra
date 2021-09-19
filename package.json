@@ -12,7 +12,10 @@
     "combined": "nyc --reporter=lcov --reporter=text-summary mocha --timeout 20000 --reporter mocha-multi-reporters --reporter-options configFile=testreport-config.json --exit",
     "testlink": "mocha --reporter=testlinkreporter --exit",
     "adduser": "node local/adduser.js",
-    "addadmin": "node local/addadmin.js"
+    "addadmin": "node local/addadmin.js",
+    "changepwd": "node local/changepwd.js",
+    "actuser": "node local/actuser.js",
+    "deluser": "node local/deluser.js"
   },
   "keywords": [
     "swagger",
