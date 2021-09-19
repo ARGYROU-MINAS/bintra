@@ -1,4 +1,4 @@
-// config/matomo.js
+// conf.js
 
 require('custom-env').env(true);
 
@@ -18,5 +18,6 @@ module.exports = {
     mongoHost: process.env.MONGO_HOSTNAME,
     mongoPort: process.env.MONGO_PORT,
     mongoDb: process.env.MONGO_DB,
-    mongoUrl: tmpUrl
+    mongoUrl: tmpUrl,
+    saltRounds: 10
 };

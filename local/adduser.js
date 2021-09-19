@@ -3,7 +3,8 @@ const {
     mongoHost,
     mongoPort,
     mongoDb,
-    mongoUrl
+    mongoUrl,
+    saltRounds
 } = require('../conf');
 console.log(mongoHost + mongoUrl);
 mongoose.connect(mongoUrl, {
@@ -15,7 +16,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var LoginModel = require('../models/login.js');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
 var cmdArgs = process.argv.slice(2);
 var username = cmdArgs[0];
@@ -31,4 +31,6 @@ bcrypt.hash(password, saltRounds, async function(err, hash) {
 
     // store hash in database
     await login.save();
+
+    process.exit();
 });

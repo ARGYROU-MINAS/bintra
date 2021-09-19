@@ -16,6 +16,14 @@ var LoginModel = require('../models/login.js');
 var DomainModel = require('../models/domain.js');
 const bcrypt = require('bcrypt');
 
+const {
+    mongoHost,
+    mongoPort,
+    mongoDb,
+    mongoUrl,
+    saltRounds
+} = require('../conf');
+
 var eventEmitter = require('../utils/eventer').em;
 
 
@@ -368,7 +376,6 @@ exports.createUser = function(user) {
                     console.error("Domain black listed: " + domain);
                     reject("bahh");
                 } else {
-                    const saltRounds = 10;
                     var tsnow = new Date();
                     bcrypt.hash(user.password, saltRounds, function(err, hash) {
                         var u = new LoginModel({

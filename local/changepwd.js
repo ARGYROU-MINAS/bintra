@@ -20,18 +20,15 @@ const bcrypt = require('bcrypt');
 var cmdArgs = process.argv.slice(2);
 var username = cmdArgs[0];
 var password = cmdArgs[1];
-console.log("Add admin name=" + username + " Password=" + password);
+console.log("Change user name=" + username + " Password=" + password);
 
 // salt, hash, and store
 bcrypt.hash(password, saltRounds, async function(err, hash) {
-    var login = new LoginModel({
-        name: username,
-        passwd: hash,
-        role: 'admin'
-    });
-
-    // store hash in database
-    await login.save();
+    await LoginModel.updateOne(
+        {name: username},
+        { $set: {passwd: hash}}
+    );
+    console.log("Did change");
 
     process.exit();
 });
