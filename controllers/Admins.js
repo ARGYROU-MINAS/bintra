@@ -328,7 +328,10 @@ module.exports.getVersions = function getVersions(req, res, next) {
 
     (async () => {
         nginxversion = await exec('/usr/sbin/nginx -v');
-        jdata.nginx = nginxversion;
+        nginxversion = nginxversion.stderr.trim();
+        let re = /.+nginx\/(.+)/;
+        let match = re.exec(nginxversion);
+        jdata.nginx = match[1];
     })();
 
     jdata.bintra = json.version;
