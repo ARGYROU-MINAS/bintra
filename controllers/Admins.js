@@ -14,7 +14,8 @@ var UsersService = require('../service/UsersService');
 var auth = require("../utils/auth");
 var fs = require('fs');
 var path = require('path');
-
+const { promisify } = require('util');
+const exec = promisify(require('child_process').exec)
 
 /**
  * @function
@@ -316,6 +317,7 @@ module.exports.getVersions = function getVersions(req, res, next) {
     var json = require('../package.json');
     var gitrevFilename = path.join(__dirname, '../.gitrevision');
     var gitrevision = "";
+    var nginxversion = "";
 
     try {
         fs.accessSync(gitrevFilename, fs.constants.R_OK);
@@ -323,6 +325,12 @@ module.exports.getVersions = function getVersions(req, res, next) {
     } catch (err) {
         console.error("gitrevision file not found at: " + gitrevFilename);
     }
+
+    (async () => {
+        nginxversion = await exec('/usr/sbin/nginx -v');
+        jdata.nginx = nginxversion;
+    })();
+
     jdata.bintra = json.version;
     jdata.gitrevision = gitrevision.trim();
     var admin = req.mcdadmin.db.admin();
