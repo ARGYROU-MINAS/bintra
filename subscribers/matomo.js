@@ -3,10 +3,10 @@
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('../utils/eventer').em;
 
-var PiwikTracker = require('piwik-tracker');
-var piwik = null;
+var MatomoTracker = require('matomo-tracker');
+var matomo = null;
 if(process.env.MATOMO_ID) {
-  piwik = new PiwikTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
+  matomo = new MatomoTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
 }
 var baseUrl = 'https://api.binarytransparency.net';
 
@@ -35,7 +35,7 @@ function getRemoteAddr(req) {
 eventEmitter.on('apihit', function getApiHit(req) {
   console.debug("In subscriber");
 
-  if(null == piwik) return;
+  if(null == matomo) return;
 
   var url = req.url;
   var urlparts = url.split('/');
@@ -43,7 +43,7 @@ eventEmitter.on('apihit', function getApiHit(req) {
   var reqMethod = req.method;
 
   console.log("log " + urlMethod);
-  piwik.track({
+  matomo.track({
     url: baseUrl + urlMethod,
     action_name: 'API call',
     token_auth: process.env.MATOMO_TOKEN_AUTH,
@@ -61,9 +61,9 @@ eventEmitter.on('apihit', function getApiHit(req) {
 eventEmitter.on('posthit', function getPostHit(urlpath) {
   console.debug("In subscriber");
 
-  if(null == piwik) return;
+  if(null == matomo) return;
 
-   piwik.track({
+   matomo.track({
     url: baseUrl + urlpath,
     action_name: 'POST call',
     token_auth: process.env.MATOMO_TOKEN_AUTH,
