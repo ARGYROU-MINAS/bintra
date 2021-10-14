@@ -8,6 +8,10 @@ stages:
   - analyze
   - deploy
 
+.myglobals:
+  tags:
+    - docker
+
 .sourcechanged:
   rules:
     - changes:
@@ -33,6 +37,8 @@ variables:
   NEXUS_URL_DEB: "https://nexus.myocastor.de/repository/bintra/"
 
 makedocs:
+  extends:
+    - .myglobals
   stage: build
   image: "$CI_REGISTRY/kai/lggr:mkdocs"
   before_script:
@@ -44,6 +50,8 @@ makedocs:
       - pub_mkdocs
 
 jsdocs:
+  extends:
+    - .myglobals
   stage: build
   before_script:
     - npm install
@@ -54,7 +62,9 @@ jsdocs:
       - out
 
 unittest:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: test
   image: "$CI_REGISTRY/kai/bintra:fat"
   variables:
@@ -79,7 +89,9 @@ unittest:
       junit: junit-custom.xml
 
 testlink:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: report
   image: python:3
   variables:
@@ -98,7 +110,9 @@ testlink:
     - python tl2rest.py
 
 sonarqube:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
@@ -114,7 +128,9 @@ sonarqube:
   allow_failure: false
 
 pages:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: deploy
   image: alpine
   needs: ["makedocs","jsdocs","unittest"]
@@ -131,6 +147,8 @@ pages:
       - public
 
 debPublish:
+  extends:
+    - .myglobals
   stage: deploy
   image: "$CI_REGISTRY/kai/bintra:deb"
   before_script:
@@ -158,6 +176,8 @@ debPublish:
       - master
 
 rpmPublish:
+  extends:
+    - .myglobals
   stage: deploy
   parallel:
     matrix:
@@ -186,6 +206,8 @@ rpmPublish:
       - master
 
 publish:
+  extends:
+    - .myglobals
   stage: deploy
   image: ubuntu:latest
   variables:
@@ -205,15 +227,22 @@ publish:
     - master
 
 sast:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: analyze
+
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
+
 semgrep-sast:
   variables:
     SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
+
 .secret-analyzer:
-  extends: .sourcechanged
+  extends:
+    - .sourcechanged
+    - .myglobals
   stage: analyze
   needs: []
