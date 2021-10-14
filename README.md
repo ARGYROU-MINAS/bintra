@@ -82,6 +82,16 @@ Add new property to existing data, like *family* attribute:
     use bintra
     db.packagemodels.updateMany({}, {$set: {"family": "debian"}})
 
+## other mongodb stuff
+
+To read out the existing index definitions run from mongosh:
+
+    bintra> db.packagemodels.getIndexes()
+
+and to get the usage stats per index
+
+    bintra> db.packagemodels.aggregate( [ { $indexStats: { } } ] )
+
 ## docker logs
 
 Looking into a running service log:
