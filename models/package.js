@@ -67,8 +67,12 @@ PackageSchema.index({
     tscreated: 1
 });
 PackageSchema.index({
+    tsupdated: 1
+});
+PackageSchema.index({
     count: 1
 });
 
 
 module.exports = mongoose.model('PackageModel', PackageSchema);
+
