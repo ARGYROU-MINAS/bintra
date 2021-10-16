@@ -142,3 +142,7 @@ Where using these files as docker configurations:
     
     RUN apt-get update && apt-get upgrade -y
     RUN apt-get install -y git dh-make build-essential
+
+# Automated documenation
+
+Gitlab pages found here: [pages](https://kai.kretschmann.fyi/bintra/)
