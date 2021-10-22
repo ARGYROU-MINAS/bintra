@@ -35,9 +35,15 @@ const appCounter = new client.Counter({
 
 const pj = require('./package.json');
 const myversion = pj.version;
+const versionCounter = new client.Gauge({
+  name: 'bintra_app_version',
+  help: 'source code version',
+  registers: [register],
+  labelNames: ['version']
+});
+versionCounter.set({version: myversion}, 1);
 
-
-collectDefaultMetrics({prefix: 'bintra_', labels: {NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE}, register});
+collectDefaultMetrics({prefix: 'bintra_', register});
 
 // next section
 const toobusy = require('toobusy-js');
