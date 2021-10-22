@@ -22,13 +22,14 @@ var auth = require("./utils/auth");
 
 // Prometheus section
 const client = require('prom-client');
+const defaultLabels = {NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE};
 const Registry = client.Registry;
 const register = new Registry();
+register.setDefaultLabels(defaultLabels);
 const collectDefaultMetrics = client.collectDefaultMetrics;
 const appCounter = new client.Counter({
   name: 'bintra_app_requests_counter',
   help: 'all api requests',
-  labels: {NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE},
   registers: [register],
 });
 
