@@ -28,10 +28,15 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 const appCounter = new client.Counter({
   name: 'bintra_app_requests_counter',
   help: 'all api requests',
+  labels: {NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE},
   registers: [register],
 });
 
-collectDefaultMetrics({prefix: 'bintra_', register});
+const pj = require('./package.json');
+const myversion = pj.version;
+
+
+collectDefaultMetrics({prefix: 'bintra_', labels: {NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE}, register});
 
 // next section
 const toobusy = require('toobusy-js');
