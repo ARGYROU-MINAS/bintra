@@ -20,18 +20,20 @@ var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
 
+// Prometheus section
 const client = require('prom-client');
 const Registry = client.Registry;
 const register = new Registry();
 const collectDefaultMetrics = client.collectDefaultMetrics;
 const appCounter = new client.Counter({
-  name: 'app_requests_counter',
+  name: 'bintra_app_requests_counter',
   help: 'all api requests',
   registers: [register],
 });
-console.log(appCounter);
-collectDefaultMetrics({register});
 
+collectDefaultMetrics({prefix: 'bintra_', register});
+
+// next section
 const toobusy = require('toobusy-js');
 const hpp = require('hpp');
 const express = require("express");
