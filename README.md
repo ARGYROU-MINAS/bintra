@@ -117,19 +117,19 @@ Bloody fix until the main module has support for own app modifications included.
 
 ### prepare docker container for gitlab stages
 
-    docker login gitlab.kretschmann.software:5050 -u kai -p xxxx
+    docker login registry.kretschmann.software -u kai -p xxxx
     
-    docker build -t gitlab.kretschmann.software:5050/kai/bintra:fat - <Dockerfile_fat
-    docker push gitlab.kretschmann.software:5050/kai/bintra:fat
+    docker build -t registry.kretschmann.software/kai/bintra:fat - <Dockerfile_fat
+    docker push registry.kretschmann.software/kai/bintra:fat
     
-    docker build -t gitlab.kretschmann.software:5050/kai/bintra:deb - <Dockerfile_deb
-    docker push gitlab.kretschmann.software:5050/kai/bintra:deb
+    docker build -t registry.kretschmann.software/kai/bintra:deb - <Dockerfile_deb
+    docker push registry.kretschmann.software/kai/bintra:deb
 
 Where using these files as docker configurations:
 
 #### Dockerfile\_fat
 
-    FROM node:14
+    FROM node:16
     MAINTAINER Kai Kretschmann
     
     RUN apt-get update && apt-get install -y \
