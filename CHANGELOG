@@ -1,3 +1,6 @@
+2021.10.24
+Add docker container to snyk
+
 2021.02.10
 Add JWT authorization filter for destructive actions.
 
