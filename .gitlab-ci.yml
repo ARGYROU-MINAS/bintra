@@ -77,6 +77,7 @@ unittest:
     - "/etc/init.d/mosquitto start"
     - npm install
     - ping -c 3 mongo
+    - mongosh --host mongo -f mongotest.txt
     - "./setup_env_test.sh"
   script:
     - npm run combined
