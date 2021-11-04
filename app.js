@@ -19,6 +19,33 @@ var oas3Tools = require('./myoas/'); // here was required the oas3-tools before
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
+const express = require("express");
+var app = express();
+
+// Sentry
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+const sentryDSN = process.env.SENTRY;
+console.log(sentryDSN);
+Sentry.init({
+  dsn: sentryDSN,
+  integrations: [
+    // enable HTTP calls tracing
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Tracing.Integrations.Express({
+      // to trace all requests to the default router
+      app,
+      // alternatively, you can specify the routes you want to trace:
+      // router: someRouter,
+    }),
+  ],
+  tracesSampleRate: 1.0
+});
+
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+app.use(Sentry.Handlers.errorHandler());
 
 // Prometheus section
 const client = require('prom-client');
@@ -48,7 +75,6 @@ collectDefaultMetrics({prefix: 'bintra_', register});
 // next section
 const toobusy = require('toobusy-js');
 const hpp = require('hpp');
-const express = require("express");
 const cors = require("cors");
 
 const swaggerUi = require('swagger-ui-express');
@@ -97,10 +123,20 @@ var corsOptions = {
     }
 };
 
-var app = express();
+//var app = express();
 
 app.use(hpp());
 app.use(cors(corsOptions));
+
+// Add Sentry to app object
+app.use(function(req, res, next) {
+    req.sentry = Sentry;
+    req.sentryTransaction = Sentry.startTransaction({
+        op: "test",
+        name: "Some test",
+    });
+    next();
+});
 
 // Redirect root to docs UI
 app.use('/', function doRedir(req, res, next) {
@@ -110,12 +146,15 @@ app.use('/', function doRedir(req, res, next) {
         res.writeHead(301, {
             Location: '/docs/'
         });
+        req.sentryTransaction.finish();
         res.end();
     }
 });
 
 app.use(function(req, res, next) {
     if (toobusy()) {
+        req.sentry.captureMessage("Too busy");
+        req.sentryTransaction.finish();
         res.send(503, "I'm busy right now, sorry.");
     } else {
         next();
@@ -130,6 +169,7 @@ app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.pa
 app.get('/metrics', async(req, res) => {
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
+    req.sentryTransaction.finish();
 });
 
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
@@ -181,6 +221,8 @@ app.use(/^(?!\/v1).+/, function(req, res) {
     console.error('No API call');
     res.status(404);
     res.send('No API call');
+    req.sentry.captureMessage("No API call");
+    req.sentryTransaction.finish();
 });
 
 
