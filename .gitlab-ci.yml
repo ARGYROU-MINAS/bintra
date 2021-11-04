@@ -63,7 +63,8 @@ jsdocs:
 
 unittest:
   services:
-    - mongo:5
+    - name: mongo:5
+      alias: mongo
   extends:
     - .sourcechanged
     - .myglobals
@@ -75,6 +76,7 @@ unittest:
   before_script:
     - "/etc/init.d/mosquitto start"
     - npm install
+    - ping -c 3 mongo
     - "./setup_env_test.sh"
   script:
     - npm run combined

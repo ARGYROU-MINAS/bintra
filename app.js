@@ -95,7 +95,7 @@ const {
     mongoDb,
     mongoUrl
 } = require('./conf');
-console.log(mongoHost + mongoUrl);
+console.log('Host=' + mongoHost + ' url=' + mongoUrl);
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
