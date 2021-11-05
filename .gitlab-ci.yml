@@ -81,6 +81,8 @@ unittest:
     - "./setup_env_test.sh"
   script:
     - npm run combined
+  after_script:
+    - mongosh --host mongo -f mongotest.txt
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   allow_failure: true
   artifacts:
