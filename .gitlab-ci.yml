@@ -69,7 +69,7 @@ unittest:
     - .sourcechanged
     - .myglobals
   stage: test
-  image: "$CI_REGISTRY/kai/bintra:fat"
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
   variables:
     NODE_ENV: test
   needs: []
@@ -155,7 +155,7 @@ debPublish:
   extends:
     - .myglobals
   stage: deploy
-  image: "$CI_REGISTRY/kai/bintra:deb"
+  image: "$CI_REGISTRY/kgroup/bintra:deb"
   before_script:
     - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
     - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
@@ -202,7 +202,7 @@ rpmPublish:
     - rpmdev-setuptree
     - cat client/dnf/append_rpmmacros >>~/.rpmmacros
     - cd ~/rpmbuild
-    - cp /builds/kai/bintra/client/dnf/bintra.spec SPECS/
+    - cp /builds/kgroup/bintra/client/dnf/bintra.spec SPECS/
     - rpmbuild -bb SPECS/bintra.spec
     - rpm --addsign RPMS/noarch/*.rpm
     - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
@@ -230,6 +230,21 @@ publish:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
   only:
     - master
+
+sentry:
+  stage: deploy
+  image: getsentry/sentry-cli
+  only:
+    - master
+  script:
+    - export SENTRY_URL=$SENTRY_BASE_URL
+    - export SENTRY_AUTH_TOKEN=$SENTRY_BASE_TOKEN
+    - export SENTRY_ORG=kretschmann
+    - export SENTRY_PROJECT=bintra
+    - export SENTRY_LOG_LEVEL=debug
+    - export VERSION=$(sentry-cli releases propose-version)
+    - sentry-cli releases new $CI_COMMIT_SHA
+    - sentry-cli releases set-commits --auto $VERSION
 
 sast:
   extends:
