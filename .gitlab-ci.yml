@@ -77,12 +77,13 @@ unittest:
     - "/etc/init.d/mosquitto start"
     - npm install
     - ping -c 3 mongo
-    - mongosh --host mongo -f mongotest.txt
+    - echo "show dbs" | mongosh --host mongo
+    - echo "use bintra" | mongosh --host mongo
     - "./setup_env_test.sh"
   script:
     - npm run combined
   after_script:
-    - mongosh --host mongo -f mongotest.txt
+    - echo "show dbs" | mongosh --host mongo
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   allow_failure: true
   artifacts:
