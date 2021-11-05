@@ -131,10 +131,6 @@ app.use(cors(corsOptions));
 // Add Sentry to app object
 app.use(function(req, res, next) {
     req.sentry = Sentry;
-    req.sentryTransaction = Sentry.startTransaction({
-        op: "test",
-        name: "Some test",
-    });
     next();
 });
 
@@ -146,7 +142,6 @@ app.use('/', function doRedir(req, res, next) {
         res.writeHead(301, {
             Location: '/docs/'
         });
-        req.sentryTransaction.finish();
         res.end();
     }
 });
@@ -154,7 +149,6 @@ app.use('/', function doRedir(req, res, next) {
 app.use(function(req, res, next) {
     if (toobusy()) {
         req.sentry.captureMessage("Too busy");
-        req.sentryTransaction.finish();
         res.send(503, "I'm busy right now, sorry.");
     } else {
         next();
@@ -169,7 +163,6 @@ app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.pa
 app.get('/metrics', async(req, res) => {
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
-    req.sentryTransaction.finish();
 });
 
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
@@ -222,7 +215,6 @@ app.use(/^(?!\/v1).+/, function(req, res) {
     res.status(404);
     res.send('No API call');
     req.sentry.captureMessage("No API call");
-    req.sentryTransaction.finish();
 });
 
 

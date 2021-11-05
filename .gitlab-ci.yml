@@ -82,6 +82,7 @@ unittest:
   script:
     - npm run combined
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
+  allow_failure: true
   artifacts:
     paths:
       - mochawesome-report/
