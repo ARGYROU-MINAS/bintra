@@ -26,6 +26,9 @@ stages:
       - static/
       - subscribers/*.js
       - utils/*.js
+      - app.js
+      - conf.js
+      - setup_env_test.sh
 
 image: node:14
 cache:
