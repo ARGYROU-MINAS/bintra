@@ -4,6 +4,7 @@ echo "Start writing .env.test"
 
 echo BIND_HOST=0.0.0.0 >.env.test
 echo BIND_PORT=8080 >>.env.test
+echo MONGO_URL="mongodb://mongo/bintra?directConnection=true" >>.env.test
 echo MONGO_USERNAME= >>.env.test
 echo MONGO_PASSWORD= >>.env.test
 echo MONGO_HOSTNAME=mongo >>.env.test
