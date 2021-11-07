@@ -251,6 +251,7 @@ sentry:
     - export VERSION=$(sentry-cli releases propose-version)
     - sentry-cli releases new $CI_COMMIT_SHA
     - sentry-cli releases set-commits --auto $VERSION
+    - sentry-cli releases files "$VERSION" upload-sourcemaps mochawesome-report/assets/
 
 sast:
   extends:
