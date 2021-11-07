@@ -336,6 +336,13 @@ module.exports.getVersions = function getVersions(req, res, next) {
 
     jdata.bintra = json.version;
     jdata.gitrevision = gitrevision.trim();
+
+    var payload = JSON.stringify(jdata);
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    return res.end(payload);
+/*
     var admin = req.mcdadmin.db.admin();
     admin.serverStatus(function(err, info) {
         if (err) {
@@ -350,6 +357,7 @@ module.exports.getVersions = function getVersions(req, res, next) {
         });
         return res.end(payload);
     });
+*/
 };
 
 /**

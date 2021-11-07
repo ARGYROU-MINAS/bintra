@@ -171,7 +171,6 @@ describe('server roles', () => {
                     done();
                 });
         });
-/*
         it('[STEP-4] get versions', (done) => {
             request(server)
                 .get('/v1/versions')
@@ -185,7 +184,6 @@ describe('server roles', () => {
                     done();
                 });
         });
-*/
     });
 
 });
