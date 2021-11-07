@@ -29,6 +29,7 @@ const sentryDSN = process.env.SENTRY;
 console.log(sentryDSN);
 Sentry.init({
   dsn: sentryDSN,
+  environment: process.env.NODE_ENV || "production",
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Express({
@@ -206,7 +207,6 @@ var options = {
 
 // No "/v1" pattern, so it is wrong from here on
 app.use(/^(?!\/v1).+/, function(req, res) {
-    console.error('No API call');
     res.status(404);
     res.send('No API call');
     req.sentry.captureMessage("No API call");
