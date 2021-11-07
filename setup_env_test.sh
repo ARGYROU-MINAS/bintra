@@ -21,9 +21,6 @@ echo MQTT_PROTO=mqtt >>.env.test
 echo MQTT_HOSTNAME=localhost >>.env.test
 echo MQTT_USERNAME= >>.env.test
 echo MQTT_PASSWORD= >>.env.test
-
-echo "Content of .env.test"
-ls -la |grep .env
-cat .env.test
+echo SENTRY=${SENTRY_URL} >>.env.test
 
 echo "NODE_ENV is ${NODE_ENV}"

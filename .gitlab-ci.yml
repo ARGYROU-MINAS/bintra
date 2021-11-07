@@ -88,7 +88,7 @@ unittest:
   after_script:
     - echo "show dbs" | mongosh --host mongo
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
-  allow_failure: true
+  allow_failure: false
   artifacts:
     paths:
       - mochawesome-report/
