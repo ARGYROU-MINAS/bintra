@@ -40,7 +40,7 @@ exports.listDomains = function() {
 
         DomainModel.find({})
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 resolve(item);
             })
             .catch(err => {
@@ -70,7 +70,7 @@ exports.addDomain = function(domainname) {
 
         d.save()
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 resolve(item);
             })
             .catch(err => {
@@ -132,7 +132,7 @@ exports.checkDomain = function(domainname) {
                 name: domainname
             })
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 if (item.length == 1) {
                     resolve(item[0]);
                 } else {
@@ -166,7 +166,7 @@ exports.listUsers = function() {
                 tscreated: 1
             })
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 resolve(item);
             })
             .catch(err => {
@@ -195,7 +195,7 @@ exports.putUserStatus = function(id, newStatus) {
                 status: newStatus
             })
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 console.log(item);
                 resolve(item);
             })
@@ -215,7 +215,7 @@ function checkGetUserStatus(resolve, reject, query) {
             tscreated: 1
         })
         .then(item => {
-            console.info("Was OK");
+            console.debug("Was OK");
             if (item.length > 0) {
                 resolve(item[0]);
             } else {
@@ -288,7 +288,7 @@ exports.patchUser = function(idUser, jpatch) {
                 tscreated: 1
             })
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 if (item.length > 0) {
                     var userDoc = item[0];
                     var patchedUser = jsonpatch.apply(userDoc, jpatch);
@@ -371,7 +371,7 @@ exports.createUser = function(user) {
                 name: domain
             })
             .then(item => {
-                console.info("Was OK");
+                console.debug("Was OK");
                 if (item.length == 1) {
                     console.error("Domain black listed: " + domain);
                     reject("bahh");
@@ -389,7 +389,7 @@ exports.createUser = function(user) {
 
                         u.save()
                             .then(item2 => {
-                                console.info("Was OK");
+                                console.debug("Was OK");
                                 resolve(u);
                             })
                             .catch(errSave => {
@@ -426,7 +426,7 @@ exports.checkUser = function(name, passwd) {
             })
             .then(item => {
                 if (item.length > 0) {
-                    console.info("Was OK: " + item);
+                    console.debug("Was OK: " + item);
                     var pwhash = item[0].passwd;
                     console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
                     bcrypt.compare(passwd, pwhash, function(err, result) {
@@ -472,7 +472,7 @@ exports.isActiveUser = function(uname) {
             })
             .then(item => {
                 if (item.length > 0) {
-                    console.info("Was found OK");
+                    console.debug("Was found OK");
                     resolve(true);
                 } else {
                     console.error("No match found");
@@ -504,7 +504,7 @@ exports.hasRole = function(uname, aRoles) {
             })
             .then(item => {
                 if (item.length > 0) {
-                    console.info("Was found OK");
+                    console.debug("Was found OK");
                     var uRole = item[0].role;
                     console.log("USer " + uname + " has role " + uRole);
                     if (-1 == aRoles.indexOf(uRole)) {
