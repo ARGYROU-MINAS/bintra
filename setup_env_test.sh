@@ -24,3 +24,5 @@ echo MQTT_PASSWORD= >>.env.test
 echo SENTRY=${SENTRY_URL} >>.env.test
 
 echo "NODE_ENV is ${NODE_ENV}"
+
+git rev-parse HEAD >.gitrevision
