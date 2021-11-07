@@ -22,14 +22,16 @@ var auth = require("./utils/auth");
 const express = require("express");
 var app = express();
 
+app.set('trust proxy', true);
+
 // Sentry
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 const sentryDSN = process.env.SENTRY;
-console.log(sentryDSN);
 Sentry.init({
   dsn: sentryDSN,
   environment: process.env.NODE_ENV || "production",
+  sendDefaultPii: true,
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Express({
@@ -126,6 +128,7 @@ app.use(cors(corsOptions));
 
 // Add Sentry to app object
 app.use(function(req, res, next) {
+    Sentry.setUser({ip_address: req.ip});
     req.sentry = Sentry;
     next();
 });

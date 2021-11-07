@@ -59,7 +59,7 @@ exports.verifyToken = async function(req, scopes, schema) {
             console.log("Added AUTH to request object");
 
             // Add user data to sentry
-            req.sentry.setUser({username: decodedToken.sub});
+            req.sentry.setUser({username: decodedToken.sub, ip_address: req.ip});
 
             return true;
         }
