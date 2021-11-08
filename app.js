@@ -105,7 +105,6 @@ const {
     mongoDb,
     mongoUrl
 } = require('./conf');
-console.log('Host=' + mongoHost + ' url=' + mongoUrl);
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -166,7 +165,7 @@ app.use(function(req, res, next) {
     }
 });
 toobusy.onLag(function(currentLag) {
-    console.error("Event loop lag detected! Latency: " + currentLag + "ms");
+    console.warn("Event loop lag detected! Latency: " + currentLag + "ms");
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
