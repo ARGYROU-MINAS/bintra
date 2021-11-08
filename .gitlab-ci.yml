@@ -248,8 +248,8 @@ sentry:
     - export SENTRY_ORG=kretschmann
     - export SENTRY_PROJECT=bintra
     - export SENTRY_LOG_LEVEL=debug
-    - export VERSION=$(sentry-cli releases propose-version)
-    - sentry-cli releases new $CI_COMMIT_SHA
+    - export VERSION=bintra@$(sentry-cli releases propose-version)
+    - sentry-cli releases new bintra@$CI_COMMIT_SHA
     - sentry-cli releases set-commits --auto $VERSION
     - sentry-cli releases files "$VERSION" upload-sourcemaps mochawesome-report/assets/
 

@@ -24,6 +24,17 @@ var app = express();
 
 app.set('trust proxy', true);
 
+// get git revision
+var gitrevFilename = path.join(__dirname, '.gitrevision');
+var gitrevision = "";
+try {
+    fs.accessSync(gitrevFilename, fs.constants.R_OK);
+    gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
+} catch (err) {
+    console.error("gitrevision file not found at: " + gitrevFilename);
+}
+
+
 // Sentry
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
@@ -32,7 +43,7 @@ Sentry.init({
   dsn: sentryDSN,
   environment: process.env.NODE_ENV || "production",
   sendDefaultPii: true,
-  release: "bintra@" + process.env.npm_package_version,
+  release: "bintra@" + gitrevision,
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Express({
