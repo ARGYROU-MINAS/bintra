@@ -100,6 +100,8 @@ class Bintra(dnf.Plugin):
 
             if "Fedora Project" == _family:
                 _family = "Fedora"
+            if "Red Hat, Inc." == _family:
+                _family = "RedHat"
 
             logger.info('Check package %s, version %s for architecture %s, family %s in temp path %s', _pname, _version, _arch, _family, _path)
 
