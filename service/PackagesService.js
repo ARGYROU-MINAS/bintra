@@ -235,7 +235,6 @@ exports.listPackage = function(packageName, packageVersion, packageArch, package
                 tsupdated: 1
             })
             .then(item => {
-                console.debug("Was OK");
                 var r = [];
                 item.forEach(function(value) {
                     r.push(renameAttributes(value));
@@ -273,7 +272,6 @@ exports.listPackageSingle = function(packageId) {
                 tsupdated: 1
             })
             .then(item => {
-                console.debug("Was OK");
                 if (item.length > 0) {
                     var r = renameAttributes(item[0]);
                     resolve(r);
@@ -328,7 +326,6 @@ exports.listPackages = function(skip, count, sort, direction, age) {
             .limit(count)
             .skip(skip)
             .then(item => {
-                console.debug("Was OK");
                 resolve(item);
             })
             .catch(err => {
@@ -376,7 +373,6 @@ exports.listPagePackages = function(page, size, sorters, filter) {
                 .limit(size)
                 .skip(iSkip)
                 .then(item => {
-                    console.debug("Was OK");
                     var iPages = Math.ceil(count / size);
                     var resp = {
                         last_page: iPages,
@@ -410,7 +406,6 @@ exports.listPackagesFull = function(count) {
             })
             .limit(count)
             .then(item => {
-                console.debug("Was OK");
                 resolve(item);
             })
             .catch(err => {
@@ -484,7 +479,6 @@ exports.searchPackages = function(jsearch) {
             })
             .limit(count)
             .then(item => {
-                console.debug("Was OK");
                 if (item.length == 0) {
                     reject({
                         code: 404,
@@ -573,7 +567,6 @@ exports.countPackage = function() {
         console.log("In count service");
 
         PackageModel.countDocuments({}, function(err, count) {
-            console.debug("Was OK: " + count);
             var examples = {};
             examples['application/json'] = {
                 count: count
