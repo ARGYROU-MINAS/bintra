@@ -158,7 +158,8 @@ app.use('/', function doRedir(req, res, next) {
 
 app.use(function(req, res, next) {
     if (toobusy()) {
-        req.sentry.captureMessage("Too busy");
+        var error = new Error("Too busy");
+        req.sentry.captureException(error);
         res.send(503, "I'm busy right now, sorry.");
     } else {
         next();
