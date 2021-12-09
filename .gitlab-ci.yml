@@ -232,8 +232,11 @@ publish:
     - eval $(ssh-agent -s)
     - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "Expect error 502 from here" && date
   script:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+  after_script:
+    - echo "Now no more error 502 expected" && date
   only:
     - master
 
