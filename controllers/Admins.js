@@ -341,23 +341,8 @@ module.exports.getVersions = function getVersions(req, res, next) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    return res.end(payload);
-/*
-    var admin = req.mcdadmin.db.admin();
-    admin.serverStatus(function(err, info) {
-        if (err) {
-            console.error("Get mongoDB version failed");
-            return res.status(500);
-        }
 
-        jdata.mongodb = info.version;
-        var payload = JSON.stringify(jdata);
-        res.writeHead(200, {
-            "Content-Type": "application/json"
-        });
-        return res.end(payload);
-    });
-*/
+    return res.end(payload);
 };
 
 /**

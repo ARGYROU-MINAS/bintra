@@ -132,8 +132,6 @@ var corsOptions = {
     }
 };
 
-//var app = express();
-
 app.use(hpp());
 app.use(cors(corsOptions));
 
