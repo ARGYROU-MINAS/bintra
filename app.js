@@ -139,7 +139,7 @@ app.use(cors(corsOptions));
 app.use(function(req, res, next) {
     Sentry.setUser({
         ip_address: req.ip,
-        country: req.headers['GEOPIP_COUNTRY_CODE']
+        country: req.headers['geopip_country_code']
     });
     req.sentry = Sentry;
     next();
