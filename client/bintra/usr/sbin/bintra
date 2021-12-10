@@ -4,6 +4,14 @@ exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>>/var/log/bintra.log 2>&1
 
+cleanupchars () {
+        local neu="$(tr -dc '[:alnum:]~,. -' <<<$1)"
+        if [ "$1" != "$neu" ]; then
+                >&2 echo "Did change parameter from $1 to $neu"
+        fi
+        echo "$neu"
+}
+
 echo "Got called with optional args: '$@'"
 
 bintraVersion=1.0.6
@@ -36,8 +44,11 @@ while IFS='$\n' read -r line; do
   fi
 
   packageName=$(cat control | grep "^Package:" | cut -d":" -f2- | xargs)
+  packageName=$(cleanupchars "$packageName")
   packageVersion=$(cat control | grep "^Version:" | cut -d":" -f2- | xargs)
+  packageVersion=$(cleanupchars "$packageVersion")
   packageArch=$(cat control | grep "^Architecture:" | cut -d":" -f2- | xargs)
+  packageArch=$(cleanupchars "$packageArch")
 
   APIREPLY=$(curl -X PUT -G "https://api.binarytransparency.net/v1/package" --data-urlencode "packageName=$packageName" --data-urlencode "packageVersion=$packageVersion" --data-urlencode "packageArch=$packageArch" --data-urlencode "packageFamily=debian" --data-urlencode "packageHash=$packageHash" -H "Authorization: Bearer ${JWT}" -H "accept: application/json" --silent --show-error --user-agent "bintra/$bintraVersion")
   echo "APIreply: $APIREPLY"
@@ -50,8 +61,8 @@ while IFS='$\n' read -r line; do
   if (( $REPLYLENGTH > 1 ));
   then
     echo "Multiple matches, be alarmed"
-    HASHMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash=="$packageHash").count')
-    HASHMISMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash!="$packageHash").count')
+    HASHMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash=="'$packageHash'").count')
+    HASHMISMATCHCOUNT=$(echo $APIREPLY|jq '.[] | select(.hash!="'$packageHash'").count')
     echo "Your hash was found $HASHMATCHCOUNT times versus $HASHMISMATCHCOUNT other ones"
     if (( $HASHMATCHCOUNT <= $BADCOUNT ));
     then
