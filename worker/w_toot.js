@@ -2,7 +2,6 @@
 
 var Masto = require('mastodon');
 
-
 function dotoot(t) {
   var M = new Masto({
     access_token: process.env.TOOTAUTH,
@@ -16,4 +15,3 @@ function dotoot(t) {
 };
 
 module.exports = dotoot;
-
