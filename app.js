@@ -99,6 +99,8 @@ require('./subscribers/toot');
 require('./subscribers/mqttclient.js');
 require('./subscribers/prometheus.js');
 
+var myworker = require('./worker/worker');
+
 const {
     mongoHost,
     mongoPort,
@@ -251,9 +253,16 @@ var server = http.createServer(app).listen(serverPort, serverHost, function() {
     console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
 });
 
+async function workerStop() {
+    await myworker.Queue.end();
+    await myworker.Scheduler.end();
+    await myworker.Worker.end();
+}
+
 process.on('SIGINT', function() {
     console.error("SIGINT received, quit");
     server.close();
+    (async () => await workerStop())();
     // calling .shutdown allows your process to exit normally
     toobusy.shutdown();
     process.exit();
