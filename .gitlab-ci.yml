@@ -26,6 +26,7 @@ stages:
       - static/
       - subscribers/*.js
       - utils/*.js
+      - worker/*.js
       - app.js
       - conf.js
       - setup_env_test.sh
