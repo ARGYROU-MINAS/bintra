@@ -79,6 +79,7 @@ unittest:
   needs: []
   before_script:
     - "/etc/init.d/mosquitto start"
+    - "/etc/init.d/redis-server start"
     - npm install
     - ping -c 3 mongo
     - echo "show dbs" | mongosh --host mongo
