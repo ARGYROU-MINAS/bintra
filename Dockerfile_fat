@@ -3,6 +3,7 @@ MAINTAINER Kai Kretschmann
 
 RUN apt-get update
 RUN apt-get install -y mosquitto gnupg2
+RUN apt-get install -y redis
 
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
 RUN echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main" >/etc/apt/sources.list.d/mongodb-org-5.0.list && apt-get update && apt-get install -y mongodb-org mongodb-org-database mongodb-org-server mongodb-org-shell mongodb-org-mongos mongodb-org-tools
