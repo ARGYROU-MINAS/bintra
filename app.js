@@ -254,7 +254,7 @@ var server = http.createServer(app).listen(serverPort, serverHost, function() {
 });
 
 async function workerStop() {
-    await myworker.Queue.end();
+    await myworker.queue.end();
     await myworker.Scheduler.end();
     await myworker.Worker.end();
 }

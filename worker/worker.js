@@ -14,6 +14,10 @@ var Plugins = require('node-resque').Plugins;
 var Scheduler = require('node-resque').Scheduler;
 var Queue = require('node-resque').Queue;
 
+var queue;
+
+var dotoot = require('./w_toot');
+
 async function boot() {
 	const connectionDetails = {
 		pkg: "ioredis",
@@ -24,7 +28,10 @@ async function boot() {
 	};
 
 	const jobs = {
-		add: {
+		addtoot: {
+			perform: (t) => {
+				dotoot(t);
+			}
 		}
 	};
 
@@ -102,16 +109,23 @@ async function boot() {
 	});
 
 	// connect to a queue
-	const queue = new Queue({ connection: connectionDetails }, jobs);
+	queue = new Queue({ connection: connectionDetails }, jobs);
 	queue.on("error", function (error) {
 		console.log(error);
 	});
 	await queue.connect();
 }
 
+async function doqueue(q, j, t) {
+	console.log(queue);
+	queue.enqueue(q, j, t);
+}
+
 boot();
+
 
 exports.boot = boot;
 exports.Worker = Worker;
 exports.Scheduler = Scheduler;
-exports.Queue = Queue;
+exports.queue = queue;
+exports.doqueue = doqueue;
