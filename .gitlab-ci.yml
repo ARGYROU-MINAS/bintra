@@ -92,6 +92,7 @@ unittest:
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   allow_failure: false
   artifacts:
+    when: always
     paths:
       - mochawesome-report/
       - coverage/
