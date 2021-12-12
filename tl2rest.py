@@ -71,6 +71,7 @@ def update_build(aitems):
             "release_date": dtreleasedate,
             "notes": "Created build at " +dtstring
         }
+        print("payload: ", payload)
         r = requests.post(testlink_host + "lib/api/rest/v3/builds", json=payload, headers=headers)
         print("result", r.text)
         buildID = r.json()['id']
