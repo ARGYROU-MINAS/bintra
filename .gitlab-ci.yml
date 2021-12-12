@@ -31,7 +31,7 @@ stages:
       - conf.js
       - setup_env_test.sh
 
-image: node:14
+image: node:16
 cache:
   paths:
     - node_modules/
