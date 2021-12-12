@@ -39,6 +39,7 @@
     "js-yaml": "^3.3.0",
     "json-patch": "^0.7.0",
     "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.3.0",
     "mastodon": "^1.2.2",
     "matomo-tracker": "^2.2.4",
     "mongodb": "^3.6.4",

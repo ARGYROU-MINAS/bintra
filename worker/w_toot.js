@@ -1,6 +1,9 @@
 // subscribers
 
 var Masto = require('mastodon');
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = "debug";
 
 function dotoot(t) {
   var M = new Masto({
@@ -9,9 +12,9 @@ function dotoot(t) {
     api_url: process.env.TOOTAPI
   });
 
-  console.log("!!! Tooting " + t);
+  logger.debug("!!! Tooting " + t);
 /*  M.post('statuses', { status: t } ).then(resp => {
-    console.log('Did post status');
+    logger.info('Did post status');
   }); */
 
 };

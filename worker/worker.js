@@ -13,6 +13,9 @@ var Worker = require('node-resque').Worker;
 var Plugins = require('node-resque').Plugins;
 var Scheduler = require('node-resque').Scheduler;
 var Queue = require('node-resque').Queue;
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = "debug";
 
 var queue;
 
@@ -56,71 +59,71 @@ async function boot() {
 
 	// Register for events
 	worker.on("start", () => {
-		console.log("worker started");
+		logger.info("worker started");
 	});
 	worker.on("end", () => {
-		console.log("worker ended");
+		logger.info("worker ended");
 	});
 	worker.on("cleaning_worker", (worker, pid) => {
-		console.log(`cleaning old worker ${worker}`);
+		logger.debug(`cleaning old worker ${worker}`);
 	});
 	worker.on("poll", (queuename) => {
-		console.debug(`worker polling ${queuename}`);
+		logger.debug(`worker polling ${queuename}`);
 		queue.length(queuename).then(function(l) {
-			console.debug("Q length=" + l);
+			logger.debug("Q length=" + l);
 		});
 	});
 	worker.on("ping", (time) => {
-		console.debug(`worker check in @ ${time}`);
+		logger.debug(`worker check in @ ${time}`);
 	});
 	worker.on("job", (queue, job) => {
-		console.log(`working job ${queue} ${JSON.stringify(job)}`);
+		logger.debug(`working job ${queue} ${JSON.stringify(job)}`);
 	});
 	worker.on("reEnqueue", (queue, job, plugin) => {
-		console.log(`reEnqueue job (${plugin}) ${queue} ${JSON.stringify(job)}`);
+		logger.debug(`reEnqueue job (${plugin}) ${queue} ${JSON.stringify(job)}`);
 	});
 	worker.on("success", (queue, job, result, duration) => {
-		console.log(`job success ${queue} ${JSON.stringify(job)} >> ${result} (${duration}ms)`);
+		logger.debug(`job success ${queue} ${JSON.stringify(job)} >> ${result} (${duration}ms)`);
 	});
 	worker.on("failure", (queue, job, failure, duration) => {
-		console.log( `job failure ${queue} ${JSON.stringify( job)} >> ${failure} (${duration}ms)`);
+		logger.debug( `job failure ${queue} ${JSON.stringify( job)} >> ${failure} (${duration}ms)`);
 	});
 	worker.on("error", (error, queue, job) => {
-		console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`);
+		logger.debug(`error ${queue} ${JSON.stringify(job)}  >> ${error}`);
 	});
 	worker.on("pause", () => {
-		console.debug("worker paused");
+		logger.debug("worker paused");
 	});
 
 	scheduler.on("start", () => {
-		console.log("scheduler started");
+		logger.debug("scheduler started");
 	});
 	scheduler.on("end", () => {
-		console.log("scheduler ended");
+		logger.debug("scheduler ended");
 	});
 	scheduler.on("poll", () => {
-		console.debug("scheduler polling");
+		logger.debug("scheduler polling");
 	});
 	scheduler.on("leader", () => {
-		console.debug("scheduler became leader");
+		logger.debug("scheduler became leader");
 	});
 	scheduler.on("error", (error) => {
-		console.log(`scheduler error >> ${error}`);
+		logger.debug(`scheduler error >> ${error}`);
 	});
 	scheduler.on("cleanStuckWorker", (workerName, errorPayload, delta) => {
-		console.log( `failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`);
+		logger.debug( `failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`);
 	});
 	scheduler.on("workingTimestamp", (timestamp) => {
-		console.log(`scheduler working timestamp ${timestamp}`);
+		logger.debug(`scheduler working timestamp ${timestamp}`);
 	});
 	scheduler.on("transferredJob", (timestamp, job) => {
-		console.log(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`);
+		logger.debug(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`);
 	});
 
 	// connect to a queue
 	queue = new Queue({ connection: connectionDetails }, jobs);
 	queue.on("error", function (error) {
-		console.log(error);
+		logger.error(error);
 	});
 	await queue.connect();
 }
@@ -130,15 +133,15 @@ async function doqueue(t) {
 }
 
 async function queueDelayed(s) {
-  console.log("XX");
+  logger.debug("XX");
   var qName  = "toot";
   var fName  = "addtoot";
   var iDelay = 5000;
 
   queue.length(qName).then(function(result) {
-    console.log("Queue length=" + result);
+    logger.debug("Queue length=" + result);
     queue.enqueueIn(result * iDelay, qName, fName, s);
-    console.log("Did enqueue");
+    logger.debug("Did enqueue");
   });
 }
 
