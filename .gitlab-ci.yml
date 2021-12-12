@@ -109,6 +109,7 @@ testlink:
   image: python:3
   variables:
     GIT_STRATEGY: clone
+    GIT_DEPTH: 0
     APIKEY: "${TESTLINK_APIKEY}"
     TPAPIKEY: "${TESTLINK_TESTPLAN_APIKEY}"
     COMMIT_ID: "${CI_COMMIT_SHA}"
