@@ -13,7 +13,7 @@ var issuer = process.env.JWT_ISSUER;
 
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-logger.level = "debug";
+logger.level = process.env.LOGLEVEL || "warn";
 
 
 exports.verifyToken = async function(req, scopes, schema) {

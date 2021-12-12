@@ -15,7 +15,7 @@ var Scheduler = require('node-resque').Scheduler;
 var Queue = require('node-resque').Queue;
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-logger.level = "debug";
+logger.level = process.env.LOGLEVEL || "warn";
 
 var queue;
 

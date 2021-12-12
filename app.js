@@ -15,7 +15,7 @@ require('custom-env').env(true);
 
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-logger.level = "debug";
+logger.level = process.env.LOGLEVEL || "warn";
 
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');

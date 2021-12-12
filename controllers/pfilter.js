@@ -2,7 +2,7 @@
 
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-logger.level = "debug";
+logger.level = process.env.LOGLEVEL || "warn";
 
 function cleanupString(s) {
     var sNew = s.replace(/[^a-zA-Z0-9\-\._ ~:+]/gi, '');

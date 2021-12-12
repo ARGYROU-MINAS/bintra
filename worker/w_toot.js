@@ -3,7 +3,7 @@
 var Masto = require('mastodon');
 const log4js = require("log4js");
 const logger = log4js.getLogger();
-logger.level = "debug";
+logger.level = process.env.LOGLEVEL || "warn";
 
 function dotoot(t) {
   var M = new Masto({
