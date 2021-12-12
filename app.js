@@ -2,7 +2,7 @@
 
 /**
  * @module AppServer
- * Main entry point.
+ * Main entry point..
  * @license MIT
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
