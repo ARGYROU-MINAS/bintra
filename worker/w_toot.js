@@ -13,9 +13,9 @@ function dotoot(t) {
   });
 
   logger.debug("!!! Tooting " + t);
-/*  M.post('statuses', { status: t } ).then(resp => {
+  M.post('statuses', { status: t } ).then(resp => {
     logger.info('Did post status');
-  }); */
+  });
 
 };
 
