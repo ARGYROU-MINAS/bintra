@@ -266,7 +266,7 @@ async function workerStop() {
 process.on('SIGINT', function() {
     logger.error("SIGINT received, quit");
     server.close();
-    (async () => await workerStop())();
+    (async () => workerStop())();
     // calling .shutdown allows your process to exit normally
     toobusy.shutdown();
     process.exit();

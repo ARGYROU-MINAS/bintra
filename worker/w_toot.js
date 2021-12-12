@@ -17,6 +17,6 @@ function dotoot(t) {
     logger.info('Did post status');
   });
 
-};
+}
 
 module.exports = dotoot;

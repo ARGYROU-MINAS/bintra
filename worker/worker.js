@@ -7,8 +7,6 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
-//import { Worker, Plugins, Scheduler, Queue } from "node-resque";
-
 var Worker = require('node-resque').Worker;
 var Plugins = require('node-resque').Plugins;
 var Scheduler = require('node-resque').Scheduler;
@@ -64,32 +62,32 @@ async function boot() {
 	worker.on("end", () => {
 		logger.info("worker ended");
 	});
-	worker.on("cleaning_worker", (worker, pid) => {
-		logger.debug(`cleaning old worker ${worker}`);
+	worker.on("cleaning_worker", (w, pid) => {
+		logger.debug(`cleaning old worker ${w}`);
 	});
-	worker.on("poll", (queuename) => {
-		logger.debug(`worker polling ${queuename}`);
-		queue.length(queuename).then(function(l) {
+	worker.on("poll", (q) => {
+		logger.debug(`worker polling ${q}`);
+		queue.length(q).then(function(l) {
 			logger.debug("Q length=" + l);
 		});
 	});
 	worker.on("ping", (time) => {
 		logger.debug(`worker check in @ ${time}`);
 	});
-	worker.on("job", (queue, job) => {
-		logger.debug(`working job ${queue} ${JSON.stringify(job)}`);
+	worker.on("job", (q, job) => {
+		logger.debug(`working job ${q} ${JSON.stringify(job)}`);
 	});
-	worker.on("reEnqueue", (queue, job, plugin) => {
-		logger.debug(`reEnqueue job (${plugin}) ${queue} ${JSON.stringify(job)}`);
+	worker.on("reEnqueue", (q, job, plugin) => {
+		logger.debug(`reEnqueue job (${plugin}) ${q} ${JSON.stringify(job)}`);
 	});
-	worker.on("success", (queue, job, result, duration) => {
-		logger.debug(`job success ${queue} ${JSON.stringify(job)} >> ${result} (${duration}ms)`);
+	worker.on("success", (q, job, result, duration) => {
+		logger.debug(`job success ${q} ${JSON.stringify(job)} >> ${result} (${duration}ms)`);
 	});
-	worker.on("failure", (queue, job, failure, duration) => {
-		logger.debug( `job failure ${queue} ${JSON.stringify( job)} >> ${failure} (${duration}ms)`);
+	worker.on("failure", (q, job, failure, duration) => {
+		logger.debug( `job failure ${q} ${JSON.stringify( job)} >> ${failure} (${duration}ms)`);
 	});
-	worker.on("error", (error, queue, job) => {
-		logger.debug(`error ${queue} ${JSON.stringify(job)}  >> ${error}`);
+	worker.on("error", (error, q, job) => {
+		logger.debug(`error ${q} ${JSON.stringify(job)}  >> ${error}`);
 	});
 	worker.on("pause", () => {
 		logger.debug("worker paused");
