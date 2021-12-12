@@ -2,7 +2,7 @@
 
 /**
  * @module AppServer
- * Main entry point.
+ * Main entry point..
  * @license MIT
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
@@ -12,6 +12,10 @@ var fs = require('fs'),
     http = require('http');
 
 require('custom-env').env(true);
+
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
 
 var favicon = require('serve-favicon');
 var serveStatic = require('serve-static');
@@ -31,7 +35,7 @@ try {
     fs.accessSync(gitrevFilename, fs.constants.R_OK);
     gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
 } catch (err) {
-    console.error("gitrevision file not found at: " + gitrevFilename);
+    logger.error("gitrevision file not found at: " + gitrevFilename);
 }
 
 
@@ -99,6 +103,8 @@ require('./subscribers/toot');
 require('./subscribers/mqttclient.js');
 require('./subscribers/prometheus.js');
 
+var myworker = require('./worker/worker');
+
 const {
     mongoHost,
     mongoPort,
@@ -122,7 +128,7 @@ var corsOptions = {
         if (!(origin)) {
             callback(null, true);
         } else {
-            console.log("cors check on " + origin);
+            logger.info("cors check on " + origin);
             if (corsWhitelist.indexOf(origin) !== -1) {
                 callback(null, true);
             } else {
@@ -172,7 +178,7 @@ app.use(function(req, res, next) {
     }
 });
 toobusy.onLag(function(currentLag) {
-    console.warn("Event loop lag detected! Latency: " + currentLag + "ms");
+    logger.warn("Event loop lag detected! Latency: " + currentLag + "ms");
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
@@ -245,15 +251,22 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
  */
 var serverPort = process.env.BIND_PORT;
 var serverHost = process.env.BIND_HOST;
-console.log("Bind to %s : %d", serverHost, serverPort);
+logger.info("Bind to %s : %d", serverHost, serverPort);
 var server = http.createServer(app).listen(serverPort, serverHost, function() {
-    console.log('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
-    console.log('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
+    logger.info('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
+    logger.info('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
 });
 
+async function workerStop() {
+    await myworker.queue.end();
+    await myworker.Scheduler.end();
+    await myworker.Worker.end();
+}
+
 process.on('SIGINT', function() {
-    console.error("SIGINT received, quit");
+    logger.error("SIGINT received, quit");
     server.close();
+    (async () => workerStop())();
     // calling .shutdown allows your process to exit normally
     toobusy.shutdown();
     process.exit();

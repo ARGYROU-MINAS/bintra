@@ -13,6 +13,10 @@ var eventEmitter = require('../utils/eventer').em;
 var PackagesService = require('../service/PackagesService');
 var UsersService = require('../service/UsersService');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 
 /**
  * @method
@@ -20,9 +24,9 @@ var UsersService = require('../service/UsersService');
  * @public
  */
 module.exports.checkToken = function checkToken(req, res, next) {
-    console.log("In check");
+    logger.info("In check");
     eventEmitter.emit('apihit', req);
-    console.log(req.auth);
+    logger.info(req.auth);
 
     var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
     var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
@@ -32,7 +36,7 @@ module.exports.checkToken = function checkToken(req, res, next) {
         tsfrom: tsfrom,
         tsto: tsto
     };
-    console.log(payload);
+    logger.info(payload);
     utils.writeJson(res, payload, 200);
 };
 
@@ -97,7 +101,7 @@ module.exports.listPackageSingle = function listPackage(req, res, next, id) {
  * @public
  */
 module.exports.listPackages = function listPackage(req, res, next, skip, count, sort, direction, age) {
-    console.log("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction + ", " + age);
+    logger.info("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction + ", " + age);
 
     eventEmitter.emit('apihit', req);
 
@@ -120,7 +124,7 @@ module.exports.listPackages = function listPackage(req, res, next, skip, count, 
  * @public
  */
 module.exports.listPagePackages = function listPagePackage(req, res, next, page, size, sorters, filter) {
-    console.log("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
+    logger.info("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
 
     eventEmitter.emit('apihit', req);
 
@@ -181,7 +185,7 @@ module.exports.countPackage = function countPackage(req, res, next) {
 module.exports.testDefault = function testDefault(req, res, next) {
 
     eventEmitter.emit('apihit', req);
-    console.log(req.openapi.schema.security);
+    logger.info(req.openapi.schema.security);
 
     var payload = {
         message: "you called default"
@@ -197,7 +201,7 @@ module.exports.testDefault = function testDefault(req, res, next) {
 module.exports.testAdmin = function testAdmin(req, res, next) {
 
     eventEmitter.emit('apihit', req);
-    console.log(req.openapi.schema.security);
+    logger.info(req.openapi.schema.security);
 
     var payload = {
         message: "you called admin"

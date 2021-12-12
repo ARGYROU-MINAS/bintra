@@ -17,6 +17,10 @@ var path = require('path');
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec)
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 /**
  * @function
  * Receive login data and return JWT token.
@@ -31,9 +35,9 @@ module.exports.loginPost = function loginPost(args, res, next) {
 
     UsersService.checkUser(username, password)
         .then(function(useritem) {
-            console.log("User found: " + useritem);
+            logger.info("User found: " + useritem);
             var myRole = useritem.role;
-            console.log("User hat role " + myRole);
+            logger.info("User hat role " + myRole);
             var tokenString = auth.issueToken(username, myRole);
             response = {
                 token: tokenString
@@ -114,7 +118,7 @@ module.exports.deleteUser = function deleteUser(req, res, next, id) {
  */
 module.exports.putUserStatus = function putUserStatus(req, res, next, status, id) {
     eventEmitter.emit('apihit', req);
-    console.log("putUserStatus " + id + "/" + status + "!");
+    logger.info("putUserStatus " + id + "/" + status + "!");
 
     UsersService.putUserStatus(id, status)
         .then(function(payload) {
@@ -323,7 +327,7 @@ module.exports.getVersions = function getVersions(req, res, next) {
         fs.accessSync(gitrevFilename, fs.constants.R_OK);
         gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
     } catch (err) {
-        console.error("gitrevision file not found at: " + gitrevFilename);
+        logger.error("gitrevision file not found at: " + gitrevFilename);
     }
 
     (async () => {

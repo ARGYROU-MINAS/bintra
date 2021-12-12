@@ -26,6 +26,10 @@ const {
 
 var eventEmitter = require('../utils/eventer').em;
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 
 /**
  * @method
@@ -36,14 +40,14 @@ var eventEmitter = require('../utils/eventer').em;
  **/
 exports.listDomains = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In list domains service");
+        logger.info("In list domains service");
 
         DomainModel.find({})
             .then(item => {
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -59,7 +63,7 @@ exports.listDomains = function() {
  **/
 exports.addDomain = function(domainname) {
     return new Promise(function(resolve, reject) {
-        console.log("In add domain service");
+        logger.info("In add domain service");
 
         var tsnow = new Date();
         var d = new DomainModel({
@@ -72,7 +76,7 @@ exports.addDomain = function(domainname) {
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -88,14 +92,14 @@ exports.addDomain = function(domainname) {
  **/
 exports.deleteDomain = function(domainname) {
     return new Promise(function(resolve, reject) {
-        console.log("In delete domain service");
+        logger.info("In delete domain service");
 
         DomainModel.deleteOne({
                 name: domainname
             })
             .then(item => {
                 if (item.deletedCount != 1) {
-                    console.error("not found, not deleted");
+                    logger.error("not found, not deleted");
                     reject({
                         code: 404,
                         msg: "not found"
@@ -105,7 +109,7 @@ exports.deleteDomain = function(domainname) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject({
                     code: 400,
                     msg: "bahh"
@@ -124,7 +128,7 @@ exports.deleteDomain = function(domainname) {
  **/
 exports.checkDomain = function(domainname) {
     return new Promise(function(resolve, reject) {
-        console.log("In check domain service");
+        logger.info("In check domain service");
 
         DomainModel.find({
                 name: domainname
@@ -137,7 +141,7 @@ exports.checkDomain = function(domainname) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -153,7 +157,7 @@ exports.checkDomain = function(domainname) {
  **/
 exports.listUsers = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In list users service");
+        logger.info("In list users service");
 
         LoginModel.find({}, {
                 role: 1,
@@ -166,7 +170,7 @@ exports.listUsers = function() {
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -183,7 +187,7 @@ exports.listUsers = function() {
  **/
 exports.putUserStatus = function(id, newStatus) {
     return new Promise(function(resolve, reject) {
-        console.log("In put user status service " + id + newStatus);
+        logger.info("In put user status service " + id + newStatus);
 
         LoginModel.findOneAndUpdate({
                 _id: id
@@ -191,11 +195,11 @@ exports.putUserStatus = function(id, newStatus) {
                 status: newStatus
             })
             .then(item => {
-                console.log(item);
+                logger.info(item);
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -217,7 +221,7 @@ function checkGetUserStatus(resolve, reject, query) {
             }
         })
         .catch(err => {
-            console.error("Not OK: ", err);
+            logger.error("Not OK: ", err);
             reject("bahh");
         });
 }
@@ -232,7 +236,7 @@ function checkGetUserStatus(resolve, reject, query) {
  **/
 exports.listUser = function(idUser) {
     return new Promise(function(resolve, reject) {
-        console.log("In list user service");
+        logger.info("In list user service");
 
         checkGetUserStatus(resolve, reject, {
             _id: idUser
@@ -250,7 +254,7 @@ exports.listUser = function(idUser) {
  **/
 exports.getUser = function(name) {
     return new Promise(function(resolve, reject) {
-        console.log("In get user service");
+        logger.info("In get user service");
 
         checkGetUserStatus(resolve, reject, {
             name: name
@@ -270,7 +274,7 @@ exports.getUser = function(name) {
  **/
 exports.patchUser = function(idUser, jpatch) {
     return new Promise(function(resolve, reject) {
-        console.log("In patch user service");
+        logger.info("In patch user service");
 
         LoginModel.find({
                 _id: idUser
@@ -292,7 +296,7 @@ exports.patchUser = function(idUser, jpatch) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -308,7 +312,7 @@ exports.patchUser = function(idUser, jpatch) {
  **/
 exports.deleteUser = function(idUser) {
     return new Promise(function(resolve, reject) {
-        console.log("In delete user service");
+        logger.info("In delete user service");
 
         LoginModel.find({
                 _id: idUser
@@ -320,19 +324,19 @@ exports.deleteUser = function(idUser) {
                 tscreated: 1
             })
             .then(item => {
-                console.info("Query OK");
+                logger.info("Query OK");
                 if (item.length > 0) {
-                    console.log("Items found");
+                    logger.info("Items found");
                     var userDoc = item[0];
-                    console.log(userDoc);
+                    logger.info(userDoc);
                     userDoc.status = "deleted";
-                    console.log(userDoc);
+                    logger.info(userDoc);
                     userDoc.save().then(itemSave => {
-                            console.log("Updated item saved");
+                            logger.info("Updated item saved");
                             resolve(userDoc);
                         })
                         .catch(err => {
-                            console.error("Not OK" + err);
+                            logger.error("Not OK" + err);
                             reject("error");
                         });
                 } else {
@@ -340,7 +344,7 @@ exports.deleteUser = function(idUser) {
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -356,16 +360,16 @@ exports.deleteUser = function(idUser) {
  **/
 exports.createUser = function(user) {
     return new Promise(function(resolve, reject) {
-        console.log("In create user service");
+        logger.info("In create user service");
 
         var domain = user.email.split('@')[1];
-        console.log("Check domain " + domain);
+        logger.info("Check domain " + domain);
         DomainModel.find({
                 name: domain
             })
             .then(item => {
                 if (item.length == 1) {
-                    console.error("Domain black listed: " + domain);
+                    logger.error("Domain black listed: " + domain);
                     reject("bahh");
                 } else {
                     var tsnow = new Date();
@@ -384,14 +388,14 @@ exports.createUser = function(user) {
                                 resolve(u);
                             })
                             .catch(errSave => {
-                                console.error("Not OK: ", errSave);
+                                logger.error("Not OK: ", errSave);
                                 reject("bahh");
                             });
                     });
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
 
@@ -409,7 +413,7 @@ exports.createUser = function(user) {
  **/
 exports.checkUser = function(name, passwd) {
     return new Promise(function(resolve, reject) {
-        console.log("In check users service");
+        logger.info("In check users service");
 
         LoginModel.find({
                 name: name,
@@ -418,27 +422,27 @@ exports.checkUser = function(name, passwd) {
             .then(item => {
                 if (item.length > 0) {
                     var pwhash = item[0].passwd;
-                    console.log("pwd=" + passwd + "; hashfromdb=" + pwhash);
+                    logger.info("pwd=" + passwd + "; hashfromdb=" + pwhash);
                     bcrypt.compare(passwd, pwhash, function(err, result) {
                         if (err) {
-                            console.error("Some error during compare: " + err);
+                            logger.error("Some error during compare: " + err);
                             reject("bahh");
                         }
                         if (result) {
-                            console.log("matched");
+                            logger.info("matched");
                             resolve(item[0]);
                         } else {
-                            console.error("Pwd mismatch");
+                            logger.error("Pwd mismatch");
                             reject("bahh");
                         }
                     });
                 } else {
-                    console.error("No entry found or perhaps not yet activated");
+                    logger.error("No entry found or perhaps not yet activated");
                     reject("bahh");
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -454,7 +458,7 @@ exports.checkUser = function(name, passwd) {
  **/
 exports.isActiveUser = function(uname) {
     return new Promise(function(resolve, reject) {
-        console.log("In isActiveUser service");
+        logger.info("In isActiveUser service");
 
         LoginModel.find({
                 name: uname,
@@ -462,15 +466,15 @@ exports.isActiveUser = function(uname) {
             })
             .then(item => {
                 if (item.length > 0) {
-                    console.debug("Was found OK");
+                    logger.debug("Was found OK");
                     resolve(true);
                 } else {
-                    console.error("No match found");
+                    logger.error("No match found");
                     reject(false);
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject(false);
             });
     });
@@ -487,28 +491,28 @@ exports.isActiveUser = function(uname) {
  **/
 exports.hasRole = function(uname, aRoles) {
     return new Promise(function(resolve, reject) {
-        console.log("In hasRole service");
+        logger.info("In hasRole service");
 
         LoginModel.find({
                 name: uname
             })
             .then(item => {
                 if (item.length > 0) {
-                    console.debug("Was found OK");
+                    logger.debug("Was found OK");
                     var uRole = item[0].role;
-                    console.log("USer " + uname + " has role " + uRole);
+                    logger.info("USer " + uname + " has role " + uRole);
                     if (-1 == aRoles.indexOf(uRole)) {
-                        console.error("User does not have one of the wanted roles");
+                        logger.error("User does not have one of the wanted roles");
                         reject(false);
                     }
                     resolve(true);
                 } else {
-                    console.error("No match found");
+                    logger.error("No match found");
                     reject(false);
                 }
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject(false);
             });
     });

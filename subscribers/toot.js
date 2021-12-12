@@ -3,33 +3,27 @@
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('../utils/eventer').em;
 
-var Masto = require('mastodon');
-var M = new Masto({
-  access_token: process.env.TOOTAUTH,
-  timeout_ms: 60*1000,  // optional HTTP request timeout to apply to all requests.
-  api_url: process.env.TOOTAPI
-})
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
 
-var baseUrl = 'https://api.binarytransparency.net';
+var myworker = require('../worker/worker');
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
   if(process.env.TOOTAUTH == "XXX") return;
-  console.debug("In toot subscriber");
+  logger.debug("In toot subscriber");
 
   var t;
   if(isnew) {
     t = 'Add new hash ' + packageHash + ' for ' + packageName + ' (' + packageVersion + ') for ' + packageArch + ' #' + packageFamily;
   } else {
-    console.log('Skip checks for now');
+    logger.info('Skip toot if not new');
     return;
   }
 
   t = t + ' #binarytransparency';
 
-  M.post('statuses', { status: t } ).then(resp => {
-    console.log('Did post status');
-  });
-
+  myworker.doqueue(t);
 });
 
 module.exports = {}
