@@ -19,8 +19,9 @@ eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, p
 
   t = t + ' #binarytransparency';
 
-  myworker.doqueue("toot", "addtoot", t);
-
+  myworker.doqueue(t + " 1");
+  myworker.doqueue(t + " 2");
+  myworker.doqueue(t + " 3");
 });
 
 module.exports = {}

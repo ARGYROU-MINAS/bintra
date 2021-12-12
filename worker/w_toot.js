@@ -9,9 +9,11 @@ function dotoot(t) {
     api_url: process.env.TOOTAPI
   });
 
-  M.post('statuses', { status: t } ).then(resp => {
+  console.log("!!! Tooting " + t);
+/*  M.post('statuses', { status: t } ).then(resp => {
     console.log('Did post status');
-  });
+  }); */
+
 };
 
 module.exports = dotoot;

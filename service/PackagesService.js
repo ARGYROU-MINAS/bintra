@@ -565,6 +565,7 @@ exports.deletePackageById = function(packageId) {
 exports.countPackage = function() {
     return new Promise(function(resolve, reject) {
         console.log("In count service");
+	eventEmitter.emit('putdata', "packageName", "packageVersion", "packageArch", "packageFamily", "packageHash", true);
 
         PackageModel.countDocuments({}, function(err, count) {
             var examples = {};

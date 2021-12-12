@@ -30,7 +30,13 @@ async function boot() {
 	const jobs = {
 		addtoot: {
 			perform: (t) => {
-				dotoot(t);
+				queue.length("toot").then(function(l) {
+					if(l > 1) {
+						t = t + " and " + l + " more";
+					}
+					dotoot(t);
+					queue.delByFunction("toot", "addtoot");
+				});
 			}
 		}
 	};
@@ -58,8 +64,11 @@ async function boot() {
 	worker.on("cleaning_worker", (worker, pid) => {
 		console.log(`cleaning old worker ${worker}`);
 	});
-	worker.on("poll", (queue) => {
-		console.debug(`worker polling ${queue}`);
+	worker.on("poll", (queuename) => {
+		console.debug(`worker polling ${queuename}`);
+		queue.length(queuename).then(function(l) {
+			console.debug("Q length=" + l);
+		});
 	});
 	worker.on("ping", (time) => {
 		console.debug(`worker check in @ ${time}`);
@@ -116,9 +125,21 @@ async function boot() {
 	await queue.connect();
 }
 
-async function doqueue(q, j, t) {
-	console.log(queue);
-	queue.enqueue(q, j, t);
+async function doqueue(t) {
+	queue.enqueue("toot", "addtoot", t);
+}
+
+async function queueDelayed(s) {
+  console.log("XX");
+  var qName  = "toot";
+  var fName  = "addtoot";
+  var iDelay = 5000;
+
+  queue.length(qName).then(function(result) {
+    console.log("Queue length=" + result);
+    queue.enqueueIn(result * iDelay, qName, fName, s);
+    console.log("Did enqueue");
+  });
 }
 
 boot();
@@ -129,3 +150,4 @@ exports.Worker = Worker;
 exports.Scheduler = Scheduler;
 exports.queue = queue;
 exports.doqueue = doqueue;
+exports.queueDelayed = queueDelayed;
