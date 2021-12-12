@@ -12,7 +12,7 @@ eventEmitter.on('apihit', function getPrometheusApiHit(req) {
 
   if(null == req.appCounter) return;
   req.appCounter.inc();
-  logger.info(req.appCounter);
+  logger.debug(req.appCounter);
 });
 
 module.exports = {}
