@@ -18,6 +18,10 @@ const bcrypt = require('bcrypt');
 
 var eventEmitter = require('../utils/eventer').em;
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 
 /**
  * Helper functions
@@ -29,14 +33,14 @@ function getUserObject(username) {
             })
             .then(itemFound => {
                 if (1 == itemFound.length) {
-                    console.log("Found user");
+                    logger.info("Found user");
                     resolve(itemFound[0]);
                 } else {
                     reject("Not found");
                 }
             })
             .catch(err => {
-                console.error("getUser failed: " + err);
+                logger.error("getUser failed: " + err);
                 reject("getUser failed");
             });
     });
@@ -72,11 +76,11 @@ function findPackage(resolve, reject, packageName, packageVersion, packageArch, 
             tsupdated: 1
         })
         .then(itemOthers => {
-            console.info("Found others");
+            logger.info("Found others");
             resolve(itemOthers);
         })
         .catch(err => {
-            console.error("Not found others: ", err);
+            logger.error("Not found others: ", err);
             reject("bahh");
         });
 }
@@ -87,7 +91,7 @@ function findPackage(resolve, reject, packageName, packageVersion, packageArch, 
  * @private
  **/
 function replyWithError(reject, err) {
-    console.error("Not OK: ", err);
+    logger.error("Not OK: ", err);
     reject({
         code: 400,
         msg: "bahh"
@@ -124,7 +128,7 @@ function replyWithSummary(resolve, answer) {
  **/
 exports.validatePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash, username) {
     return new Promise(function(resolve, reject) {
-        console.log("In validate service for " + username);
+        logger.info("In validate service for " + username);
         var tsnow = new Date();
 
         // Does it exist already?
@@ -137,11 +141,11 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
             })
             .then(itemFound => {
                 if (0 == itemFound.length) {
-                    console.log("Not exist yet");
+                    logger.info("Not exist yet");
 
                     getUserObject(username)
                         .then(userObject => {
-                            console.log(userObject);
+                            logger.info(userObject);
 
                             var packageNew = new PackageModel({
                                 name: packageName,
@@ -155,21 +159,21 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                             });
                             packageNew.save()
                                 .then(itemSaved => {
-                                    console.log("Added fresh entry");
+                                    logger.info("Added fresh entry");
                                     eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, true);
 
                                     findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily);
                                 })
                                 .catch(err => {
-                                    console.error("Not saved fresh: ", err);
+                                    logger.error("Not saved fresh: ", err);
                                     reject("bahh");
                                 })
                         })
                         .catch(err => {
-                            console.error("Some error occured?", err);
+                            logger.error("Some error occured?", err);
                         });
                 } else {
-                    console.log("Did exist already");
+                    logger.info("Did exist already");
 
                     PackageModel.updateMany({
                             name: packageName,
@@ -188,18 +192,18 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                             upsert: true
                         })
                         .then(itemUpdated => {
-                            console.log("Did update counter");
+                            logger.info("Did update counter");
                             eventEmitter.emit('putdata', packageName, packageVersion, packageArch, packageFamily, packageHash, false);
                             findPackage(resolve, reject, packageName, packageVersion, packageArch, packageFamily);
                         })
                         .catch(err => {
-                            console.error("Not updated: ", err);
+                            logger.error("Not updated: ", err);
                             reject("bahh");
                         });
                 } // if
             })
             .catch(err => { // Not really an error, just a fresh entry
-                console.error("Query failed: ", err);
+                logger.error("Query failed: ", err);
                 reject("bahh");
             });
     });
@@ -218,7 +222,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
  **/
 exports.listPackage = function(packageName, packageVersion, packageArch, packageFamily) {
     return new Promise(function(resolve, reject) {
-        console.log("In list service");
+        logger.info("In list service");
         PackageModel.find({
                 name: packageName,
                 version: packageVersion,
@@ -242,7 +246,7 @@ exports.listPackage = function(packageName, packageVersion, packageArch, package
                 resolve(r);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -258,7 +262,7 @@ exports.listPackage = function(packageName, packageVersion, packageArch, package
  **/
 exports.listPackageSingle = function(packageId) {
     return new Promise(function(resolve, reject) {
-        console.log("In list service");
+        logger.info("In list service");
         PackageModel.find({
                 _id: packageId
             }, {
@@ -302,14 +306,14 @@ exports.listPackageSingle = function(packageId) {
  **/
 exports.listPackages = function(skip, count, sort, direction, age) {
     return new Promise(function(resolve, reject) {
-        console.log("In list service");
+        logger.info("In list service");
 
         var sdir = -1;
         if ('up' == direction) sdir = 1;
 
         var date = new Date();
         var marginDate = new Date(date.setDate(date.getDate() - age));
-        console.log("Show from " + marginDate);
+        logger.info("Show from " + marginDate);
         PackageModel.find({tsupdated: {$gt: marginDate} }, {
                 name: 1,
                 version: 1,
@@ -329,7 +333,7 @@ exports.listPackages = function(skip, count, sort, direction, age) {
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -348,14 +352,14 @@ exports.listPackages = function(skip, count, sort, direction, age) {
  **/
 exports.listPagePackages = function(page, size, sorters, filter) {
     return new Promise(function(resolve, reject) {
-        console.log("In listpage service");
+        logger.info("In listpage service");
 
         var sdir = -1;
         var iSkip = (page - 1) * size;
-        console.log("skip=" + iSkip + ", amount=" + size);
+        logger.info("skip=" + iSkip + ", amount=" + size);
 
         PackageModel.countDocuments({}, function(err, count) {
-            console.info("All entries: " + count);
+            logger.info("All entries: " + count);
 
             PackageModel.find({}, {
                     name: 1,
@@ -381,7 +385,7 @@ exports.listPagePackages = function(page, size, sorters, filter) {
                     resolve(resp);
                 })
                 .catch(err2 => {
-                    console.error("Not OK: ", err2);
+                    logger.error("Not OK: ", err2);
                     reject("bahh");
                 });
         });
@@ -398,7 +402,7 @@ exports.listPagePackages = function(page, size, sorters, filter) {
  **/
 exports.listPackagesFull = function(count) {
     return new Promise(function(resolve, reject) {
-        console.log("In list service");
+        logger.info("In list service");
         PackageModel.find({})
             .populate('creator')
             .sort({
@@ -409,7 +413,7 @@ exports.listPackagesFull = function(count) {
                 resolve(item);
             })
             .catch(err => {
-                console.error("Not OK: ", err);
+                logger.error("Not OK: ", err);
                 reject("bahh");
             });
     });
@@ -433,7 +437,7 @@ function optionalWildcard(searchvalue) {
  **/
 exports.searchPackages = function(jsearch) {
     return new Promise(function(resolve, reject) {
-        console.log("In search packages service");
+        logger.info("In search packages service");
 
         const count = 100;
         const queryObj = {};
@@ -498,7 +502,7 @@ function checkDeleteStatus(resolve, reject, query) {
     PackageModel.deleteOne(query)
         .then(item => {
             if (item.deletedCount != 1) {
-                console.error("not found, not deleted");
+                logger.error("not found, not deleted");
                 reject({
                     code: 404,
                     msg: "not found"
@@ -525,7 +529,7 @@ function checkDeleteStatus(resolve, reject, query) {
  **/
 exports.deletePackage = function(packageName, packageVersion, packageArch, packageFamily, packageHash) {
     return new Promise(function(resolve, reject) {
-        console.log("In deletePackage service");
+        logger.info("In deletePackage service");
 
         var query = {
             name: packageName,
@@ -547,7 +551,7 @@ exports.deletePackage = function(packageName, packageVersion, packageArch, packa
  **/
 exports.deletePackageById = function(packageId) {
     return new Promise(function(resolve, reject) {
-        console.log("In cleanup service");
+        logger.info("In cleanup service");
 
         checkDeleteStatus(resolve, reject, {
             _id: packageId
@@ -564,7 +568,7 @@ exports.deletePackageById = function(packageId) {
  **/
 exports.countPackage = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In count service");
+        logger.info("In count service");
 
         PackageModel.countDocuments({}, function(err, count) {
             var examples = {};
@@ -585,7 +589,7 @@ exports.countPackage = function() {
  **/
 exports.summaryArch = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In summaryArch service");
+        logger.info("In summaryArch service");
 
         PackageModel.aggregate( [
   {
@@ -610,7 +614,7 @@ exports.summaryArch = function() {
  **/
 exports.summaryFamily = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In summaryFamily service");
+        logger.info("In summaryFamily service");
 
         PackageModel.aggregate( [
   {
@@ -635,7 +639,7 @@ exports.summaryFamily = function() {
  **/
 exports.countPerCreator = function() {
     return new Promise(function(resolve, reject) {
-        console.log("In countPerCreator service");
+        logger.info("In countPerCreator service");
 
         PackageModel.aggregate([
             {"$group": {_id:"$creator", count:{$sum:1}}}

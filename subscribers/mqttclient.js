@@ -6,13 +6,17 @@ var os = require('os');
 var mqtt=require('mqtt');
 var client=null;
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 // initial init steps
-console.log("In mqttclient initial init");
+logger.info("In mqttclient initial init");
 
 if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null) {
-  console.warn("No MQTT defined");
+  logger.warn("No MQTT defined");
 } else {
-  console.log("MQTT do connect");
+  logger.info("MQTT do connect");
 
   let mqttOptions = {
     clientId: "bintraService" + os.hostname()
@@ -21,20 +25,20 @@ if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME
   if(process.env.MQTT_USERNAME != "") {
     mqttOptions.username = process.env.MQTT_USERNAME;
     mqttOptions.password = process.env.MQTT_PASSWORD;
-    console.log("MQTT using login " + mqttOptions.username);
+    logger.info("MQTT using login " + mqttOptions.username);
   }
 
   let mqttUrl = process.env.MQTT_PROTO + "://" + process.env.MQTT_HOSTNAME;
-  console.log(mqttUrl);
+  logger.info(mqttUrl);
   client = mqtt.connect(mqttUrl, mqttOptions);
   client.on("error", function(error) {
-    console.error("MQTT error " + error);
+    logger.error("MQTT error " + error);
   });
 }
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
   if(!client.connected) {
-    console.log("MQTT not connected, skipping publish");
+    logger.info("MQTT not connected, skipping publish");
     return;
   }
 
@@ -48,7 +52,7 @@ eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, p
     msg = 'Verify hash ' + packageHash + ' for ' + packageName + ' (' + packageVersion + ') for ' + packageArch + ' #' + packageFamily;
   }
 
-  console.log("MQTT publish to " + topic);
+  logger.info("MQTT publish to " + topic);
   client.publish(topic, msg, {qos:0});
 
 });

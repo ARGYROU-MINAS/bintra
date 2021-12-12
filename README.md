@@ -16,6 +16,10 @@ Create in /etc/apt/sources.list.d/bintra.list with
 
 Add perhaps gpg key, see [gitlab wiki](https://gitlab.kretschmann.software/kai/bintra/-/wikis/Repository)
 
+## Sidekiq like queue
+
+Using [node-resque](https://github.com/actionhero/node-resque) for running delayed mastodon toots and more in future.
+
 ## run local for testing
 
     NODE_ENV=develop npm start

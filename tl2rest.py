@@ -67,7 +67,7 @@ def update_build(aitems):
             "testplan": os.environ['TESTLINK_TESTPLANID'],
             "commit_id": os.environ['COMMIT_ID'],
             "tag": os.environ['TAGFULL'],
-            "branch": "master",
+            "branch": os.environ['COMMIT_BRANCH'],
             "release_date": dtreleasedate,
             "notes": "Created build at " +dtstring
         }

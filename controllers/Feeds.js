@@ -2,6 +2,10 @@
 
 var PackagesService = require('../service/PackagesService');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 const Feed = require("feed").Feed;
 const maxFeedItems = 25;
 const sortItemFeed = 'tsupdated';
@@ -146,6 +150,6 @@ module.exports.bintraFeed = function bintraFeed(req, res, next, type) {
             feedJson(req, res, next);
             break;
         default:
-            console.error("Wrong type " + type);
+            logger.error("Wrong type " + type);
     }
 }

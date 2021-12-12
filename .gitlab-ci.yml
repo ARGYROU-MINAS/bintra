@@ -26,11 +26,12 @@ stages:
       - static/
       - subscribers/*.js
       - utils/*.js
+      - worker/*.js
       - app.js
       - conf.js
       - setup_env_test.sh
 
-image: node:14
+image: node:16
 cache:
   paths:
     - node_modules/
@@ -78,6 +79,7 @@ unittest:
   needs: []
   before_script:
     - "/etc/init.d/mosquitto start"
+    - "/etc/init.d/redis-server start"
     - npm install
     - ping -c 3 mongo
     - echo "show dbs" | mongosh --host mongo
@@ -106,9 +108,12 @@ testlink:
   stage: report
   image: python:3
   variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
     APIKEY: "${TESTLINK_APIKEY}"
     TPAPIKEY: "${TESTLINK_TESTPLAN_APIKEY}"
     COMMIT_ID: "${CI_COMMIT_SHA}"
+    COMMIT_BRANCH: "${CI_COMMIT_BRANCH}"
     TESTLINK_HOST: "${TESTLINK_HOST}"
     TESTLINK_TESTPLANID: "${TESTLINK_TESTPLANID}"
     TESTLINK_PLATFORMID: "${TESTLINK_PLATFORMID}"
