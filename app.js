@@ -147,7 +147,7 @@ app.use(function(req, res, next) {
         ip_address: req.ip
     });
     Sentry.setContext("GeoIP", {
-        country: req.headers['geopip-country-code'],
+        country: req.headers['geoip-country-code'],
         city: req.headers['geoip-city-name'],
         zip: req.headers['geoip-zip'],
         statecode: req.headers['geoip-state-code']
