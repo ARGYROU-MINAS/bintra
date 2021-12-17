@@ -1,0 +1,3 @@
+Contact: mailto:info@bintra.directory
+Expires: 2022-12-31T11:00:00.000Z
+Preferred-Languages: en,de
