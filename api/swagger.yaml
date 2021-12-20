@@ -1025,6 +1025,8 @@ paths:
       tags:
         - default
       summary: get queue data
+      description: |
+        Get name of worker queues and number of current entries if any
       operationId: listQueues
       x-swagger-router-controller: Queue
       responses:
@@ -1279,8 +1281,11 @@ components:
       properties:
         id:
           type: string
+          pattern: ^[a-fA-F0-9]$
+          example: whatever
         count:
           type: integer
+          example: 0
 
     PackageCount:
       required:
