@@ -82,7 +82,7 @@ exports.listQueues = function() {
 		for(const value of item) {
 		  const l = await q.length(value);
 		  r.push({id: value, count: l});
-		};
+		}
 		resolve(r);
             })
             .catch(err => {
