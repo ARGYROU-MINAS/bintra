@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.2.0
+  version: 1.3.0
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -1020,6 +1020,26 @@ paths:
       x-security-scopes:
         - admin
 
+  /queue:
+    get:
+      tags:
+        - default
+      summary: get queue data
+      description: |
+        Get name of worker queues and number of current entries if any
+      operationId: listQueues
+      x-swagger-router-controller: Queue
+      responses:
+        200:
+          description: list of queue entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueueEntries'
+        400:
+          $ref: '#/components/responses/BadRequest'
 
 components:
   parameters:
@@ -1255,6 +1275,17 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
+    QueueEntries:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: ^[a-fA-F0-9]$
+          example: whatever
+        count:
+          type: integer
+          example: 0
 
     PackageCount:
       required:

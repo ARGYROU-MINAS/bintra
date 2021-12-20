@@ -49,13 +49,16 @@ def update_build(aitems):
     currenttag = os.environ['TAGSHORT']
     r = requests.get(testlink_host + "lib/api/rest/v3/testplans/" + tpapikey + "/builds", headers=headers)
     j = r.json()
-    pprint(j)
+    #pprint(j)
     is_new_tag = True
+
+    print("Search for build " + currenttag)
     for i in j['items']:
         build = j['items'][i]
         pprint(build)
         buildname = build['name']
         if (buildname == currenttag):
+            print(buildname)
             print("Found existing tag in build #", i)
             buildID = i
             is_new_tag = False
@@ -107,7 +110,7 @@ def submit(aresults):
 
 def main():
     items = parse_xml('testlink.xml')
-    pprint(items)
+    #pprint(items)
     update_build(items);
     submit(items);
 
