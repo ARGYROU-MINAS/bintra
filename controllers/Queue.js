@@ -17,7 +17,7 @@ logger.level = process.env.LOGLEVEL || "warn";
 
 /**
  * @method
- * List all queues.
+ * List all queues and entry counts.
  * @public
  */
 module.exports.listQueues = function listQueues(req, res, next) {
