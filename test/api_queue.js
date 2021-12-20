@@ -18,7 +18,7 @@ const QueueService = require('../service/QueueService.js');
 describe('getQueues', function() {
 	captureLogs();
 
-	context('[BINTRA-] get queues and count', function() {
+	context('[BINTRA-23] get queues and count', function() {
 		it('[STEP-1] should generate number property', async () => {
 			const queueSchema = {
 				title: 'queue schema',
