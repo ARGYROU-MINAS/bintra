@@ -4,6 +4,7 @@ node_modules/
 .version
 .gitrevision
 pub_mkdocs/
+DO
 out/
 mochawesome-report/
 coverage/
