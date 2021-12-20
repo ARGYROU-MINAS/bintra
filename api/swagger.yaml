@@ -1020,6 +1020,24 @@ paths:
       x-security-scopes:
         - admin
 
+  /queue:
+    get:
+      tags:
+        - default
+      summary: get queue data
+      operationId: listQueues
+      x-swagger-router-controller: Queue
+      responses:
+        200:
+          description: list of queue entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueueEntries'
+        400:
+          $ref: '#/components/responses/BadRequest'
 
 components:
   parameters:
@@ -1255,6 +1273,14 @@ components:
           type: string
           format: date-time
           example: 2016-08-29T09:12:33.001Z
+
+    QueueEntries:
+      type: object
+      properties:
+        id:
+          type: string
+        count:
+          type: integer
 
     PackageCount:
       required:
