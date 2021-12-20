@@ -1,5 +1,0 @@
-#!/bin/bash
-
-dpkg-deb --root-owner-group --build bintra
-dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb
-dpkg-sig --verify bintra.deb

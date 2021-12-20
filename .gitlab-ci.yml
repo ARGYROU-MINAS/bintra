@@ -159,6 +159,9 @@ pages:
     - cp -a pub_mkdocs/* public/
     - cp -a out/* public/jsdoc/
     - cp -a mochawesome-report/* public/mocha/
+  only:
+    refs:
+      - master
   artifacts:
     paths:
       - public
