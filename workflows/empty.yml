@@ -1,0 +1,4 @@
+dummy:
+  stage: build
+  script:
+    - echo "Dummy step"
