@@ -14,10 +14,10 @@ include:
     rules:
       - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG == null'
 
-
   - local: 'workflows/merge.yml'
     rules:
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#      - if: $CI_MERGE_REQUEST_IID
-#      - if: $CI_COMMIT_TAG
-#      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+  - local: 'workflows/publish.yml'
+    rules:
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG != null'
