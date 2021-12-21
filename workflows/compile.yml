@@ -1,12 +1,6 @@
 # bintra gitlab CI definition
 # simple commit without tag, so test as hell
 
-stages:
-  - build
-  - test
-  - report
-  - analyze
-
 .myglobals:
   tags:
     - docker
