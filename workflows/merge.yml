@@ -1,11 +1,6 @@
 # bintra gitlab CI definition
 # we got merged, so do something
 
-stages:
-  - build
-  - test
-  - report
-  - analyze
 
 .myglobals:
   tags:
