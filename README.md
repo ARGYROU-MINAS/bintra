@@ -29,6 +29,16 @@ Using [node-resque](https://github.com/actionhero/node-resque) for running delay
 
 The combined is a special testrun, configured by an additional json file runnin gmultiple output formats from onw testrun.
 
+## Mongo commands
+
+Using *mongosh* to manually work within the tables:
+
+    db.adminCommand({listDatabases:1})
+    show dbs
+    use bintra
+    show collections
+    db.loginmodels.find()
+
 ## RPM building
 
     rpmdev-setuptree
