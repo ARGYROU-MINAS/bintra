@@ -52,6 +52,42 @@ prepare_job:
     reports:
       dotenv: variables.env                                   # Use artifacts:reports:dotenv to expose the variables to other jobs
 
+unittest:
+  services:
+    - name: mongo:5
+      alias: mongo
+  extends:
+    - .myglobals
+  stage: test
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
+  variables:
+    NODE_ENV: test
+  needs: []
+  before_script:
+    - "/etc/init.d/mosquitto start"
+    - "/etc/init.d/redis-server start"
+    - npm install
+    - ping -c 3 mongo
+    - echo "show dbs" | mongosh --host mongo
+    - echo "use bintra" | mongosh --host mongo
+    - "./setup_env_test.sh"
+  script:
+    - npm run combined
+  after_script:
+    - echo "show dbs" | mongosh --host mongo
+  coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
+  allow_failure: false
+  artifacts:
+    when: always
+    paths:
+      - mochawesome-report/
+      - coverage/
+      - junit-custom.xml
+      - xunit.xml
+      - testlink.xml
+    reports:
+      junit: junit-custom.xml
+
 pages:
   extends:
     - .myglobals
