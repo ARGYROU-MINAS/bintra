@@ -42,10 +42,6 @@ jsdocs:
 
 prepare_job:
   stage: build                                              # This stage must run before the release stage
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never                                             # Do not run this job when a tag is created manually
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH             # Run this job when commits are pushed or merged to the default branch
   script:
     - echo "TAG=$(git describe --abbrev=0)" >> variables.env             # and append to the variables.env file
   artifacts:
@@ -131,9 +127,6 @@ debPublish:
   artifacts:
     paths:
       - client/*.deb
-  only:
-    refs:
-      - master
 
 rpmPublish:
   extends:
@@ -161,9 +154,6 @@ rpmPublish:
     - rpmbuild -bb SPECS/bintra.spec
     - rpm --addsign RPMS/noarch/*.rpm
     - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
-  only:
-    refs:
-      - master
 
 release_job:
   stage: deploy
@@ -171,10 +161,6 @@ release_job:
   needs:
     - job: prepare_job
       artifacts: true
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never                                  # Do not run this job when a tag is created manually
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Run this job when commits are pushed or merged to the default branch
   script:
     - echo "running release_job for $TAG"
   release:
@@ -204,14 +190,10 @@ publish:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
   after_script:
     - echo "Now no more error 502 expected" && date
-  only:
-    - master
 
 sentry:
   stage: deploy
   image: getsentry/sentry-cli
-  only:
-    - master
   script:
     - export SENTRY_URL=$SENTRY_BASE_URL
     - export SENTRY_AUTH_TOKEN=$SENTRY_BASE_TOKEN
