@@ -1,9 +1,6 @@
 # bintra gitlab CI definition
 # we got tagged, so publish it
 
-stages:
-  - build
-  - deploy
 
 .myglobals:
   tags:
