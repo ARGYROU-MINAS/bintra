@@ -1,0 +1,165 @@
+# bintra gitlab CI definition
+# we got merged, so do something
+
+stages:
+  - build
+  - test
+  - report
+  - analyze
+
+.myglobals:
+  tags:
+    - docker
+
+.sourcechanged:
+  rules:
+    - changes:
+      - api/*
+      - ./*.js
+      - .gitlab-ci.yml
+      - package.json
+      - config/*.js
+      - controllers/*.js
+      - models/*.js
+      - service/*.js
+      - static/
+      - subscribers/*.js
+      - utils/*.js
+      - worker/*.js
+      - app.js
+      - conf.js
+      - setup_env_test.sh
+
+image: node:16
+cache:
+  paths:
+    - node_modules/
+variables:
+  versionTag: "$CI_COMMIT_SHA"
+  NEXUS_URL_RPM: "https://nexus.myocastor.de/repository/bintra_rpm/"
+  NEXUS_URL_DEB: "https://nexus.myocastor.de/repository/bintra/"
+
+makedocs:
+  extends:
+    - .myglobals
+  stage: build
+  image: "$CI_REGISTRY/kai/lggr:mkdocs"
+  before_script:
+    - mkdir pub_mkdocs
+  script:
+    - mkdocs build
+  artifacts:
+    paths:
+      - pub_mkdocs
+
+jsdocs:
+  extends:
+    - .myglobals
+  stage: build
+  before_script:
+    - npm install
+  script:
+    - "./node_modules/.bin/jsdoc --verbose -c jsdoc.json"
+  artifacts:
+    paths:
+      - out
+
+unittest:
+  services:
+    - name: mongo:5
+      alias: mongo
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: test
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
+  variables:
+    NODE_ENV: test
+  needs: []
+  before_script:
+    - "/etc/init.d/mosquitto start"
+    - "/etc/init.d/redis-server start"
+    - npm install
+    - ping -c 3 mongo
+    - echo "show dbs" | mongosh --host mongo
+    - echo "use bintra" | mongosh --host mongo
+    - "./setup_env_test.sh"
+  script:
+    - npm run combined
+  after_script:
+    - echo "show dbs" | mongosh --host mongo
+  coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
+  allow_failure: false
+  artifacts:
+    when: always
+    paths:
+      - mochawesome-report/
+      - coverage/
+      - junit-custom.xml
+      - xunit.xml
+      - testlink.xml
+    reports:
+      junit: junit-custom.xml
+
+testlink:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: report
+  image: python:3
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+    APIKEY: "${TESTLINK_APIKEY}"
+    TPAPIKEY: "${TESTLINK_TESTPLAN_APIKEY}"
+    COMMIT_ID: "${CI_COMMIT_SHA}"
+    COMMIT_BRANCH: "${CI_COMMIT_BRANCH}"
+    TESTLINK_HOST: "${TESTLINK_HOST}"
+    TESTLINK_TESTPLANID: "${TESTLINK_TESTPLANID}"
+    TESTLINK_PLATFORMID: "${TESTLINK_PLATFORMID}"
+  needs: ["unittest"]
+  before_script:
+    - pip install --no-cache-dir requests
+    - export TAGFULL=$(git describe)
+    - export TAGSHORT=$(git describe --abbrev=0)
+  script:
+    - python tl2rest.py
+
+sonarqube:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: analyze
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint:
+      - ''
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  needs: ["unittest"]
+  before_script:
+    - git fetch --unshallow
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
+  allow_failure: false
+
+sast:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: analyze
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+semgrep-sast:
+  variables:
+    SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
+
+.secret-analyzer:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: analyze
+  needs: []
