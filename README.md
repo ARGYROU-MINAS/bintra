@@ -163,6 +163,7 @@ Things to update in the moment before tagging:
 
 * package.json: version
 * sonar-project.properties: sonar.projectVersion
+* api/swagger.yaml: info.version
 
 # Automated documentation
 
