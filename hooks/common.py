@@ -30,8 +30,19 @@ from pathlib import Path
 TAGREF_RE = re.compile(r"^refs/tags/(?P<tag>.*)$")
 VERSIONS_RE = re.compile(r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)$")
 
+def getRootFolder():
+    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE)
+    s = result.stdout.decode('utf-8').strip()
+    return s
+
 def getLatestTag():
     result = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], stdout=subprocess.PIPE)
+    s = result.stdout.decode('utf-8').strip()
+    pprint.pprint(s, sys.stderr)
+    return s
+
+def getPreviousTag(newTag):
+    result = subprocess.run(["git", "describe", "--abbrev=0", newTag+"^"], stdout=subprocess.PIPE)
     s = result.stdout.decode('utf-8').strip()
     pprint.pprint(s, sys.stderr)
     return s
@@ -65,22 +76,54 @@ def compareTags(tagPrev, tagNow):
     nowMinor = int(_.group('minor'))
     nowPatch = int(_.group('patch'))
 
+    print(prevMajor, prevMinor, prevPatch, " -> ", nowMajor, nowMinor, nowPatch, file=sys.stderr)
+    # now check all possible increments
+    if prevMajor == nowMajor:
+        if prevMinor == nowMinor:
+            if prevPatch + 1 == nowPatch:
+                return True
+            else:
+                print('Patch increment wrong', file=sys.stderr)
+                return False
+        else:
+            if prevMinor + 1 == nowMinor:
+                if nowPatch == 0:
+                    return True
+                else:
+                    print('Patch should be zero on minor increment', file=sys.stderr)
+                    return False
+            else:
+                print('Minor increment wrong', file=sys.stderr)
+                return False
+    else:
+        if prevMajor + 1 == nowMajor:
+            if nowMinor == 0 and nowPatch == 0:
+                return True
+            else:
+                print('Minor and patch should be zero on major increment', file=sys.stderr)
+                return False
+        else:
+            print('Major increment wrong', file=sys.stderr)
+            return False
+                
+                
+
     return False
 
-def checkVersionPackage(v):
+def checkVersionPackage(rf, v):
     cv = ''
     b =  True
-    with open('package.json') as json_file:
+    with open(rf + '/package.json') as json_file:
         data = json.load(json_file)
         cv = data['version']
         if cv != v:
             b = False
     return b, cv
 
-def checkVersionSonar(v):
+def checkVersionSonar(rf, v):
     cv = ''
     b =  True
-    txt = "[SONA]\n" + Path('sonar-project.properties').read_text()
+    txt = "[SONA]\n" + Path(rf + '/sonar-project.properties').read_text()
     config = configparser.ConfigParser()
     config.read_string(txt)
     cv = config['SONA']['sonar.projectVersion']
@@ -88,10 +131,10 @@ def checkVersionSonar(v):
         b = False
     return b, cv
 
-def checkVersionSwagger(v):
+def checkVersionSwagger(rf, v):
     cv = ''
     b =  True
-    with open("api/swagger.yaml", "r") as stream:
+    with open(rf + "/api/swagger.yaml", "r") as stream:
         try:
             o = yaml.safe_load(stream)
             #pprint.pprint(o['info']['version'], sys.stderr)
@@ -107,10 +150,10 @@ def checkVersionSwagger(v):
 # - package.json: version
 # - sonar-project.properties: sonar.projectVersion
 # - api/swagger.yaml: info.version
-def checkVersions(v):
-    b1, v1 = checkVersionPackage(v)
-    b2, v2 = checkVersionSonar(v)
-    b3, v3 = checkVersionSwagger(v)
+def checkVersions(rf, v):
+    b1, v1 = checkVersionPackage(rf, v)
+    b2, v2 = checkVersionSonar(rf, v)
+    b3, v3 = checkVersionSwagger(rf, v)
     if not b1:
         print('package.json contains wrong version', v1, file=sys.stderr)
     if not b2:
