@@ -13,6 +13,7 @@ testlink.xml
 junit-custom.xml
 .nyc_output/
 *.deb
+**/__pycache__/
 
 client/**/*.so*
 client/**/*pico
