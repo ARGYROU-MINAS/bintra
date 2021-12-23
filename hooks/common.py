@@ -105,10 +105,6 @@ def compareTags(tagPrev, tagNow):
         else:
             print('Major increment wrong', file=sys.stderr)
             return False
-                
-                
-
-    return False
 
 def checkVersionPackage(rf, v):
     cv = ''
