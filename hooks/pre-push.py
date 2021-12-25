@@ -23,8 +23,7 @@ def main(lines):
             sys.exit(0)
         else:
             if not compareTags(tagPrev, tagLatest):
-                print('Failed monotone version increase', file=sys.stderr)
-                sys.exit(1)
+                print('Warning: Failed (perhaps) monotone version increase', file=sys.stderr)
 
             if not checkVersions(rf, newTag):
                 print('Failed pre conditions', file=sys.stderr)

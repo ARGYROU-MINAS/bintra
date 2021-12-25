@@ -30,25 +30,25 @@ from pathlib import Path
 TAGREF_RE = re.compile(r"^refs/tags/(?P<tag>.*)$")
 VERSIONS_RE = re.compile(r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)$")
 
-def getRootFolder():
+def getRootFolder() -> str:
     result = subprocess.run(["git", "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE)
     s = result.stdout.decode('utf-8').strip()
     return s
 
-def getLatestTag():
+def getLatestTag() -> str:
     result = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], stdout=subprocess.PIPE)
     s = result.stdout.decode('utf-8').strip()
     pprint.pprint(s, sys.stderr)
     return s
 
-def getPreviousTag(newTag):
+def getPreviousTag(newTag: str) -> str:
     result = subprocess.run(["git", "describe", "--abbrev=0", newTag+"^"], stdout=subprocess.PIPE)
     s = result.stdout.decode('utf-8').strip()
     pprint.pprint(s, sys.stderr)
     return s
 
 # parse Tag/Version out of ref string
-def getTag(ref):
+def getTag(ref: str) -> str:
     p = TAGREF_RE
     _ = p.search(ref.strip())
     if not _:
@@ -57,24 +57,33 @@ def getTag(ref):
     name = (_.group('tag') or '').strip()
     return (name)
 
-def compareTags(tagPrev, tagNow):
+# save conversion from string to int
+def getSaveNum(s: str) -> int:
+    try:
+        i = int(s)
+        return i
+    except ValueError as ex:
+        print('"%s" cannot be converted to an int: %s' % (s, ex))
+        sys.exit(1)
+
+def compareTags(tagPrev: str, tagNow: str) -> bool:
     p = VERSIONS_RE
 
     _ = p.search(tagPrev)
     if not _:
         print('No RE match for tagPrev', file=sys.stderr)
         return False
-    prevMajor = int(_.group('major'))
-    prevMinor = int(_.group('minor'))
-    prevPatch = int(_.group('patch'))
+    prevMajor = getSaveNum(_.group('major'))
+    prevMinor = getSaveNum(_.group('minor'))
+    prevPatch = getSaveNum(_.group('patch'))
 
     _ = p.search(tagNow)
     if not _:
         print('No RE match for tagNow', file=sys.stderr)
         return False
-    nowMajor = int(_.group('major'))
-    nowMinor = int(_.group('minor'))
-    nowPatch = int(_.group('patch'))
+    nowMajor = getSaveNum(_.group('major'))
+    nowMinor = getSaveNum(_.group('minor'))
+    nowPatch = getSaveNum(_.group('patch'))
 
     print(prevMajor, prevMinor, prevPatch, " -> ", nowMajor, nowMinor, nowPatch, file=sys.stderr)
     # now check all possible increments
@@ -106,7 +115,7 @@ def compareTags(tagPrev, tagNow):
             print('Major increment wrong', file=sys.stderr)
             return False
 
-def checkVersionPackage(rf, v):
+def checkVersionPackage(rf: str, v: str):
     cv = ''
     b =  True
     with open(rf + '/package.json') as json_file:
@@ -116,7 +125,7 @@ def checkVersionPackage(rf, v):
             b = False
     return b, cv
 
-def checkVersionSonar(rf, v):
+def checkVersionSonar(rf: str, v: str):
     cv = ''
     b =  True
     txt = "[SONA]\n" + Path(rf + '/sonar-project.properties').read_text()
@@ -127,7 +136,7 @@ def checkVersionSonar(rf, v):
         b = False
     return b, cv
 
-def checkVersionSwagger(rf, v):
+def checkVersionSwagger(rf: str, v: str):
     cv = ''
     b =  True
     with open(rf + "/api/swagger.yaml", "r") as stream:
@@ -146,7 +155,7 @@ def checkVersionSwagger(rf, v):
 # - package.json: version
 # - sonar-project.properties: sonar.projectVersion
 # - api/swagger.yaml: info.version
-def checkVersions(rf, v):
+def checkVersions(rf: str, v: str) -> bool:
     b1, v1 = checkVersionPackage(rf, v)
     b2, v2 = checkVersionSonar(rf, v)
     b3, v3 = checkVersionSwagger(rf, v)
