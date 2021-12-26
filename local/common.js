@@ -7,6 +7,7 @@ const {
     saltRounds
 } = require('../conf');
 console.log(mongoHost + mongoUrl);
+mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true

@@ -111,13 +111,13 @@ const {
 	mongoDb,
 	mongoUrl
 } = require('./conf');
+mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUrl, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
 	connectWithNoPrimary: true
 });
-mongoose.set('useCreateIndex', true);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
