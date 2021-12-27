@@ -59,7 +59,7 @@ describe('Local common functions', function() {
 		await UsersService.createUser(u);
 	});
 
-	context('[BINTRA-] local', function() {
+	context('[BINTRA-26] local', function() {
 		it('[STEP-1] Check user is not yet active', function() {
 			return expect(UsersService.isActiveUser(userName)).to.be.rejectedWith(false);
 		});
