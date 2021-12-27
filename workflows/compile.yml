@@ -20,6 +20,7 @@
       - subscribers/*.js
       - utils/*.js
       - worker/*.js
+      - test/*.js
       - app.js
       - conf.js
       - setup_env_test.sh
