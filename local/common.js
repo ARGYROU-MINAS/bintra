@@ -6,7 +6,7 @@ const {
     mongoUrl,
     saltRounds
 } = require('../conf');
-console.log(mongoHost + mongoUrl);
+console.log(mongoUrl);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
@@ -24,19 +24,21 @@ exports.cmdArgs = cmdArgs;
 exports.saltRounds = saltRounds;
 
 const setUserStatus = (username, newstatus) => {
-loginModel.updateOne(
-    { name: username },
-    { $set: {status: newstatus} }
-).then(result => {
-    console.log(result);
-    if(result.nModified != 1) {
-        console.log("Entry not found");
-    }
-    process.exit();
-}).catch(error => {
-    console.log("Had an error " + error);
-    process.exit();
-});
+	loginModel.updateOne(
+    	{ name: username },
+    	{ $set: {status: newstatus} }
+	).then(result => {
+    	console.log(result);
+    	if(result.nModified != 1) {
+        	console.log("Entry not found");
+			return false;
+    	}
+		return true;
+	}).catch(error => {
+    	console.log("Had an error " + error);
+    	return false;
+	});
 }
+
 exports.setUserStatus = setUserStatus;
 

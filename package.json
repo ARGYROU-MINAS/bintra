@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm ci",
     "start": "node app.js",
-    "test": "mocha --reporter mochawesome --exit",
+    "test": "npx mocha --reporter mochawesome --exit",
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "combined": "nyc --reporter=lcov --reporter=text-summary mocha --timeout 20000 --reporter mocha-multi-reporters --reporter-options configFile=testreport-config.json --exit",
@@ -55,6 +55,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@jsdevtools/chai-exec": "^2.1.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
