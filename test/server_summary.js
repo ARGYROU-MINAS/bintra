@@ -18,7 +18,7 @@ chai.use(chaiHttp);
 describe('server', () => {
     captureLogs();
 
-    describe('[BINTRA-] GET summary', () => {
+    describe('[BINTRA-27] GET summary', () => {
         before(async () => {
             var tsnow = new Date();
             var packageNew = new PackageModel({
@@ -33,7 +33,7 @@ describe('server', () => {
             await packageNew.save();
         });
 
-        it('[STEP-] get arch', (done) => {
+        it('[STEP-1] get arch', (done) => {
             request(server)
                 .get('/v1/summary/arch')
                 .end((err, res) => {
@@ -42,7 +42,7 @@ describe('server', () => {
                     done();
                 });
         });
-        it('[STEP-] get family', (done) => {
+        it('[STEP-2] get family', (done) => {
             console.log("Call family API");
             request(server)
                 .get('/v1/summary/family')

@@ -23,7 +23,7 @@ chai.use(chaiHttp);
 describe('server', () => {
     captureLogs();
 
-    describe('[BINTRA-] GET summary', () => {
+    describe('[BINTRA-28] GET summary', () => {
         before(async () => {
             var tsnow = new Date();
             var packageNew = new PackageModel({
@@ -59,7 +59,7 @@ describe('server', () => {
             console.log("Token: " + tokenUser);
         });
 
-	it('[STEP-] get countPerCreator', (done) => {
+	it('[STEP-1] get countPerCreator', (done) => {
             console.log("Call family API");
             request(server)
                 .get('/v1/countPerCreator')
