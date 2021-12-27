@@ -98,6 +98,7 @@ var pfilter = require('./controllers/pfilter');
 
 var emitter = require('events').EventEmitter;
 var eventEmitter = require('./utils/eventer').em;
+eventEmitter.setMaxListeners(0); // temp solution somehow
 require('./subscribers/matomo');
 require('./subscribers/toot');
 require('./subscribers/mqttclient.js');
