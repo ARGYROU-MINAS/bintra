@@ -1,5 +1,5 @@
 /**
- * Test local interface for manual admin commands
+ * Test local interface for manual admin commands, see requirements
  * @see DDATA-functional-API-numbers
  */
 
