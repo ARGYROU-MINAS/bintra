@@ -186,4 +186,9 @@ describe('server roles', () => {
         });
     });
 
+    after(async () => {
+        console.log("after run");
+        await LoginModel.deleteMany({});
+    });
+
 });

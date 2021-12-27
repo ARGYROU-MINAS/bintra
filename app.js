@@ -87,7 +87,7 @@ versionCounter.set({ version: myversion }, 1);
 collectDefaultMetrics({ prefix: 'bintra_', register });
 
 // next section
-const toobusy = require('toobusy-js');
+//const toobusy = require('toobusy-js');
 const hpp = require('hpp');
 const cors = require("cors");
 
@@ -168,11 +168,12 @@ app.use('/', function doRedir(req, res, next) {
 	}
 });
 
+/*
 app.use(function(req, res, next) {
 	if (toobusy()) {
 		var error = new Error("Too busy");
 		req.sentry.captureException(error);
-		res.send(503, "I'm busy right now, sorry.");
+		res.status(503).send("I'm busy right now, sorry.");
 	} else {
 		next();
 	}
@@ -180,6 +181,7 @@ app.use(function(req, res, next) {
 toobusy.onLag(function(currentLag) {
 	logger.warn("Event loop lag detected! Latency: " + currentLag + "ms");
 });
+*/
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
 
@@ -268,7 +270,7 @@ process.on('SIGINT', function() {
 	server.close();
 	(async () => workerStop())();
 	// calling .shutdown allows your process to exit normally
-	toobusy.shutdown();
+	//toobusy.shutdown();
 	process.exit();
 });
 
