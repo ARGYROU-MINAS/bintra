@@ -65,6 +65,8 @@ unittest:
       alias: mongo
     - name: redis:6
       alias: redis
+    - name: mosquitto:2
+      alias: mqtt
   extends:
     - .sourcechanged
     - .myglobals
@@ -74,10 +76,10 @@ unittest:
     NODE_ENV: test
   needs: []
   before_script:
-    - "/etc/init.d/mosquitto start"
     - npm install
     - ping -c 3 mongo
     - ping -c 3 redis
+    - ping -c 3 mqtt
     - mongosh --host mongo <testutils/cleanup.js
     - echo "show dbs" | mongosh --host mongo
     - "./setup_env_test.sh"
