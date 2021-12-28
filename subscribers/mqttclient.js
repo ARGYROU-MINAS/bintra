@@ -16,7 +16,7 @@ logger.info("In mqttclient initial init");
 if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null) {
   logger.warn("No MQTT defined");
 } else {
-  logger.info("MQTT do connect");
+  logger.info("MQTT do connect to " + process.env.MQTT_HOSTNAME);
 
   let mqttOptions = {
     clientId: "bintraService" + os.hostname()
