@@ -27,6 +27,8 @@ async function boot() {
 		port: process.env.REDIS_PORT || 6379,
 		database: 0,
 	};
+	console.log(connectionDetails);
+	console.log(process.env);
 
 	const jobs = {
 		addtoot: {
