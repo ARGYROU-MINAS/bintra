@@ -22,6 +22,7 @@ echo MQTT_HOSTNAME=localhost >>.env.test
 echo MQTT_USERNAME= >>.env.test
 echo MQTT_PASSWORD= >>.env.test
 echo SENTRY=${SENTRY_URL} >>.env.test
+echo REDIS_HOSTNAME=redis >>.env.test
 
 echo "NODE_ENV is ${NODE_ENV}"
 

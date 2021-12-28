@@ -22,9 +22,9 @@ var dotoot = require('./w_toot');
 async function boot() {
 	const connectionDetails = {
 		pkg: "ioredis",
-		host: "127.0.0.1",
+		host: process.env.REDIS_HOSTNAME || "127.0.0.1",
 		password: null,
-		port: 6379,
+		port: process.env.REDIS_PORT || 6379,
 		database: 0,
 	};
 
