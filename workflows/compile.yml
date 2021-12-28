@@ -24,6 +24,7 @@
       - app.js
       - conf.js
       - setup_env_test.sh
+      - workflows/*.yml
 
 image: node:16
 cache:
