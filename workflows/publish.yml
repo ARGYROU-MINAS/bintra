@@ -54,7 +54,7 @@ unittest:
       alias: mongo
     - name: redis:6
       alias: redis
-    - name: eclipse-mosquitto:2
+    - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
       alias: mqtt
   extends:
     - .myglobals
