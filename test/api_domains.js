@@ -31,48 +31,37 @@ describe('Domain stuff', function() {
 			name: 'theDomain',
 			tscreated: tsnow
 		});
-		console.log(domainNew);
 		await domainNew.save();
-		console.log("B");
 
 		await DomainModel.deleteMany({});
-		console.log("C");
 		await UsersService.addDomain('demo.xyz');
-		console.log("D");
 	});
 
 	context('[BINTRA-18] handle domains', function() {
 		it('[STEP-1] check get all domains', async () => {
-			console.log("X");
-
 			var result = await UsersService.listDomains();
-			console.log(result);
 			return expect(result).to.have.length(1);
 		});
 		it('[STEP-2] add domain', async () => {
 			var result = await UsersService.addDomain('test.eu')
-			console.log(result);
 			return expect(result).to.have.property('name');
 		});
 		it('[STEP-3] list added domain', async () => {
 			var result = await UsersService.listDomains()
-			console.log(result);
 			return expect(result).to.have.length(2);
 		});
 		it('[STEP-4] delete domain', async () => {
 			var result = await UsersService.deleteDomain('test.eu')
-			console.log(result);
 			return expect(result).to.contain("OK");
 		});
 		it('[STEP-5] list with deleted domain', async () => {
 			var result = await UsersService.listDomains()
-			console.log(result);
 			return expect(result).to.have.length(1);
 		});
 	});
 
 	after(async () => {
 		console.log("after run");
-		// await DomainModel.deleteMany({});
+		await DomainModel.deleteMany({});
 	});
 });
