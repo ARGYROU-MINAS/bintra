@@ -54,7 +54,7 @@ unittest:
       alias: mongo
     - name: redis:6
       alias: redis
-    - name: mosquitto:2
+    - name: eclipse-mosquitto:2
       alias: mqtt
   extends:
     - .myglobals
