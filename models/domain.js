@@ -1,4 +1,4 @@
-// models/login.js
+// models/domain.js
 
 
 var mongoose = require('mongoose');
