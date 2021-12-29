@@ -124,7 +124,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // default CORS domain
-const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080'];
+const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080', 'http://127.0.0.1:8087'];
 var corsOptions = {
 	origin: function(origin, callback) {
 		if (!(origin)) {

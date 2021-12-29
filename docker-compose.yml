@@ -19,17 +19,32 @@ services:
       - dbdata:/data/db
     networks:
       - bintra-network
-    Healthcheck:
+    healthcheck:
       test: echo 'db.stats().ok' | mongo localhost:27017/bintra --quiet
       interval: 5s
       timeout: 5s
       retries: 12
 
+  redis:
+    image: redis:6
+    container_name: 'bintra-redis'
+    restart: unless-stopped
+    env_file: .env.docker
+    networks:
+      - bintra-network
+
+  mqtt:
+    image: registry.kretschmann.software/kgroup/bintra:mqtt
+    container_name: 'bintra-mqtt'
+    restart: unless-stopped
+    env_file: .env.docker
+    networks:
+      - bintra-network
+
   nodejs:
     build:
       context: .
       dockerfile: Dockerfile
-    image: nodejs
     container_name: 'bintra-nodejs'
     restart: unless-stopped
     cap_drop:
@@ -45,7 +60,7 @@ services:
     networks:
       - bintra-network
     command: npm start
-    Healthcheck:
+    healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/docs/"]
       interval: 30s
       timeout: 5s
