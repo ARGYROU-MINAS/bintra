@@ -170,6 +170,8 @@ app.use('/', function doRedir(req, res, next) {
 	}
 });
 
+toobusy.maxLag(process.env.BUSY_LAG || 70);
+toobusy.interval(process.env.BUSY_INTERVAL || 500);
 app.use(function(req, res, next) {
 	if (toobusy()) {
 		var error = new Error("Too busy");
@@ -180,7 +182,9 @@ app.use(function(req, res, next) {
 	}
 });
 toobusy.onLag(function(currentLag) {
-	logger.warn("Event loop lag detected! Latency: " + currentLag + "ms");
+	var sTmp = "Event loop lag detected! Latency: " + currentLag + "ms";
+	Sentry.captureMessage(sTmp, "warning");
+	logger.warn(sTmp);
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
