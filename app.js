@@ -172,6 +172,8 @@ app.use('/', function doRedir(req, res, next) {
 
 toobusy.maxLag(process.env.BUSY_LAG || 70);
 toobusy.interval(process.env.BUSY_INTERVAL || 500);
+var currentMaxLag = toobusy.maxLag(), interval = toobusy.interval();
+logger.info("configure toobusy with maxLag=" + currentMaxLag + ", interval=" + interval);
 app.use(function(req, res, next) {
 	if (toobusy()) {
 		var error = new Error("Too busy");
