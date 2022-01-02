@@ -139,6 +139,9 @@ Bloody fix until the main module has support for own app modifications included.
     docker build -t registry.kretschmann.software/kai/bintra:deb - <Dockerfile_deb
     docker push registry.kretschmann.software/kai/bintra:deb
 
+    docker build -t kkretsch/bintra:latest -f Dockerfile .
+    docker push kkretsch/bintra:latest
+
 Where using these files as docker configurations:
 
 #### Dockerfile\_fat
