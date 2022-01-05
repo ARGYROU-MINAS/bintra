@@ -106,59 +106,6 @@ pages:
     paths:
       - public
 
-debPublish:
-  extends:
-    - .myglobals
-  stage: deploy
-  image: "$CI_REGISTRY/kgroup/bintra:deb"
-  before_script:
-    - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
-    - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-    - echo "${GPG_SIGNER_PASSWD}" >/pwd.txt
-    - gpg --import public.asc
-    - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
-  script:
-    - cd client
-    - chmod -R 644 .
-    - find . -type d -exec chmod 755 {} \;
-    - chmod 755 bintra/usr/sbin/bintra
-    - dpkg-deb --root-owner-group --build bintra
-    - export GPG_TTY=$(tty) && dpkg-sig -k 373E4C67CD0AA78828BE31FBD0C855D432558284 --sign builder bintra.deb --gpg-options "--batch --no-tty --pinentry-mode loopback --yes --passphrase ${GPG_SIGNER_PASSWD}"
-    - dpkg-sig --verify bintra.deb
-    - 'mv bintra.deb bintra_$(cat bintra/DEBIAN/control | grep "^Version:" | cut -d":" -f2- | xargs)_all.deb'
-    - ls -l
-    - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} -H "Content-Type: multipart/form-data" --data-binary @$(ls -1 bintra*deb) ${NEXUS_URL_DEB}'
-  artifacts:
-    paths:
-      - client/*.deb
-
-rpmPublish:
-  extends:
-    - .myglobals
-  stage: deploy
-  parallel:
-    matrix:
-      - FAMILY: ['fedora:33', 'fedora:34', 'centos:8']
-  image: ${FAMILY}
-  before_script:
-    - dnf -y -q update
-    - dnf -y -q install git rpm-build rpmdevtools rpm-sign gpg
-    - echo "${GPG_SIGNER_KEY_PUB}" >public.asc
-    - echo "${GPG_SIGNER_KEY_PRIV}" >private.asc
-    - echo "${GPG_SIGNER_PASSWD}" >/passphrase.txt
-    - gpg --import public.asc
-    - gpg --import --batch --yes --passphrase ${GPG_SIGNER_PASSWD} private.asc
-    - rpm --import public.asc
-    - echo "URL to publish to ${NEXUS_URL_RPM}"
-  script:
-    - rpmdev-setuptree
-    - cat client/dnf/append_rpmmacros >>~/.rpmmacros
-    - cd ~/rpmbuild
-    - cp /builds/kgroup/bintra/client/dnf/bintra.spec SPECS/
-    - rpmbuild -bb SPECS/bintra.spec
-    - rpm --addsign RPMS/noarch/*.rpm
-    - 'curl --user ${NEXUS_USER}:${NEXUS_PASSWD} --upload-file `find RPMS/ -type f` ${NEXUS_URL_RPM}'
-
 release_job:
   stage: deploy
   image: registry.gitlab.com/gitlab-org/release-cli:latest
