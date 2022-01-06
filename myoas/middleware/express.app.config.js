@@ -19,7 +19,7 @@ class ExpressAppConfig {
         this.setOpenApiValidatorOptions(definitionPath, appOptions);
         //this.app = express();
         const spec = fs.readFileSync(definitionPath, 'utf8');
-        const swaggerDoc = jsyaml.safeLoad(spec);
+        const swaggerDoc = jsyaml.load(spec);
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.text());
         this.app.use(bodyParser.json());
