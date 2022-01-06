@@ -112,9 +112,7 @@ const {
 	mongoDb,
 	mongoUrl
 } = require('./conf');
-mongoose.connect(mongoUrl, {
-	connectWithNoPrimary: true
-});
+mongoose.connect(mongoUrl, { });
 console.log(mongoUrl);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
