@@ -8,6 +8,9 @@ stages:
 include:
   - local: 'workflows/empty.yml'
 
+  - project: 'kgroup/dependabot-standalone'
+    file: '.gitlab-ci.yml'
+
 #  - local: 'workflows/original.yml'
 
   - local: 'workflows/compile.yml'
