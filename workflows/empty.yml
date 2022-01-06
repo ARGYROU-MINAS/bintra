@@ -1,4 +1,7 @@
 dummy:
   stage: build
+  tags:
+    - docker
+  image: node:16
   script:
     - echo "Dummy step"
