@@ -112,11 +112,7 @@ const {
 	mongoDb,
 	mongoUrl
 } = require('./conf');
-mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUrl, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false,
 	connectWithNoPrimary: true
 });
 console.log(mongoUrl);
