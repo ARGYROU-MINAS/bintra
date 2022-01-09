@@ -45,15 +45,18 @@ eventEmitter.on('apihit', function getApiHit(req) {
   var urlparts = url.split('/');
   var urlMethod = urlparts[0] + '/' + urlparts[1] + '/' + urlparts[2];
   var reqMethod = req.method;
+  var reqUseragent = req.headers['user-agent'];
+  var reqLanguage = req.headers['accept-language'];
 
-  logger.info("log " + urlMethod);
+  logger.debug("log " + urlMethod);
   matomo.track({
     url: baseUrl + urlMethod,
     action_name: 'API call',
     token_auth: process.env.MATOMO_TOKEN_AUTH,
     cip: getRemoteAddr(req),
-    ua: req.headers['user-agent'],
-    lang: req.headers['accept-language'],
+    ca: 1,
+    ua: reqUseragent,
+    lang: reqLanguage,
     cvar: JSON.stringify({
       '1': ['API version', urlparts[1]],
       '2': ['HTTP method', reqMethod]
