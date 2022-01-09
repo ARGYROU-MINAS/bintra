@@ -7,11 +7,7 @@ const {
     saltRounds
 } = require('../conf');
 console.log(mongoUrl);
-mongoose.set('useCreateIndex', true);
-mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose.connect(mongoUrl, {});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
