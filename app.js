@@ -106,16 +106,21 @@ require('./subscribers/prometheus.js');
 
 var myworker = require('./worker/worker');
 
+// Connect to mongo DB
 const {
 	mongoHost,
 	mongoPort,
 	mongoDb,
 	mongoUrl
 } = require('./conf');
-mongoose.connect(mongoUrl, { });
-console.log(mongoUrl);
+logger.debug("DB used: " + mongoUrl);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('connecting', err => { logger.info("connecting"); });
+db.on('connected', err => { logger.info("DB connected"); });
+db.on('open', err => { logger.info("DB open"); });
+mongoose.connect(mongoUrl, { });
+
 
 // default CORS domain
 const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080', 'http://127.0.0.1:8087'];

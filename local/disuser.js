@@ -4,7 +4,7 @@ var username = c.cmdArgs[0];
 console.log("Disable user name=" + username);
 
 c.doconnect().then(function(db) {
-	c.setUserStatus(username, "active")
+	c.setUserStatus(username, "disabled")
 		.then(function(payload) {
 			console.log("Did update");
 			process.exit(0);
