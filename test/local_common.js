@@ -33,13 +33,7 @@ describe('Local common functions', function() {
 
 	before(async () => {
 		console.log("run before");
-		mongoose.set('useCreateIndex', true);
-		await mongoose.connect(mongoUrl, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useFindAndModify: false,
-			connectWithNoPrimary: true
-		});
+		await mongoose.connect(mongoUrl, {});
 
 		db = mongoose.connection;
 		db.on('error', console.error.bind(console, 'MongoDB connection error:'));
