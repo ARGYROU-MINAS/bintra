@@ -20,6 +20,7 @@
       - subscribers/*.js
       - utils/*.js
       - worker/*.js
+      - local/*.js
       - test/*.js
       - app.js
       - conf.js

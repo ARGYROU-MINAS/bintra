@@ -33,13 +33,7 @@ describe('Local common functions', function() {
 
 	before(async () => {
 		console.log("run before");
-		await mongoose.connect(mongoUrl, {});
-
-		db = mongoose.connection;
-		db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-		db.once('open', function() {
-			console.log('Connected to DB');
-		});
+		await Common.doconnect();
 
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
@@ -58,17 +52,14 @@ describe('Local common functions', function() {
 			return expect(UsersService.isActiveUser(userName)).to.be.rejectedWith(false);
 		});
 		it('[STEP-2] Check user is now active', function() {
-			console.log("Davor");
-			if(Common.setUserStatus(userName, 'active')) {
-				console.log("Danach");
+			Common.setUserStatus(userName, 'active').then(result => {
 				return expect(UsersService.isActiveUser(userName)).to.eventually.equal(true);
-			} else {
-				console.error("Fehler");
-			}
+			});
 		});
 		it('[STEP-3] Check user is now inactive again', function() {
-			Common.setUserStatus(userName, 'disabled');
-			return expect(UsersService.isActiveUser(userName)).to.be.rejectedWith(false);
+			Common.setUserStatus(userName, 'disabled').then(result => {
+				return expect(UsersService.isActiveUser(userName)).to.be.rejectedWith(false);
+			});
 		});
 	});
 
