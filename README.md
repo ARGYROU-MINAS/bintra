@@ -72,6 +72,8 @@ Bloody fix until the main module has support for own app modifications included.
 
 ## CI stuff
 
+Gitlab feature _environment_ is going to be used. First for production only, later also for staging test purposes.
+
 ### prepare docker container for gitlab stages
 
     docker login registry.kretschmann.software -u kai -p xxxx

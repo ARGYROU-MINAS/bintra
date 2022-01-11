@@ -139,6 +139,8 @@ publish:
     - echo "Expect error 502 from here" && date
   script:
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+  environment:
+    name: production
   after_script:
     - echo "Now no more error 502 expected" && date
 
