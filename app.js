@@ -280,6 +280,7 @@ process.on('SIGINT', function() {
 });
 
 module.exports = {
-	app: app
+	app: app,
+	mongoose: mongoose
 }
 

@@ -10,6 +10,7 @@ const UsersService = require('../service/UsersService.js');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app').app;
+let mongoose = require('../app').mongoose;
 let should = chai.should();
 let request = require('supertest');
 
@@ -49,6 +50,9 @@ describe('server', () => {
 
 	describe('[BINTRA-27] GET user summary', () => {
 		before(async () => {
+			const adminUtil = mongoose.connection.db.admin();
+			const result = await adminUtil.ping();
+
 			await LoginModel.deleteMany({
 				name: 'max'
 			});
@@ -106,6 +110,8 @@ describe('server', () => {
 
 	after(async () => {
 		console.log("after run");
+		const adminUtil = mongoose.connection.db.admin();
+		const result = await adminUtil.ping();
 		await PackageModel.deleteMany({});
 	});
 });
