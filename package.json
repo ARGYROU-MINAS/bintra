@@ -24,7 +24,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@sentry/node": "^6.17.4",
+    "@sentry/node": "^6.17.6",
     "@sentry/tracing": "^6.17.6",
     "ansi-regex": "^6.0.1",
     "bcrypt": "^5.0.1",
