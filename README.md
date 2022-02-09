@@ -39,6 +39,24 @@ Add new property to existing data, like *family* attribute:
     use bintra
     db.packagemodels.updateMany({}, {$set: {"family": "debian"}})
 
+## cleanup test db
+
+To remove old entries before running a local test:
+
+    test> use bintratemp
+    switched to db bintratemp
+    bintratemp> show collections
+    domainmodels
+    loginmodels
+    packagemodels
+    bintratemp> db.packagemodels.deleteMany({})
+    { acknowledged: true, deletedCount: 0 }
+    bintratemp> db.loginmodles.deleteMany({})
+    { acknowledged: true, deletedCount: 0 }
+    bintratemp> db.domainmodles.deleteMany({})
+    { acknowledged: true, deletedCount: 0 }
+
+
 ## other mongodb stuff
 
 To read out the existing index definitions run from mongosh:
