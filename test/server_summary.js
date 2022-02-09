@@ -110,8 +110,6 @@ describe('server', () => {
 
 	after(async () => {
 		console.log("after run");
-		const adminUtil = mongoose.connection.db.admin();
-		const result = await adminUtil.ping();
 		await PackageModel.deleteMany({});
 	});
 });

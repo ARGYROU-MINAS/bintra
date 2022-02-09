@@ -5,6 +5,7 @@ process.env.NODE_ENV = 'test';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app').app;
+let mongoose = require('../app').mongoose;
 let should = chai.should();
 let request = require('supertest');
 
@@ -23,6 +24,8 @@ describe('server roles', () => {
 
     before(async () => {
         console.log("prepare DB before");
+	const adminUtil = mongoose.connection.db.admin();
+	const result = await adminUtil.ping();
 
         await LoginModel.deleteMany({
             name: 'max'

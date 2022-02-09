@@ -6,6 +6,7 @@
 var chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app').app;
+let mongoose = require('../app').mongoose;
 let should = chai.should();
 let request = require('supertest');
 
@@ -62,9 +63,10 @@ describe('PFilter put server tests', function() {
 
 	before(async () => {
 		console.log("run before");
+		const adminUtil = mongoose.connection.db.admin();
+		const result = await adminUtil.ping();
+
 		await PackageModel.deleteMany({});
-
-
 		await LoginModel.deleteMany({
 			name: 'max'
 		});

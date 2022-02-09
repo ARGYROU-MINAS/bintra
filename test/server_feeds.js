@@ -7,6 +7,7 @@ var PackageModel = require('../models/package.js');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app').app;
+let mongoose = require('../app').mongoose;
 let should = chai.should();
 let request = require('supertest');
 
@@ -19,6 +20,8 @@ describe('server', () => {
 
     describe('[BINTRA-8] GET feeds', () => {
         before(async () => {
+	    const adminUtil = mongoose.connection.db.admin();
+            const result = await adminUtil.ping();
             var tsnow = new Date();
             var packageNew = new PackageModel({
                 name: 'theName',
