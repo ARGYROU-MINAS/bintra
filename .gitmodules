@@ -1,3 +1,6 @@
 [submodule "bintra-client"]
 	path = bintra-client
 	url = git@gitlab.kretschmann.software:kgroup/bintra-client.git
+[submodule "bintra-automation"]
+	path = bintra-automation
+	url = git@gitlab.kretschmann.software:kgroup/bintra-automation.git
