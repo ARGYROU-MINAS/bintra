@@ -154,8 +154,9 @@ sentry:
     - export SENTRY_PROJECT=bintra
     - export SENTRY_LOG_LEVEL=debug
     - export VERSION=bintra@$CI_COMMIT_TAG
-    - sentry-cli releases new "$VERSION" -e production
+    - sentry-cli releases new "$VERSION"
     - sentry-cli releases set-commits --auto "$VERSION"
     - sentry-cli releases files "$VERSION" upload-sourcemaps mochawesome-report/assets/
+    - sentry-cli releases deploys "$VERSION" new -e production
     - sentry-cli releases finalize "$VERSION"
 
