@@ -47,6 +47,7 @@ prepare_job:
     - export TAGPREV=$(git describe --abbrev=0 $TAGNOW^)
     - export COMMITPREV=$(git rev-list -n 1 $TAGPREV)
     - echo "TAG=$(git describe --abbrev=0)" >> variables.env             # and append to the variables.env file
+    - echo "COMMITNOW=$CI_COMMIT_SHA" >> variables.env
     - echo "COMMITPREV=$COMMITPREV" >> variables.env
   artifacts:
     reports:
@@ -163,7 +164,7 @@ sentry:
     - export SENTRY_LOG_LEVEL=debug
     - export VERSION=bintra@$CI_COMMIT_TAG
     - sentry-cli releases new "$VERSION"
-    - sentry-cli releases set-commits "$VERSION" --commit "kgroup / bintra"@$COMMITPREV
+    - sentry-cli releases set-commits "$VERSION" --commit "kgroup / bintra"@$COMMITPREV..$COMMITNOW
     - sentry-cli releases files "$VERSION" upload app.js
     - export TSSTOP=$(date +%s)
     - sentry-cli releases deploys "$VERSION" new -e production -t $((TSSTOP-TSSTART))
