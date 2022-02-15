@@ -3,6 +3,10 @@
   "version": "1.4.11",
   "description": "Binary Transparency Directory API",
   "main": "app.js",
+  "engines" : {
+    "npm" : ">=8.0.0",
+    "node" : ">=16.0.0"
+  },
   "scripts": {
     "prestart": "npm ci",
     "start": "node app.js",
