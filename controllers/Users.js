@@ -27,8 +27,6 @@ module.exports.checkToken = function checkToken(req, res, next) {
     eventEmitter.emit('apihit', req);
     logger.info(req.auth);
 
-//    var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
-//    var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
     var tsfrom = new Date(req.auth.iat * 1000);
     var tsto = new Date(req.auth.exp * 1000);
 
