@@ -9,7 +9,6 @@
 
 var fs = require('fs');
 const cdigit = require("cdigit");
-var dateFormat = require("dateformat");
 require("datejs");
 var jsonpatch = require('json-patch');
 var LoginModel = require('../models/login.js');

@@ -7,7 +7,6 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
-var dateFormat = require("dateformat");
 var utils = require('../utils/writer.js');
 var eventEmitter = require('../utils/eventer').em;
 var PackagesService = require('../service/PackagesService');
@@ -28,13 +27,15 @@ module.exports.checkToken = function checkToken(req, res, next) {
     eventEmitter.emit('apihit', req);
     logger.info(req.auth);
 
-    var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
-    var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
+//    var tsfrom = dateFormat(req.auth.iat * 1000, "isoUtcDateTime");
+//    var tsto = dateFormat(req.auth.exp * 1000, "isoUtcDateTime");
+    var tsfrom = new Date(req.auth.iat * 1000);
+    var tsto = new Date(req.auth.exp * 1000);
 
     var payload = {
         name: req.auth.sub,
-        tsfrom: tsfrom,
-        tsto: tsto
+        tsfrom: tsfrom.toISOString(),
+        tsto: tsto.toISOString()
     };
     logger.info(payload);
     utils.writeJson(res, payload, 200);
