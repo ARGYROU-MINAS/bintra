@@ -26,14 +26,20 @@ module.exports.checkToken = function checkToken(req, res, next) {
     logger.info("In check");
     eventEmitter.emit('apihit', req);
     logger.info(req.auth);
+    logger.info("from=" + req.auth.iat);
+    logger.info("to=" + req.auth.exp);
 
     var tsfrom = new Date(req.auth.iat * 1000);
     var tsto = new Date(req.auth.exp * 1000);
+    var sfrom = tsfrom.toISOString();
+    var sto = tsto.toISOString();
+    logger.info("sfrom=" + sfrom);
+    logger.info("sto=" + sto);
 
     var payload = {
         name: req.auth.sub,
-        tsfrom: tsfrom.toISOString(),
-        tsto: tsto.toISOString()
+        tsfrom: sfrom,
+        tsto: sto
     };
     logger.info(payload);
     utils.writeJson(res, payload, 200);
