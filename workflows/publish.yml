@@ -43,7 +43,11 @@ jsdocs:
 prepare_job:
   stage: build                                              # This stage must run before the release stage
   script:
+    - export TAGNOW=$CI_COMMIT_TAG
+    - export TAGPREV=$(git describe --abbrev=0 $TAGNOW^)
+    - export COMMITPREV=$(git rev-list -n 1 $TAGPREV)
     - echo "TAG=$(git describe --abbrev=0)" >> variables.env             # and append to the variables.env file
+    - echo "COMMITPREV=$COMMITPREV" >> variables.env
   artifacts:
     reports:
       dotenv: variables.env                                   # Use artifacts:reports:dotenv to expose the variables to other jobs
@@ -147,6 +151,9 @@ publish:
 sentry:
   stage: deploy
   image: getsentry/sentry-cli
+  needs:
+    - job: prepare_job
+      artifacts: true
   script:
     - export TSSTART=$(date +%s)
     - export SENTRY_URL=$SENTRY_BASE_URL
@@ -156,7 +163,7 @@ sentry:
     - export SENTRY_LOG_LEVEL=debug
     - export VERSION=bintra@$CI_COMMIT_TAG
     - sentry-cli releases new "$VERSION"
-    - sentry-cli releases set-commits "$VERSION" --auto
+    - sentry-cli releases set-commits "$VERSION" --commit "kgroup / bintra"@$COMMITPREV
     - sentry-cli releases files "$VERSION" upload app.js
     - export TSSTOP=$(date +%s)
     - sentry-cli releases deploys "$VERSION" new -e production -t $((TSSTOP-TSSTART))
