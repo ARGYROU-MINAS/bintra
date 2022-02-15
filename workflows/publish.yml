@@ -148,6 +148,7 @@ sentry:
   stage: deploy
   image: getsentry/sentry-cli
   script:
+    - export TSSTART=$(date +%s)
     - export SENTRY_URL=$SENTRY_BASE_URL
     - export SENTRY_AUTH_TOKEN=$SENTRY_BASE_TOKEN
     - export SENTRY_ORG=kretschmann
@@ -155,8 +156,9 @@ sentry:
     - export SENTRY_LOG_LEVEL=debug
     - export VERSION=bintra@$CI_COMMIT_TAG
     - sentry-cli releases new "$VERSION"
-    - sentry-cli releases set-commits --auto "$VERSION"
-    - sentry-cli releases files "$VERSION" upload-sourcemaps mochawesome-report/assets/
-    - sentry-cli releases deploys "$VERSION" new -e production
+    - sentry-cli releases set-commits "$VERSION" --auto
+    - sentry-cli releases files "$VERSION" upload app.js
+    - export TSSTOP=$(date +%s)
+    - sentry-cli releases deploys "$VERSION" new -e production -t $((TSSTOP-TSSTART))
     - sentry-cli releases finalize "$VERSION"
 
