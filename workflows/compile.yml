@@ -102,6 +102,62 @@ unittest:
     reports:
       junit: junit-custom.xml
 
+zaptest:
+  services:
+    - name: mongo:5
+      alias: mongo
+    - name: redis:6
+      alias: redis
+    - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
+      alias: mqtt
+    - name: owasp/zap2docker-bare
+      alias: owasp-zap
+      command: ["zap.sh", "-daemon", "-silent", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true", "-config", "api.disablekey=true"]
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: test
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
+  variables:
+    NODE_ENV: test
+  needs: []
+  before_script:
+    - rm -rf node_modules/
+    - npm install
+    - npm install mocha -g
+    - ping -c 3 mongo
+    - ping -c 3 redis
+    - ping -c 3 mqtt
+    - ping -c 3 owasp-zap
+    - mongosh --host mongo <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongo
+    - "./setup_env_test.sh"
+    - mkdir reports || true
+  script:
+    - export MYIP=$(hostname -i)
+    - echo "Main IP $MYIP"
+    - export HTTP_PROXY=owasp-zap:8080
+    - npm start >reports/server.log&
+    - SERVERPID=$!
+    - sleep 60
+    - npx mocha test/network*
+    - sleep 5
+    - kill $SERVERPID
+  after_script:
+    - echo "show dbs" | mongosh --host mongo
+    - unset HTTP_PROXY
+    - export ZAPIP=$(ping -c 1 owasp-zap |head -1|cut -d' ' -f3|tr -d \(|tr -d \))
+    - echo "Zap-IP $ZAPIP"
+    - sleep 5
+    - curl "http://$ZAPIP:8080/OTHER/core/other/htmlreport/" > reports/main.html
+    - curl "http://$ZAPIP:8080/JSON/stats/view/allSitesStats/?keyPrefix=" > reports/all-sites-stats.json
+    - curl "http://$ZAPIP:8080/JSON/alert/view/alerts/?baseurl=&start=&count=&riskId=" > reports/all-alerts.json
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - reports/
+
 testlink:
   extends:
     - .sourcechanged
