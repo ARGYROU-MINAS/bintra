@@ -25,6 +25,7 @@ echo SENTRY=${SENTRY_URL} >>.env.test
 echo REDIS_HOSTNAME=redis >>.env.test
 echo BUSY_LAG=150 >>.env.test
 echo BUSY_INTERVAL=500 >>.env.test
+echo LOGLEVEL=info >>.env.test
 
 echo "NODE_ENV is ${NODE_ENV}"
 
