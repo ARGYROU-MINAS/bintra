@@ -49,7 +49,7 @@
     "matomo-tracker": "^2.2.4",
     "mongodb": "^4.3.1",
     "mongoose": "^6.2.2",
-    "mqtt": "^4.3.3",
+    "mqtt": "^4.3.6",
     "node-resque": "^9.1.2",
     "oas3-tools": "^2.2.2",
     "prom-client": "^14.0.0",
