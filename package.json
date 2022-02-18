@@ -1,6 +1,6 @@
 {
   "name": "bintra",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "description": "Binary Transparency Directory API",
   "main": "app.js",
   "engines": {
