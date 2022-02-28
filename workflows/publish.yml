@@ -130,6 +130,9 @@ publish:
     - .myglobals
   stage: deploy
   image: ubuntu:latest
+  needs:
+    - job: prepare_job
+      artifacts: true
   variables:
     GIT_STRATEGY: none
   cache: {}
@@ -143,6 +146,7 @@ publish:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Expect error 502 from here" && date
   script:
+    - echo "Run playbook with 'TAG=$TAG'"
     - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml --extra-vars 'TAG=$TAG'"
   environment:
     name: production
