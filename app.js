@@ -193,6 +193,7 @@ toobusy.onLag(function(currentLag) {
 app.use(function(req, res, next) {
 	logger.debug("use webFilter");
 	if(!webFilterOK(req)) {
+		logger.warn("Skip bad request");
 		var error = new Error("Bad request gest filtered out");
 		req.sentry.captureException(error);
 		res.status(400).send("Bad request");
