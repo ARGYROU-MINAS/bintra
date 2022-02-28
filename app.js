@@ -23,6 +23,7 @@ var oas3Tools = require('./myoas/'); // here was required the oas3-tools before
 var jsyaml = require('js-yaml');
 var mongoose = require('mongoose');
 var auth = require("./utils/auth");
+var webFilterOK = require("./utils/webfilter").webFilterOK;
 const express = require("express");
 var app = express();
 
@@ -186,6 +187,18 @@ toobusy.onLag(function(currentLag) {
 	var sTmp = "Event loop lag detected! Latency: " + currentLag + "ms";
 	Sentry.captureMessage(sTmp, "warning");
 	logger.warn(sTmp);
+});
+
+// filter bad requests early
+app.use(function(req, res, next) {
+	logger.debug("use webFilter");
+	if(!webFilterOK(req)) {
+		var error = new Error("Bad request gest filtered out");
+		req.sentry.captureException(error);
+		res.status(400).send("Bad request");
+	} else {
+		next();
+	}
 });
 
 app.get('/feed.(rss|atom|json)', (req, res) => res.redirect('/v1/feed.' + req.params[0]));
