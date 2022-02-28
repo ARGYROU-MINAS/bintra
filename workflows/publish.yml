@@ -143,7 +143,7 @@ publish:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Expect error 502 from here" && date
   script:
-    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml"
+    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml --extra-vars 'TAG=$TAG'"
   environment:
     name: production
   after_script:
