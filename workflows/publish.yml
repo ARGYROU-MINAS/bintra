@@ -129,16 +129,12 @@ publish:
   extends:
     - .myglobals
   stage: deploy
-  image: ubuntu:latest
-  needs:
-    - job: prepare_job
-      artifacts: true
+  image: "$CI_REGISTRY/kgroup/bintra:pub"
   variables:
     GIT_STRATEGY: none
   cache: {}
   dependencies: []
   before_script:
-    - which ssh-agent || ( apt-get update -y && apt-get install -y -qq openssh-client)
     - mkdir -p ~/.ssh
     - chmod 0700 ~/.ssh
     - eval $(ssh-agent -s)
@@ -146,8 +142,8 @@ publish:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Expect error 502 from here" && date
   script:
-    - echo "Run playbook with 'TAG=$TAG'"
-    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml --extra-vars 'TAG=$TAG'"
+    - echo "Run playbook with 'TAG=$CI_COMMIT_TAG'"
+    - ssh ansi@ctl.myocastor.de "cd playbooks && ansible-playbook apiupdate.yml --extra-vars 'TAG=$CI_COMMIT_TAG'"
   environment:
     name: production
   after_script:
