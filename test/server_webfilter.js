@@ -35,9 +35,41 @@ describe('webfilter', () => {
                     done();
                 });
         });
-        it('[STEP-2] get dot env', (done) => {
+        it('[STEP-2] get dot env from root', (done) => {
             request(server)
                 .get('/.env')
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    done();
+                });
+        });
+	it('[STEP-3] get dot env from subfolder', (done) => {
+            request(server)
+                .get('/utils/.env')
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    done();
+                });
+        });
+	it('[STEP-4] get some php script', (done) => {
+            request(server)
+                .get('/file.php')
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    done();
+                });
+        });
+	it('[STEP-5] get some .git folder', (done) => {
+            request(server)
+                .get('/.git/config')
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    done();
+                });
+        });
+	it('[STEP-6] get wp-admin folder', (done) => {
+            request(server)
+                .get('/wp-admin/admin-ajax')
                 .end((err, res) => {
                     res.should.have.status(400);
                     done();
