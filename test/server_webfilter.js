@@ -15,8 +15,8 @@ chai.use(chaiHttp);
 describe('webfilter', () => {
     captureLogs();
 
-    describe('[BINTRA-] GET good one', () => {
-        it('[STEP-2] should redirect', (done) => {
+    describe('[BINTRA-29] GET good one', () => {
+        it('[STEP-1] should redirect', (done) => {
             request(server)
                 .get('/')
                 .end((err, res) => {
@@ -26,7 +26,7 @@ describe('webfilter', () => {
         });
     });
 
-    describe('[BINTRA-] Get bad urls', () => {
+    describe('[BINTRA-30] Get bad urls', () => {
         it('[STEP-1] get double slashes', (done) => {
             request(server)
                 .get('//v1/test')
@@ -35,7 +35,7 @@ describe('webfilter', () => {
                     done();
                 });
         });
-        it('[STEP-1] get dot env', (done) => {
+        it('[STEP-2] get dot env', (done) => {
             request(server)
                 .get('/.env')
                 .end((err, res) => {
