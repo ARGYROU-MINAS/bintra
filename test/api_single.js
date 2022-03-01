@@ -46,7 +46,7 @@ describe('User stuff', function() {
         });
     });
 
-    context('[BINTRA-20] login', function() {
+    context('[BINTRA-31] login', function() {
         it('[STEP-1] Check user was created', (done) => {
             LoginModel.find({})
                 .then(itemFound => {

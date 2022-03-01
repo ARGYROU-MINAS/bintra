@@ -145,7 +145,7 @@ describe('server', () => {
         });
     });
 
-    describe('[BINTRA-] Check token auth', () => {
+    describe('[BINTRA-32] Check token auth', () => {
         it('[STEP-1] should get valid token', (done) => {
             request(server)
                 .get('/v1/token')
