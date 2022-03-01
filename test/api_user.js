@@ -60,13 +60,12 @@ describe('User stuff', function() {
                     username: 'max',
                     password: 'xxx'
                 })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('token');
-                    JWT = res.body.token;
-                    console.log(JWT);
+		.expect(200)
+                .then(response => {
+                    response.body.should.have.property('token');
                     done();
-                });
+                })
+		.catch(err => done(err));
         });
         it('[STEP-3] List users', (done) => {
             UsersService.listUsers()

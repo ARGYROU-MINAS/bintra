@@ -17,21 +17,32 @@ logger.level = process.env.LOGLEVEL || "warn";
 
 
 exports.verifyToken = async function(req, scopes, schema) {
+    logger.info("In verifyToken");
+
     var current_req_scopes = req.openapi.schema["x-security-scopes"]
     logger.info(current_req_scopes);
     logger.info(schema);
     var token = req.headers.authorization;
 
-    logger.info("in verify, token: " + token)
+    logger.debug("token: " + token)
 
     //validate the 'Authorization' header. it should have the following format:
     //'Bearer tokenString'
     if (token && token.indexOf("Bearer ") == 0) {
         var tokenString = token.split(" ")[1];
+        var decodedToken = "";
 
-        var decodedToken = jwt.verify(tokenString, sharedSecret);
-        logger.info("Decoded token:");
-        logger.info(decodedToken);
+        try {
+            decodedToken = jwt.verify(tokenString, sharedSecret);
+        } catch(err) {
+            logger.error("JWT verify failed: " + err);
+            req.sentry.setUser({ip_address: req.ip});
+            req.sentry.captureException(err);
+            throw(err);
+        }
+
+        logger.debug("Decoded token:");
+        logger.debug(decodedToken);
         if (!decodedToken) {
             logger.error("Decode failed");
             return false;
@@ -49,18 +60,11 @@ exports.verifyToken = async function(req, scopes, schema) {
             }
 
             // Check if users role matches api precondition, will return if OK, otherwise jump out
-            logger.info("Check users role matching API requirements");
-            await UsersService.hasRole(decodedToken.sub, current_req_scopes);
+            logger.debug("Check active users role matching API requirements");
+            await UsersService.isActiveHasRole(decodedToken.sub, current_req_scopes);
 
-            // you can add more verification checks for the
-            // token here if necessary, such as checking if
-            // the username belongs to an active user, will throw out if not
-            logger.info("Check if user is active: " + decodedToken.sub + "?");
-            await UsersService.isActiveUser(decodedToken.sub);
-            //add the token to the request so that we
-            //can access it in the endpoint code if necessary
             req.auth = decodedToken;
-            logger.info("Added AUTH to request object");
+            logger.debug("Added AUTH to request object");
 
             // Add user data to sentry
             req.sentry.setUser({username: decodedToken.sub, ip_address: req.ip});
@@ -72,7 +76,7 @@ exports.verifyToken = async function(req, scopes, schema) {
     }
 };
 
-exports.issueToken = function(username, role) {
+function doIssue(username, role, exprange) {
     logger.info("user " + username + ", role" + role);
     return jwt.sign({
             sub: username,
@@ -80,7 +84,15 @@ exports.issueToken = function(username, role) {
             role: role
         },
         sharedSecret, {
-            expiresIn: "365d"
+            expiresIn: exprange
         }
     );
+};
+
+exports.issueToken = function(username, role) {
+    return doIssue(username, role, "365d");
+};
+
+exports.issueShortToken = function(username, role) {
+    return doIssue(username, role, "1s");
 };
