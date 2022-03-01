@@ -10,7 +10,7 @@
   "scripts": {
     "prestart": "npm ci",
     "start": "node app.js",
-    "test": "npx mocha --reporter mochawesome --exit",
+    "test": "npx mocha --reporter mochawesome --timeout 10000 --exit",
     "sona": "mocha test --reporter mocha-sonarqube-reporter --reporter-options output=test-results.xml --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha --exit",
     "combined": "nyc --reporter=lcov --reporter=text-summary mocha --timeout 20000 --reporter mocha-multi-reporters --reporter-options configFile=testreport-config.json --exit",

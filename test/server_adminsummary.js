@@ -98,12 +98,15 @@ describe('server', () => {
 				.auth(tokenUser, {
 					type: 'bearer'
 				})
+				.expect('Content-Type', /json/)
+				.expect(200, done);
+/*
 				.end((err, res) => {
 					console.log("did get reply");
 					res.should.have.status(200);
 					res.body.should.have.property('summary');
 					done();
-				});
+				}); */
 		});
 	});
 

@@ -19,6 +19,13 @@ const captureLogs = require('../testutils/capture-logs');
 chai.use(chaiHttp);
 
 var tokenUser = "";
+var tokenShortUser = "";
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 describe('server', () => {
     captureLogs();
@@ -67,8 +74,11 @@ describe('server', () => {
         });
 
         console.log("Login to get token");
-        tokenUser = uauth.issueToken('max', 'user');
+        tokenUser = uauth.issueToken('bob', 'user');
         console.log("Token: " + tokenUser);
+        tokenShortUser = uauth.issueShortToken('bob', 'user');
+        console.log("Short living Token: " + tokenShortUser);
+        await sleep(1000);
     });
 
     describe('[BINTRA-2] GET home', () => {
@@ -132,6 +142,35 @@ describe('server', () => {
                     res.should.have.status(404);
                     done();
                 });
+        });
+    });
+
+    describe('[BINTRA-] Check token auth', () => {
+        it('[STEP-1] should get valid token', (done) => {
+            request(server)
+                .get('/v1/token')
+                .auth(tokenUser, {
+                    type: 'bearer'
+                })
+		.expect(200)
+                .then(response => {
+                    response.body.should.have.property('name', 'bob');
+                    done();
+                })
+		.catch(err => done(err));
+        });
+        it('[STEP-2] should get expired token', (done) => {
+            request(server)
+                .get('/v1/token')
+                .auth(tokenShortUser, {
+                    type: 'bearer'
+                })
+		.expect(401)
+                .then(response => {
+                        response.body.should.have.property('message', 'jwt expired');
+                        done();
+                })
+                .catch(err => done(err));
         });
     });
 
