@@ -91,7 +91,7 @@ function doIssue(username, role, exprange) {
             expiresIn: exprange
         }
     );
-};
+}
 
 exports.issueToken = function(username, role) {
     return doIssue(username, role, "365d");
