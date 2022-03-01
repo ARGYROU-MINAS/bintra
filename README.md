@@ -39,6 +39,10 @@ Add new property to existing data, like *family* attribute:
     use bintra
     db.packagemodels.updateMany({}, {$set: {"family": "debian"}})
 
+Setting a simple attribute on a user entry:
+
+    db.loginmodels.updateOne({_id: ObjectId("60279...53d")}, { $set: { email: "kai@example.com"} })
+
 ## cleanup test db
 
 To remove old entries before running a local test:
