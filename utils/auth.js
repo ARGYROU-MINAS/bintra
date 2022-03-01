@@ -36,7 +36,11 @@ exports.verifyToken = async function(req, scopes, schema) {
             decodedToken = jwt.verify(tokenString, sharedSecret);
         } catch(err) {
             logger.error("JWT verify failed: " + err);
+            logger.error(err.message);
             req.sentry.setUser({ip_address: req.ip});
+            req.sentry.setContext("JWT", {
+                msg: err.message
+	    });
             req.sentry.captureException(err);
             throw(err);
         }
