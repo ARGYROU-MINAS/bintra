@@ -13,6 +13,10 @@ const p_wp  = /wp-(admin|content|login)/g;
 
 var webFilterOK = exports.webFilterOK = function(req) {
     var u = req.originalUrl;
+    if(u.indexOf('?') > -1) {
+        logger.debug("Had to split argument off");
+        u = u.split('?')[0];
+    }
     logger.debug(u);
 
     if(u.startsWith('//')) return false;
