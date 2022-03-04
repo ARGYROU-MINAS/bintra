@@ -25,7 +25,7 @@ var webFilterOK = exports.webFilterOK = function(req) {
     if(u.search(p_git) > -1) return false;
     if(u.search(p_wp) > -1) return false;
 
-
+    logger.debug("Query was clean");
     return true;
 };
 

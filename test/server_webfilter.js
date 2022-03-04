@@ -75,6 +75,11 @@ describe('webfilter', () => {
                     done();
                 });
         });
+        it('[STEP-7] get count with .git arg', (done) => {
+            request(server)
+                .get('/v1/count') //?packageName=.git')
+		.expect(200, done);
+        });
     });
 
 });
