@@ -98,6 +98,14 @@ describe('server', () => {
                     done();
                 });
         });
+        it('[STEP-3] should not redirect', (done) => {
+            request(server)
+                .post('/')
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
+        });
     });
 
     describe('[BINTRA-4] Check default auth', () => {

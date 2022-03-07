@@ -159,7 +159,7 @@ app.use(function(req, res, next) {
 });
 
 // Redirect root to docs UI
-app.use('/', function doRedir(req, res, next) {
+app.get('/', function doRedir(req, res, next) {
 	if (req.url != '/') {
 		next();
 	} else {
