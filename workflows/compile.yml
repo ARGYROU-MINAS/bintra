@@ -106,11 +106,11 @@ unittest:
 zaptest:
   services:
     - name: mongo:5
-      alias: mongo$CI_JOB_ID
+      alias: mongo_zap
     - name: redis:6
-      alias: redis$CI_JOB_ID
+      alias: redis_zap
     - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
-      alias: mqtt$CI_JOB_ID
+      alias: mqtt_zap
     - name: owasp/zap2docker-bare
       alias: owasp-zap
       command: ["zap.sh", "-daemon", "-silent", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true", "-config", "api.disablekey=true"]
@@ -126,13 +126,13 @@ zaptest:
     - rm -rf node_modules/
     - npm install
     - npm install mocha -g
-    - ping -c 3 mongo$CI_JOB_ID
-    - ping -c 3 redis$CI_JOB_ID
-    - ping -c 3 mqtt$CI_JOB_ID
+    - ping -c 3 mongo_zap
+    - ping -c 3 redis_zap
+    - ping -c 3 mqtt_zap
     - ping -c 3 owasp-zap
-    - mongosh --host mongo$CI_JOB_ID <testutils/cleanup.js
-    - echo "show dbs" | mongosh --host mongo$CI_JOB_ID
-    - "./setup_env_test.sh -s $CI_JOB_ID"
+    - mongosh --host mongo_zap <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongo_zap
+    - "./setup_env_test.sh -s _zap"
     - mkdir reports || true
   script:
     - export MYIP=$(hostname -i)
@@ -145,7 +145,7 @@ zaptest:
     - sleep 5
     - kill $SERVERPID
   after_script:
-    - echo "show dbs" | mongosh --host mongo$CI_JOB_ID
+    - echo "show dbs" | mongosh --host mongo_zap
     - unset HTTP_PROXY
     - export ZAPIP=$(ping -c 1 owasp-zap |head -1|cut -d' ' -f3|tr -d \(|tr -d \))
     - echo "Zap-IP $ZAPIP"
