@@ -64,11 +64,11 @@ jsdocs:
 unittest:
   services:
     - name: mongo:5
-      alias: mongo
+      alias: mongo_comp
     - name: redis:6
-      alias: redis
+      alias: redis_comp
     - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
-      alias: mqtt
+      alias: mqtt_comp
   extends:
     - .sourcechanged
     - .myglobals
@@ -78,17 +78,18 @@ unittest:
     NODE_ENV: test
   needs: []
   before_script:
+    - echo "Using parallel services suffix _comp"
     - npm install
-    - ping -c 3 mongo
-    - ping -c 3 redis
-    - ping -c 3 mqtt
-    - mongosh --host mongo <testutils/cleanup.js
-    - echo "show dbs" | mongosh --host mongo
-    - "./setup_env_test.sh"
+    - ping -c 3 mongo_comp
+    - ping -c 3 redis_comp
+    - ping -c 3 mqtt_comp
+    - mongosh --host mongo_comp <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongo_comp
+    - "./setup_env_test.sh -s _comp"
   script:
     - npm run combined test/api_* test/server_adminsummary.js test/server_summary.js test/server_common.js test/server_admuser.js test/server_delpackage.js  test/server_feeds.js test/server_packages.js test/server_queue.js test/server_roles.js test/server_putpackage.js test/server_webfilter.js test/local_*
   after_script:
-    - echo "show dbs" | mongosh --host mongo
+    - echo "show dbs" | mongosh --host mongo_comp
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   allow_failure: false
   artifacts:
@@ -105,11 +106,11 @@ unittest:
 zaptest:
   services:
     - name: mongo:5
-      alias: mongo
+      alias: mongo$CI_JOB_ID
     - name: redis:6
-      alias: redis
+      alias: redis$CI_JOB_ID
     - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
-      alias: mqtt
+      alias: mqtt$CI_JOB_ID
     - name: owasp/zap2docker-bare
       alias: owasp-zap
       command: ["zap.sh", "-daemon", "-silent", "-host", "0.0.0.0", "-port", "8080", "-config", "api.addrs.addr.name=.*", "-config", "api.addrs.addr.regex=true", "-config", "api.disablekey=true"]
@@ -125,13 +126,13 @@ zaptest:
     - rm -rf node_modules/
     - npm install
     - npm install mocha -g
-    - ping -c 3 mongo
-    - ping -c 3 redis
-    - ping -c 3 mqtt
+    - ping -c 3 mongo$CI_JOB_ID
+    - ping -c 3 redis$CI_JOB_ID
+    - ping -c 3 mqtt$CI_JOB_ID
     - ping -c 3 owasp-zap
-    - mongosh --host mongo <testutils/cleanup.js
-    - echo "show dbs" | mongosh --host mongo
-    - "./setup_env_test.sh"
+    - mongosh --host mongo$CI_JOB_ID <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongo$CI_JOB_ID
+    - "./setup_env_test.sh -s $CI_JOB_ID"
     - mkdir reports || true
   script:
     - export MYIP=$(hostname -i)
@@ -144,7 +145,7 @@ zaptest:
     - sleep 5
     - kill $SERVERPID
   after_script:
-    - echo "show dbs" | mongosh --host mongo
+    - echo "show dbs" | mongosh --host mongo$CI_JOB_ID
     - unset HTTP_PROXY
     - export ZAPIP=$(ping -c 1 owasp-zap |head -1|cut -d' ' -f3|tr -d \(|tr -d \))
     - echo "Zap-IP $ZAPIP"
