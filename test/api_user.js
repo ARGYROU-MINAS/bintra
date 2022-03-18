@@ -141,6 +141,17 @@ describe('User stuff', function() {
                     done();
                 });
         });
+        it('[STEP-3] Add again package in wrong users name', (done) => {
+            PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'maria')
+                .then(itemFound => {
+                    console.error("should not pass");
+                    done();
+                })
+                .catch(err => {
+                    console.log("expected error");
+                    done();
+                });
+        });
     });
 
     context('[BINTRA-22] Destroy user', () => {
