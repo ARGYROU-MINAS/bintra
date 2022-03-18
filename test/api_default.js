@@ -116,6 +116,16 @@ describe('get default role funtions', function() {
             });
             return expect(result).to.have.length(1);
         });
+        it('[STEP-13] list single non existing package', (done) => {
+            PackagesService.listPackageSingle("00112233445566778899aabb")
+                .then(itemFound => {
+                    console.error("Should not pass");
+                })
+                .catch(err => {
+                    console.log("expected error");
+                    done();
+                });
+        });
     });
 
     after(async () => {

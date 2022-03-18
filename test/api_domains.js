@@ -58,6 +58,18 @@ describe('Domain stuff', function() {
 			var result = await UsersService.listDomains()
 			return expect(result).to.have.length(1);
 		});
+		it('[STEP-6] add colliding domain', (done) => {
+			UsersService.addDomain('test.eu')
+			.then(result => {
+				console.error("should not pass");
+				done();
+			})
+			.catch(err => {
+				console.log("expected error");
+				done();
+			});
+
+		});
 	});
 
 	after(async () => {
