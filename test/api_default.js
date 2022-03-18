@@ -120,6 +120,7 @@ describe('get default role funtions', function() {
             PackagesService.listPackageSingle("00112233445566778899aabb")
                 .then(itemFound => {
                     console.error("Should not pass");
+                    done();
                 })
                 .catch(err => {
                     console.log("expected error");
