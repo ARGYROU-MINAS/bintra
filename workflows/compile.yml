@@ -2,6 +2,7 @@
 # simple commit without tag, so test as hell
 
 .myglobals:
+  interruptible: true
   tags:
     - docker
 
