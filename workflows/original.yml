@@ -9,6 +9,7 @@ stages:
   - deploy
 
 .myglobals:
+  interruptible: true
   tags:
     - docker
 
