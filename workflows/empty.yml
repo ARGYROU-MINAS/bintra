@@ -1,5 +1,6 @@
 dummy:
   stage: build
+  interruptible: true
   tags:
     - docker
   image: node:16
