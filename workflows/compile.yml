@@ -221,4 +221,3 @@ semgrep-sast:
     - .sourcechanged
     - .myglobals
   stage: analyze
-  needs: []
