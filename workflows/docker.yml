@@ -1,0 +1,26 @@
+# bintra gitlab CI definition
+# for manual docker rebuild
+
+.myglobals:
+  tags:
+    - docker
+
+dodocker:
+  stage: build
+  image: docker:19.03.12
+  parallel:
+    matrix:
+      - D: ['fat', 'deb', 'mqtt', 'pub']
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  services:
+    - docker:19.03.12-dind
+  extends:
+    - .myglobals
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
+    - docker push registry.kretschmann.software/kgroup/bintra:$D
+

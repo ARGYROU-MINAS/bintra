@@ -1,4 +1,4 @@
 FROM eclipse-mosquitto
 MAINTAINER Kai Kretschmann
 
-COPY mosquitto.conf /mosquitto/config/mosquitto.conf
+COPY dockerdata/mosquitto.conf /mosquitto/config/mosquitto.conf

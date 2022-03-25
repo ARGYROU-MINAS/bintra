@@ -98,6 +98,8 @@ Gitlab feature _environment_ is going to be used. First for production only, lat
 
 ### prepare docker container for gitlab stages
 
+Can be run by setting _DODOCKER_ variable in CI run, or manually:
+
     docker login registry.kretschmann.software -u kai -p xxxx
     
     docker build -t registry.kretschmann.software/kai/bintra:fat - <Dockerfile_fat

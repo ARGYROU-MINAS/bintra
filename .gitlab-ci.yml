@@ -11,7 +11,9 @@ include:
   - project: 'kgroup/dependabot-standalone'
     file: '.gitlab-ci.yml'
 
-#  - local: 'workflows/original.yml'
+  - local: 'workflows/docker.yml'
+    rules:
+      - if: '$DODOCKER == "yes"'
 
   - local: 'workflows/compile.yml'
     rules:
