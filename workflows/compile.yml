@@ -78,7 +78,6 @@ unittest:
   image: "$CI_REGISTRY/kgroup/bintra:fat"
   variables:
     NODE_ENV: test
-  needs: []
   before_script:
     - echo "Using parallel services suffix _comp"
     - npm install
