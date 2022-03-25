@@ -25,6 +25,10 @@ const {
 
 const UsersService = require('../service/UsersService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 const userName = "max";
 var db;
 
@@ -32,7 +36,7 @@ describe('Local common functions', function() {
 	captureLogs();
 
 	before(async () => {
-		console.log("run before");
+		logger.info("run before");
 		await Common.doconnect();
 
 		await PackageModel.deleteMany({});
@@ -64,7 +68,7 @@ describe('Local common functions', function() {
 	});
 
 	after(async () => {
-		console.log("after run");
+		logger.info("after run");
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
 		await mongoose.connection.close();

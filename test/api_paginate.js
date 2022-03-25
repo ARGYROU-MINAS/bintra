@@ -17,11 +17,15 @@ var LoginModel = require('../models/login.js');
 
 const PackageService = require('../service/PackagesService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 describe('Paginate', function() {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
         await PackageModel.deleteMany({});
     });
 
@@ -74,7 +78,7 @@ describe('Paginate', function() {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
     });
 });

@@ -17,11 +17,15 @@ var LoginModel = require('../models/login.js');
 
 const PackagesService = require('../service/PackagesService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 describe('get default role funtions', function() {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
         await PackageModel.deleteMany({});
     });
 
@@ -119,18 +123,18 @@ describe('get default role funtions', function() {
         it('[STEP-13] list single non existing package', (done) => {
             PackagesService.listPackageSingle("00112233445566778899aabb")
                 .then(itemFound => {
-                    console.error("Should not pass");
+                    logger.error("Should not pass");
                     done();
                 })
                 .catch(err => {
-                    console.log("expected error");
+                    logger.info("expected error");
                     done();
                 });
         });
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
     });
 });

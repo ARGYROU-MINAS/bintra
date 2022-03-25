@@ -18,13 +18,17 @@ var DomainModel = require('../models/domain.js');
 
 const UsersService = require('../service/UsersService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 var JWT;
 
 describe('Domain stuff', function() {
 	captureLogs();
 
 	before(async () => {
-		console.log("run before");
+		logger.info("run before");
 
 		tsnow = new Date();
 		var domainNew = new DomainModel({
@@ -61,11 +65,11 @@ describe('Domain stuff', function() {
 		it('[STEP-6] add colliding domain', (done) => {
 			UsersService.addDomain('test.eu')
 			.then(result => {
-				console.error("should not pass");
+				logger.error("should not pass");
 				done();
 			})
 			.catch(err => {
-				console.log("expected error");
+				logger.info("expected error");
 				done();
 			});
 
@@ -73,7 +77,7 @@ describe('Domain stuff', function() {
 	});
 
 	after(async () => {
-		console.log("after run");
+		logger.info("after run");
 		await DomainModel.deleteMany({});
 	});
 });

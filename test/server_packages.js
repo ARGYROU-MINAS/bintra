@@ -13,10 +13,13 @@ let request = require('supertest');
 const captureLogs = require('../testutils/capture-logs');
 
 var PackageModel = require('../models/package.js');
+const PackageService = require('../service/PackagesService.js');
+
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
 
 chai.use(chaiHttp);
-
-const PackageService = require('../service/PackagesService.js');
 
 var packageid = "";
 
@@ -24,7 +27,7 @@ describe('PFilter server tests', function() {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
 	const adminUtil = mongoose.connection.db.admin();
 	const result = await adminUtil.ping();
 
@@ -65,7 +68,7 @@ describe('PFilter server tests', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     packageid = res.body[0]._id;
-                    console.log(packageid);
+                    logger.info(packageid);
                     done();
                 });
         });
@@ -95,7 +98,7 @@ describe('PFilter server tests', function() {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
     });
 });

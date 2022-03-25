@@ -16,6 +16,10 @@ let request = require('supertest');
 
 const captureLogs = require('../testutils/capture-logs');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 chai.use(chaiHttp);
 
 var tokenUser = "";
@@ -31,7 +35,7 @@ describe('server', () => {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
 	const adminUtil = mongoose.connection.db.admin();
 	const result = await adminUtil.ping();
 
@@ -73,11 +77,11 @@ describe('server', () => {
             }
         });
 
-        console.log("Login to get token");
+        logger.info("Login to get token");
         tokenUser = uauth.issueToken('bob', 'user');
-        console.log("Token: " + tokenUser);
+        logger.info("Token: " + tokenUser);
         tokenShortUser = uauth.issueShortToken('bob', 'user');
-        console.log("Short living Token: " + tokenShortUser);
+        logger.info("Short living Token: " + tokenShortUser);
         await sleep(1000);
     });
 
@@ -183,7 +187,7 @@ describe('server', () => {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await LoginModel.deleteMany({
             name: 'max'
         });

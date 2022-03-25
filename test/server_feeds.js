@@ -13,6 +13,10 @@ let request = require('supertest');
 
 const captureLogs = require('../testutils/capture-logs');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 chai.use(chaiHttp);
 
 describe('server', () => {
@@ -65,7 +69,7 @@ describe('server', () => {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
     });
 });

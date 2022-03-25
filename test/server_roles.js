@@ -14,6 +14,10 @@ const captureLogs = require('../testutils/capture-logs');
 var LoginModel = require('../models/login.js');
 const UsersService = require('../service/UsersService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 chai.use(chaiHttp);
 
 var tokenUser = "";
@@ -23,7 +27,7 @@ describe('server roles', () => {
     captureLogs();
 
     before(async () => {
-        console.log("prepare DB before");
+        logger.info("prepare DB before");
 	const adminUtil = mongoose.connection.db.admin();
 	const result = await adminUtil.ping();
 
@@ -182,7 +186,7 @@ describe('server roles', () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    console.log(res.body);
+                    logger.info(res.body);
                     res.body.should.have.property('node');
                     done();
                 });
@@ -190,7 +194,7 @@ describe('server roles', () => {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await LoginModel.deleteMany({});
     });
 

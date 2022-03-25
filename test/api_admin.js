@@ -17,6 +17,10 @@ var LoginModel = require('../models/login.js');
 
 const PackagesService = require('../service/PackagesService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 describe('admin only functions', function() {
     captureLogs();
 
@@ -38,7 +42,7 @@ describe('admin only functions', function() {
         it('[STEP-1] should have one reply', async () => {
             var result = await PackagesService.listPackagesFull();
             var theID = result[0]._id;
-            console.log("ID=" + theID);
+            logger.info("ID=" + theID);
             await PackagesService.deletePackageById(theID);
             result = await PackagesService.listPackagesFull();
             return expect(result).to.have.length(0);
@@ -67,7 +71,7 @@ describe('admin only functions', function() {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
     });
 });

@@ -74,7 +74,7 @@ describe('server', () => {
 				}
 			});
 			tokenUser = uauth.issueToken('max', 'user');
-			console.log("Token: " + tokenUser);
+			logger.info("Token: " + tokenUser);
 
 			var userObject = await getUserObject("max");
 			var tsnow = new Date();
@@ -92,7 +92,7 @@ describe('server', () => {
 		});
 
 		it('[STEP-1] get countPerCreator', (done) => {
-			console.log("Call family API");
+			logger.info("Call family API");
 			request(server)
 				.get('/v1/countPerCreator')
 				.auth(tokenUser, {
@@ -102,7 +102,7 @@ describe('server', () => {
 				.expect(200, done);
 /*
 				.end((err, res) => {
-					console.log("did get reply");
+					logger.info("did get reply");
 					res.should.have.status(200);
 					res.body.should.have.property('summary');
 					done();
@@ -111,7 +111,7 @@ describe('server', () => {
 	});
 
 	after(async () => {
-		console.log("after run");
+		logger.info("after run");
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
 	});

@@ -62,7 +62,7 @@ describe('PFilter put server tests', function() {
 	captureLogs();
 
 	before(async () => {
-		console.log("run before");
+		logger.info("run before");
 		const adminUtil = mongoose.connection.db.admin();
 		const result = await adminUtil.ping();
 
@@ -84,9 +84,9 @@ describe('PFilter put server tests', function() {
 			}
 		});
 
-		console.log("Login to get token");
+		logger.info("Login to get token");
 		tokenUser = uauth.issueToken('max', 'user');
-		console.log("Token: " + tokenUser);
+		logger.info("Token: " + tokenUser);
 
 		var userObject = await getUserObject("max");
 		var tsnow = new Date();
@@ -302,7 +302,7 @@ describe('PFilter put server tests', function() {
 	});
 
 	after(async () => {
-		console.log("after run");
+		logger.info("after run");
 		await PackageModel.deleteMany({});
 		await LoginModel.deleteMany({});
 	});

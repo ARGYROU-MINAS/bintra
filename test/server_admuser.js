@@ -23,6 +23,10 @@ const PackageService = require('../service/PackagesService.js');
 
 const uauth = require('../utils/auth.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 var packageid = "";
 var tokenUser = "";
 var idUser = "";
@@ -39,7 +43,7 @@ describe('PFilter put server tests', function() {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
 	const adminUtil = mongoose.connection.db.admin();
 	const result = await adminUtil.ping();
 
@@ -81,9 +85,9 @@ describe('PFilter put server tests', function() {
             }
         });
 
-        console.log("Login to get token");
+        logger.info("Login to get token");
         tokenUser = uauth.issueToken('max', 'user');
-        console.log("Token: " + tokenUser);
+        logger.info("Token: " + tokenUser);
     });
 
     context('Check user actions', () => {
@@ -110,7 +114,7 @@ describe('PFilter put server tests', function() {
                     res.should.have.status(200);
                     var reply = res.body;
                     idUser = reply._id;
-                    console.log("Bob user id=" + idUser);
+                    logger.info("Bob user id=" + idUser);
                     done();
                 });
         });
@@ -265,7 +269,7 @@ describe('PFilter put server tests', function() {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await LoginModel.deleteMany({
             name: 'max'
         });

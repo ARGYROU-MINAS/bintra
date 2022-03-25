@@ -20,13 +20,17 @@ var LoginModel = require('../models/login.js');
 const UsersService = require('../service/UsersService.js');
 const PackagesService = require('../service/PackagesService.js');
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = process.env.LOGLEVEL || "warn";
+
 var JWT;
 
 describe('User stuff', function() {
     captureLogs();
 
     before(async () => {
-        console.log("run before");
+        logger.info("run before");
 
         await PackageModel.deleteMany({});
         await LoginModel.deleteMany({});
@@ -48,7 +52,7 @@ describe('User stuff', function() {
         it('[STEP-1] Check user was created', (done) => {
             LoginModel.find({})
                 .then(itemFound => {
-                    console.log("Query logins worked, mount=" + itemFound.length);
+                    logger.info("Query logins worked, mount=" + itemFound.length);
                     done();
                 });
         });
@@ -91,20 +95,20 @@ describe('User stuff', function() {
         it('[STEP-6] Check role with wrong role', (done) => {
             UsersService.hasRole('max', ['admin'])
                 .then(itemFound => {
-                    console.error("Sould not pass");
+                    logger.error("Sould not pass");
                 })
                 .catch(err => {
-                    console.log("expected error");
+                    logger.info("expected error");
                     done();
                 });
         });
         it('[STEP-7] Check role with wrong user', (done) => {
             UsersService.hasRole('sam', ['user'])
                 .then(itemFound => {
-                    console.error("should not pass");
+                    logger.error("should not pass");
                 })
                 .catch(err => {
-                    console.log("expected error");
+                    logger.info("expected error");
                     done();
                 });
         });
@@ -117,10 +121,10 @@ describe('User stuff', function() {
         it('[STEP-9] Check active with wrong user', (done) => {
             UsersService.isActiveUser('sam')
                 .then(itemFound => {
-                    console.error("should not pass");
+                    logger.error("should not pass");
                 })
                 .catch(err => {
-                    console.log("expected error");
+                    logger.info("expected error");
                     done();
                 });
         });
@@ -144,11 +148,11 @@ describe('User stuff', function() {
         it('[STEP-3] Add again package in wrong users name', (done) => {
             PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'maria')
                 .then(itemFound => {
-                    console.error("should not pass");
+                    logger.error("should not pass");
                     done();
                 })
                 .catch(err => {
-                    console.log("expected error");
+                    logger.info("expected error");
                     done();
                 });
         });
@@ -174,7 +178,7 @@ describe('User stuff', function() {
     });
 
     after(async () => {
-        console.log("after run");
+        logger.info("after run");
         await PackageModel.deleteMany({});
         await LoginModel.deleteMany({});
     });

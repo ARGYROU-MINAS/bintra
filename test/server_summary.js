@@ -50,18 +50,25 @@ describe('server', () => {
 
 	describe('[BINTRA-27] GET user summary', () => {
 		before(async () => {
+			logger.info("In before method");
 			const adminUtil = mongoose.connection.db.admin();
+			logger.debug("do ping");
 			const result = await adminUtil.ping();
 
+			logger.debug("Do delete max");
 			await LoginModel.deleteMany({
 				name: 'max'
 			});
+
 			var oUserDefault = {
 				username: 'max',
 				email: 'test@example.com',
 				password: 'xxx'
 			};
+			logger.debug("Do create max");
 			await UsersService.createUser(oUserDefault);
+
+			logger.debug("Do update max");
 			await LoginModel.updateMany({
 				name: 'max'
 			}, {
@@ -71,6 +78,7 @@ describe('server', () => {
 				}
 			});
 
+			logger.debug("Do get max");
 			var userObject = await getUserObject("max");
 			var tsnow = new Date();
 			var packageNew = new PackageModel({
@@ -83,7 +91,10 @@ describe('server', () => {
 				tsupdated: tsnow,
 				creator: userObject
 			});
+			logger.debug("Add new package");
 			await packageNew.save();
+
+			logger.info("End before method");
 		});
 
 		it('[STEP-1] get arch', (done) => {
@@ -96,11 +107,11 @@ describe('server', () => {
 				});
 		});
 		it('[STEP-2] get family', (done) => {
-			console.log("Call family API");
+			logger.info("Call family API");
 			request(server)
 				.get('/v1/summary/family')
 				.end((err, res) => {
-					console.log("did get reply");
+					logger.info("did get reply");
 					res.should.have.status(200);
 					res.body.should.have.property('summary');
 					done();
@@ -109,7 +120,8 @@ describe('server', () => {
 	});
 
 	after(async () => {
-		console.log("after run");
+		logger.info("In after method");
 		await PackageModel.deleteMany({});
+		logger.info("End after method");
 	});
 });
