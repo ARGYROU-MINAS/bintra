@@ -48,7 +48,7 @@
     "mastodon": "^1.2.2",
     "matomo-tracker": "^2.2.4",
     "mongodb": "^4.4.1",
-    "mongoose": "^6.2.8",
+    "mongoose": "^6.2.9",
     "mqtt": "^4.3.7",
     "node-resque": "^9.1.6",
     "oas3-tools": "^2.2.2",
