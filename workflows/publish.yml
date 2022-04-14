@@ -129,6 +129,7 @@ publish:
   extends:
     - .myglobals
   stage: deploy
+  resource_group: production
   image: "$CI_REGISTRY/kgroup/bintra:pub"
   variables:
     GIT_STRATEGY: none
@@ -152,6 +153,7 @@ publish:
 sentry:
   stage: deploy
   image: getsentry/sentry-cli
+  resource_group: production
   needs:
     - job: prepare_job
       artifacts: true
