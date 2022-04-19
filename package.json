@@ -3,6 +3,10 @@
   "version": "1.4.27",
   "description": "Binary Transparency Directory API",
   "main": "app.js",
+  "homepage": "https://bintra.directory/",
+  "bugs": {
+    "url": "https://gitlab.kretschmann.software/kgroup/bintra/-/issues"
+  },
   "engines": {
     "npm": ">=8.0.0",
     "node": ">=16.0.0"
