@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cpe-list xmlns:meta="http://scap.nist.gov/schema/cpe-dictionary-metadata/0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpe-23="http://scap.nist.gov/schema/cpe-extension/2.3" xsi:schemaLocation="http://scap.nist.gov/schema/cpe-dictionary-metadata/0.2 http://nvd.nist.gov/schema/cpe-dictionary-metadata_0.2.xsd http://cpe.mitre.org/dictionary/2.0 http://cpe.mitre.org/files/cpe-dictionary_2.1.xsd" xmlns="http://cpe.mitre.org/dictionary/2.0">
+    <generator>
+        <product_name>Manual interactive work</product_name>
+        <product_version>0.1</product_version>
+        <schema_version>2.3</schema_version>
+        <timestamp>2022-04-20T05:35:00.000Z</timestamp>
+    </generator>
+    <cpe-item name="cpe:/a:kretschmann:bintra:1.4.27">
+        <title xml:lang="en-US">bintra 1.4.27</title>
+        <cpe-23:cpe23-item name="cpe:2.3:a:kretschmann:bintra:1.4.27:*:*:*:*:*:*:*"/>
+    </cpe-item>
+    <cpe-item name="cpe:/a:kretschmann:bintraclient:1.0.11">
+        <title xml:lang="en-US">bintra client 1.0.11</title>
+        <cpe-23:cpe23-item name="cpe:2.3:a:kretschmann:bintraclient:1.0.11:*:*:*:*:*:*:*"/>
+    </cpe-item>
+</cpe-list>
