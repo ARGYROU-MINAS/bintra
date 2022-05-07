@@ -9,7 +9,7 @@ logger.level = process.env.LOGLEVEL || "warn";
 
 var MatomoTracker = require('matomo-tracker');
 var matomo = null;
-if(process.env.MATOMO_ID) {
+if(process.env.MATOMO_URL !== "") {
   matomo = new MatomoTracker(process.env.MATOMO_ID, process.env.MATOMO_URL);
 }
 var baseUrl = 'https://api.binarytransparency.net';

@@ -13,7 +13,7 @@ logger.level = process.env.LOGLEVEL || "warn";
 // initial init steps
 logger.info("In mqttclient initial init");
 
-if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null) {
+if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME === null || process.env.MQTT_HOSTNAME === "") {
   logger.warn("No MQTT defined");
 } else {
   logger.info("MQTT do connect to " + process.env.MQTT_HOSTNAME);
@@ -37,6 +37,8 @@ if(typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAME
 }
 
 eventEmitter.on('putdata', function getPutDataHit(packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
+  if(null == client) return;
+
   if(!client.connected) {
     logger.info("MQTT not connected, skipping publish");
     return;
