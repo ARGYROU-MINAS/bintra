@@ -423,12 +423,12 @@ function optionalWildcard (searchvalue) {
 
 /**
  * Internal check in json data.
- * @param {json} j 
- * @param {string} p 
+ * @param {json} j
+ * @param {string} p
  * @private
  * @returns boolean
  */
-function checkProp(j, p) {
+function checkProp (j, p) {
   // eslint-disable-next-line no-prototype-builtins
   return j.hasOwnProperty(p);
 }
