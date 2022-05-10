@@ -76,7 +76,7 @@ function findPackage (resolve, reject, packageName, packageVersion, packageArch,
     })
     .catch(err => {
       logger.error('Not found others: ', err);
-      reject('bahh');
+      reject(err);
     });
 }
 
@@ -87,10 +87,8 @@ function findPackage (resolve, reject, packageName, packageVersion, packageArch,
  **/
 function replyWithError (reject, err) {
   logger.error('Not OK: ', err);
-  reject({
-    code: 400,
-    msg: 'bahh'
-  });
+  err.code = 400;
+  reject(err);
 }
 
 /**
@@ -481,15 +479,18 @@ exports.searchPackages = function (jsearch) {
       .limit(count)
       .then(item => {
         if (item.length === 0) {
-          reject(Error({
-            code: 404,
-            msg: 'not found'
-          }));
+          logger.error('XXX No item found');
+          let e = new Error('not found');
+          e.msg = 'Not found';
+          e.code = 404;
+          reject(e);
         } else {
+          logger.error('XXX Some item found');
           resolve(item);
         }
       })
       .catch(err => {
+        logger.error('XXX Error found');
         replyWithError(reject, err);
       });
   });

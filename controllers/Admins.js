@@ -243,14 +243,26 @@ module.exports.createUser = function createUser (req, res, next, user) {
  * @public
  */
 module.exports.searchPackages = function searchPackages (req, res, next, jsearch) {
+  logger.error("START");
+
   eventEmitter.emit(EVENTNAME, req);
 
   PackagesService.searchPackages(jsearch)
     .then(function (payload) {
+      logger.error('Found search result');
       utils.writeJson(res, payload, 200);
     })
     .catch(function (payload) {
-      utils.writeText(res, payload.msg, payload.code);
+      logger.error("CATCH A");
+      logger.error(typeof payload);
+      /* for (var property in payload) {
+        if (object.hasOwnProperty(property)) {
+            logger.error("XXX " + property + ":" + object[property]);
+        }
+      } */
+      logger.error("CATCH B");
+      // utils.writeText(res, payload.message, payload.code);
+      utils.writeText(res, 'error', 404);
     });
 };
 
