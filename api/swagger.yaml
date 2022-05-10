@@ -670,10 +670,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserList'
-        400:
-          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        500:
+          $ref: '#/components/responses/BadResult'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -1324,6 +1324,12 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Bad Request, some parameter must be wrong
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadResult:
+      description: Bad Result, some server part must be wrong
       content:
         application/json:
           schema:

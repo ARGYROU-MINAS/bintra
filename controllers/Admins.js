@@ -71,8 +71,8 @@ module.exports.listUsers = function listUsers (req, res, next) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 500);
     });
 };
 
@@ -88,8 +88,8 @@ module.exports.getUser = function getUser (req, res, next, name) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -105,8 +105,8 @@ module.exports.deleteUser = function deleteUser (req, res, next, id) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -124,8 +124,8 @@ module.exports.putUserStatus = function putUserStatus (req, res, next, status, i
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -141,8 +141,8 @@ module.exports.listUser = function listUser (req, res, next, id) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -158,8 +158,8 @@ module.exports.listDomains = function listDomains (req, res, next) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -175,8 +175,8 @@ module.exports.addDomain = function listDomains (req, res, next, name) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -192,8 +192,8 @@ module.exports.deleteDomain = function listDomains (req, res, next, name) {
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeText(res, payload.msg, payload.code);
+    .catch(function (err) {
+      utils.writeText(res, err.message, err.code);
     });
 };
 
@@ -215,8 +215,8 @@ module.exports.checkDomain = function listDomains (req, res, next, name) {
         utils.writeJson(res, payload, 200);
       }
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -232,8 +232,8 @@ module.exports.createUser = function createUser (req, res, next, user) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -243,8 +243,6 @@ module.exports.createUser = function createUser (req, res, next, user) {
  * @public
  */
 module.exports.searchPackages = function searchPackages (req, res, next, jsearch) {
-  logger.error("START");
-
   eventEmitter.emit(EVENTNAME, req);
 
   PackagesService.searchPackages(jsearch)
@@ -252,19 +250,8 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
       logger.error('Found search result');
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      logger.error("CATCH A");
-      logger.error(typeof payload);
-      logger.error(payload.constructor.name);
-      logger.error("Code: " + payload.code);
-      /* for (var property in payload) {
-        if (object.hasOwnProperty(property)) {
-            logger.error("XXX " + property + ":" + object[property]);
-        }
-      } */
-      logger.error("CATCH B");
-      // utils.writeText(res, payload.message, payload.code);
-      utils.writeText(res, 'error', payload.code);
+    .catch(function (err) {
+      utils.writeText(res, err.message, err.code);
     });
 };
 
@@ -280,8 +267,8 @@ module.exports.patchUser = function patchUser (req, res, next, jpatch, id) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
 
@@ -297,8 +284,8 @@ module.exports.deletePackage = function deletePackage (req, res, next, packageNa
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeText(res, payload.msg, payload.code);
+    .catch(function (err) {
+      utils.writeText(res, err.message, err.code);
     });
 };
 
@@ -314,8 +301,8 @@ module.exports.deletePackageById = function deletePackageById (req, res, next, i
     .then(function (payload) {
       utils.writeText(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeText(res, payload.msg, payload.code);
+    .catch(function (err) {
+      utils.writeText(res, err.message, err.code);
     });
 };
 
@@ -371,7 +358,7 @@ module.exports.getCountPerCreator = function getVersions (req, res, next) {
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })
-    .catch(function (payload) {
-      utils.writeJson(res, payload, 400);
+    .catch(function (err) {
+      utils.writeJson(res, err.message, 400);
     });
 };
