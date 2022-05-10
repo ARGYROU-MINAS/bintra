@@ -10,7 +10,7 @@ bcrypt.hash(password, c.saltRounds, async function (err, hash) {
   if (err) {
     throw err;
   }
-  const login = new c.loginModel({
+  const login = new c.LoginModel({
     name: username,
     passwd: hash,
     role: 'admin'

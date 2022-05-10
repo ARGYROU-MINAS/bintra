@@ -422,6 +422,18 @@ function optionalWildcard (searchvalue) {
 }
 
 /**
+ * Internal check in json data.
+ * @param {json} j 
+ * @param {string} p 
+ * @private
+ * @returns boolean
+ */
+function checkProp(j, p) {
+  // eslint-disable-next-line no-prototype-builtins
+  return j.hasOwnProperty(p);
+}
+
+/**
  * @method
  * Search for packages by given query
  * @public
@@ -436,30 +448,30 @@ exports.searchPackages = function (jsearch) {
     const count = 100;
     const queryObj = {};
 
-    if (jsearch.hasOwnProperty('packageName')) {
+    if (checkProp(jsearch, 'packageName')) {
       queryObj.name = optionalWildcard(jsearch.packageName);
     }
 
-    if (jsearch.hasOwnProperty('packageVersion')) {
+    if (checkProp(jsearch, 'packageVersion')) {
       queryObj.version = optionalWildcard(jsearch.packageVersion);
     }
 
-    if (jsearch.hasOwnProperty('packageArch')) {
+    if (checkProp(jsearch, 'packageArch')) {
       queryObj.arch = jsearch.packageArch;
     }
-    if (jsearch.hasOwnProperty('packageFamily')) {
+    if (checkProp(jsearch, 'packageFamily')) {
       queryObj.family = jsearch.packageFamily;
     }
-    if (jsearch.hasOwnProperty('packageHash')) {
+    if (checkProp(jsearch, 'packageHash')) {
       queryObj.hash = jsearch.packageHash;
     }
-    if (jsearch.hasOwnProperty('count')) {
+    if (checkProp(jsearch, 'count')) {
       queryObj.count = jsearch.count;
     }
-    if (jsearch.hasOwnProperty('tscreated')) {
+    if (checkProp(jsearch, 'tscreated')) {
       queryObj.tscreated = jsearch.tscreated;
     }
-    if (jsearch.hasOwnProperty('tsupdated')) {
+    if (checkProp(jsearch, 'tsupdated')) {
       queryObj.tsupdated = jsearch.tsupdated;
     }
     PackageModel.find(queryObj, {

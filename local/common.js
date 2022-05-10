@@ -8,9 +8,9 @@ const {
 const cmdArgs = process.argv.slice(2);
 
 const bcrypt = require('bcrypt');
-const loginModel = require('../models/login.js');
+const LoginModel = require('../models/login.js');
 
-exports.loginModel = loginModel;
+exports.LoginModel = LoginModel;
 exports.cmdArgs = cmdArgs;
 exports.saltRounds = saltRounds;
 
@@ -36,7 +36,7 @@ exports.doconnect = function () {
 exports.setUserStatus = function (username, newstatus) {
   return new Promise(function (resolve, reject) {
     console.log('cstate=' + mongoose.connection.readyState);
-    loginModel.updateOne(
+    LoginModel.updateOne(
       { name: username },
       { $set: { status: newstatus } }
     ).then(result => {
@@ -56,7 +56,7 @@ exports.setUserPasswd = function (username, newpassword) {
   return new Promise(function (resolve, reject) {
     console.log(username);
     const hash = bcrypt.hashSync(newpassword, saltRounds);
-    loginModel.updateOne(
+    LoginModel.updateOne(
       { name: username },
       { $set: { passwd: hash } }
     ).then(result => {
