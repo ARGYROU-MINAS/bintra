@@ -14,6 +14,7 @@ var QueueService = require('../service/QueueService');
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 logger.level = process.env.LOGLEVEL || "warn";
+const EVENTNAME="apihit";
 
 /**
  * @method
@@ -21,8 +22,7 @@ logger.level = process.env.LOGLEVEL || "warn";
  * @public
  */
 module.exports.listQueues = function listQueues(req, res, next) {
-
-	eventEmitter.emit('apihit', req);
+	eventEmitter.emit(EVENTNAME, req);
 
 	QueueService.listQueues()
 		.then(function(payload) {

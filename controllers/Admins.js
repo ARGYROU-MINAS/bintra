@@ -20,6 +20,7 @@ const exec = promisify(require('child_process').exec)
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 logger.level = process.env.LOGLEVEL || "warn";
+const EVENTNAME="apihit";
 
 /**
  * @function
@@ -64,8 +65,7 @@ module.exports.loginPost = function loginPost(args, res, next) {
  * @public
  */
 module.exports.listUsers = function listUsers(req, res, next) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.listUsers()
         .then(function(payload) {
@@ -82,8 +82,7 @@ module.exports.listUsers = function listUsers(req, res, next) {
  * @public
  */
 module.exports.getUser = function getUser(req, res, next, name) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.getUser(name)
         .then(function(payload) {
@@ -100,7 +99,7 @@ module.exports.getUser = function getUser(req, res, next, name) {
  * @public
  */
 module.exports.deleteUser = function deleteUser(req, res, next, id) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.deleteUser(id)
         .then(function(payload) {
@@ -117,7 +116,8 @@ module.exports.deleteUser = function deleteUser(req, res, next, id) {
  * @public
  */
 module.exports.putUserStatus = function putUserStatus(req, res, next, status, id) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
+
     logger.info("putUserStatus " + id + "/" + status + "!");
 
     UsersService.putUserStatus(id, status)
@@ -135,7 +135,7 @@ module.exports.putUserStatus = function putUserStatus(req, res, next, status, id
  * @public
  */
 module.exports.listUser = function listUser(req, res, next, id) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.listUser(id)
         .then(function(payload) {
@@ -152,7 +152,7 @@ module.exports.listUser = function listUser(req, res, next, id) {
  * @public
  */
 module.exports.listDomains = function listDomains(req, res, next) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.listDomains()
         .then(function(payload) {
@@ -169,7 +169,7 @@ module.exports.listDomains = function listDomains(req, res, next) {
  * @public
  */
 module.exports.addDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.addDomain(name)
         .then(function(payload) {
@@ -186,7 +186,7 @@ module.exports.addDomain = function listDomains(req, res, next, name) {
  * @public
  */
 module.exports.deleteDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.deleteDomain(name)
         .then(function(payload) {
@@ -203,7 +203,7 @@ module.exports.deleteDomain = function listDomains(req, res, next, name) {
  * @public
  */
 module.exports.checkDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.checkDomain(name)
         .then(function(payload) {
@@ -227,7 +227,7 @@ module.exports.checkDomain = function listDomains(req, res, next, name) {
  * @public
  */
 module.exports.createUser = function createUser(req, res, next, user) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.createUser(user)
         .then(function(payload) {
@@ -244,7 +244,7 @@ module.exports.createUser = function createUser(req, res, next, user) {
  * @public
  */
 module.exports.searchPackages = function searchPackages(req, res, next, jsearch) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.searchPackages(jsearch)
         .then(function(payload) {
@@ -261,7 +261,7 @@ module.exports.searchPackages = function searchPackages(req, res, next, jsearch)
  * @public
  */
 module.exports.patchUser = function patchUser(req, res, next, jpatch, id) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     UsersService.patchUser(id, jpatch)
         .then(function(payload) {
@@ -278,7 +278,7 @@ module.exports.patchUser = function patchUser(req, res, next, jpatch, id) {
  * @public
  */
 module.exports.deletePackage = function deletePackage(req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
         .then(function(payload) {
@@ -295,8 +295,7 @@ module.exports.deletePackage = function deletePackage(req, res, next, packageNam
  * @public
  */
 module.exports.deletePackageById = function deletePackageById(req, res, next, id) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.deletePackageById(id)
         .then(function(payload) {
@@ -314,8 +313,7 @@ module.exports.deletePackageById = function deletePackageById(req, res, next, id
  * @public
  */
 module.exports.getVersions = function getVersions(req, res, next) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     var jdata = process.versions;
     var json = require('../package.json');
@@ -355,7 +353,7 @@ module.exports.getVersions = function getVersions(req, res, next) {
  * @public
  **/
 module.exports.getCountPerCreator = function getVersions(req, res, next) {
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.countPerCreator()
         .then(function(payload) {
@@ -365,4 +363,3 @@ module.exports.getCountPerCreator = function getVersions(req, res, next) {
             utils.writeJson(res, payload, 400);
         });
 };
-

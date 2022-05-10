@@ -15,7 +15,7 @@ var UsersService = require('../service/UsersService');
 const log4js = require("log4js");
 const logger = log4js.getLogger();
 logger.level = process.env.LOGLEVEL || "warn";
-
+const EVENTNAME="apihit";
 
 /**
  * @method
@@ -23,25 +23,25 @@ logger.level = process.env.LOGLEVEL || "warn";
  * @public
  */
 module.exports.checkToken = function checkToken(req, res, next) {
-    logger.info("In check");
-    eventEmitter.emit('apihit', req);
-    logger.info(req.auth);
-    logger.info("from=" + req.auth.iat);
-    logger.info("to=" + req.auth.exp);
+    eventEmitter.emit(EVENTNAME, req);
+
+    logger.debug(req.auth);
+    logger.debug("from=" + req.auth.iat);
+    logger.debug("to=" + req.auth.exp);
 
     var tsfrom = new Date(req.auth.iat * 1000);
     var tsto = new Date(req.auth.exp * 1000);
     var sfrom = tsfrom.toISOString();
     var sto = tsto.toISOString();
-    logger.info("sfrom=" + sfrom);
-    logger.info("sto=" + sto);
+    logger.debug("sfrom=" + sfrom);
+    logger.debug("sto=" + sto);
 
     var payload = {
         name: req.auth.sub,
         tsfrom: sfrom,
         tsto: sto
     };
-    logger.info(payload);
+    logger.debug(payload);
     utils.writeJson(res, payload, 200);
 };
 
@@ -53,7 +53,7 @@ module.exports.checkToken = function checkToken(req, res, next) {
 module.exports.validatePackage = function validatePackage(req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
     var username = req.auth.sub;
 
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
         .then(function(payload) {
@@ -70,8 +70,7 @@ module.exports.validatePackage = function validatePackage(req, res, next, packag
  * @public
  */
 module.exports.listPackage = function listPackage(req, res, next, packageName, packageVersion, packageArch, packageFamily) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.listPackage(packageName, packageVersion, packageArch, packageFamily)
         .then(function(payload) {
@@ -88,8 +87,7 @@ module.exports.listPackage = function listPackage(req, res, next, packageName, p
  * @public
  */
 module.exports.listPackageSingle = function listPackage(req, res, next, id) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.listPackageSingle(id)
         .then(function(payload) {
@@ -106,9 +104,9 @@ module.exports.listPackageSingle = function listPackage(req, res, next, id) {
  * @public
  */
 module.exports.listPackages = function listPackage(req, res, next, skip, count, sort, direction, age) {
-    logger.info("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction + ", " + age);
+    logger.debug("listPackages called with " + skip + ", " + count + ", " + sort + ", " + direction + ", " + age);
 
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     if(age == null) {
         age = 9999; // might be enough for any
@@ -129,9 +127,9 @@ module.exports.listPackages = function listPackage(req, res, next, skip, count, 
  * @public
  */
 module.exports.listPagePackages = function listPagePackage(req, res, next, page, size, sorters, filter) {
-    logger.info("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
+    logger.debug("listPagePackages called with " + page + ", " + size + ", " + sorters + ", " + filter);
 
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.listPagePackages(page, size, sorters, filter)
         .then(function(payload) {
@@ -152,7 +150,7 @@ module.exports.listPackagesFull = function listPackage(req, res, next, count) {
         count = 100;
     }
 
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.listPackagesFull(count)
         .then(function(payload) {
@@ -169,8 +167,7 @@ module.exports.listPackagesFull = function listPackage(req, res, next, count) {
  * @public
  */
 module.exports.countPackage = function countPackage(req, res, next) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     PackagesService.countPackage()
         .then(function(payload) {
@@ -184,12 +181,11 @@ module.exports.countPackage = function countPackage(req, res, next) {
 
 /**
  * @method
- * Test function
+ * Test function for normal rights
  * @public
  */
 module.exports.testDefault = function testDefault(req, res, next) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
     logger.info(req.openapi.schema.security);
 
     var payload = {
@@ -200,12 +196,11 @@ module.exports.testDefault = function testDefault(req, res, next) {
 
 /**
  * @method
- * Test function
+ * Test function for admin right
  * @public
  */
 module.exports.testAdmin = function testAdmin(req, res, next) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
     logger.info(req.openapi.schema.security);
 
     var payload = {
@@ -220,8 +215,7 @@ module.exports.testAdmin = function testAdmin(req, res, next) {
  * @public
  */
 module.exports.summaryByWhat = function summaryByWhat(req, res, next, bywhat) {
-
-    eventEmitter.emit('apihit', req);
+    eventEmitter.emit(EVENTNAME, req);
 
     switch(bywhat) {
       case 'arch':
