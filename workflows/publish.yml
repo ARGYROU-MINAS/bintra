@@ -93,6 +93,29 @@ unittest:
     reports:
       junit: junit-custom.xml
 
+testlink:
+  extends:
+    - .myglobals
+  stage: report
+  image: python:3
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+    APIKEY: "${TESTLINK_APIKEY}"
+    TPAPIKEY: "${TESTLINK_TESTPLAN_APIKEY}"
+    COMMIT_ID: "${CI_COMMIT_SHA}"
+    COMMIT_BRANCH: "${CI_COMMIT_BRANCH}"
+    TESTLINK_HOST: "${TESTLINK_HOST}"
+    TESTLINK_TESTPLANID: "${TESTLINK_TESTPLANID}"
+    TESTLINK_PLATFORMID: "${TESTLINK_PLATFORMID}"
+  needs: ["unittest"]
+  before_script:
+    - pip install --no-cache-dir requests
+    - export TAGFULL=$(git describe)
+    - export TAGSHORT=$(git describe --abbrev=0)
+  script:
+    - python tl2rest.py
+
 pages:
   extends:
     - .myglobals
