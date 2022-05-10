@@ -83,7 +83,7 @@ function feedRss (req, res, next) {
       return res.end(rssfeed.rss2());
     })
     .catch(function (payload) {
-	        return replyWithError(res, payload);
+      return replyWithError(res, payload);
     });
 }
 
@@ -108,7 +108,7 @@ function feedAtom (req, res, next) {
       return res.end(atomfeed.atom1());
     })
     .catch(function (payload) {
-	        return replyWithError(res, payload);
+      return replyWithError(res, payload);
     });
 }
 
@@ -134,7 +134,7 @@ function feedJson (req, res, next) {
       return res.end(jsonfeed.json1());
     })
     .catch(function (payload) {
-	        return replyWithError(res, payload);
+      return replyWithError(res, payload);
     });
 }
 

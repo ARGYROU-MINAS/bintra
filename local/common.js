@@ -21,17 +21,17 @@ exports.doconnect = function () {
   return new Promise(function (resolve, reject) {
     console.log("connect to DB: '" + mongoUrl + "'");
     mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
-    mongoose.connection.on('connecting', err => { console.log('connecting'); });
-    mongoose.connection.on('connected', err => { console.log('connected'); });
-    mongoose.connection.on('open', err => { console.log('open'); });
+    mongoose.connection.on('connecting', err => { if (err) { console.error(err); } console.log('connecting'); });
+    mongoose.connection.on('connected', err => { if (err) { console.error(err); } console.log('connected'); });
+    mongoose.connection.on('open', err => { if (err) { console.error(err); } console.log('open'); });
     mongoose.connect(mongoUrl, {}).then(
       () => {
         console.log('DB OK');
         resolve('OK');
       },
       err => {
-        console.log('DB connect error' + error);
-        reject();
+        console.log('DB connect error' + err);
+        reject(err);
       });
   });
 }
@@ -40,17 +40,17 @@ exports.setUserStatus = function (username, newstatus) {
   return new Promise(function (resolve, reject) {
     console.log('cstate=' + mongoose.connection.readyState);
     loginModel.updateOne(
-    				{ name: username },
-    				{ $set: { status: newstatus } }
+      { name: username },
+      { $set: { status: newstatus } }
     ).then(result => {
-    				if (result.matchedCount != 1) {
-       	 			console.log('Entry not found');
-        reject('not found');
-    				}
+      if (result.matchedCount !== 1) {
+        console.log('Entry not found');
+        reject(Error('not found'));
+      }
       resolve(result);
     }).catch(error => {
-			    	console.log('Had an error ' + error);
-    				reject('error');
+      console.log('Had an error ' + error);
+      reject(error);
     });
   });
 }
@@ -63,14 +63,14 @@ exports.setUserPasswd = function (username, newpassword) {
       { name: username },
       { $set: { passwd: hash } }
     ).then(result => {
-      if (result.matchedCount != 1) {
+      if (result.matchedCount !== 1) {
         console.log('Entry not found');
-        reject('not found');
+        reject(Error('not found'));
       }
       resolve(result);
     }).catch(error => {
       console.log('Had an error ' + error);
-      reject('error');
+      reject(error);
     });
   });
 }

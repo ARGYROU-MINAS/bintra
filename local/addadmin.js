@@ -7,6 +7,9 @@ console.log('Add admin name=' + username + ' Password=' + password);
 
 // salt, hash, and store
 bcrypt.hash(password, c.saltRounds, async function (err, hash) {
+  if (err) {
+    throw err;
+  }
   const login = new c.loginModel({
     name: username,
     passwd: hash,

@@ -94,20 +94,20 @@ exports.deleteDomain = function (domainname) {
       .then(item => {
         if (item.deletedCount !== 1) {
           logger.error('not found, not deleted');
-          reject({
+          reject(Error({
             code: 404,
             msg: 'not found'
-          });
+          }));
         } else {
           resolve('OK');
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject({
+        reject(Error({
           code: 400,
           msg: 'bahh'
-        });
+        }));
       });
   });
 };
@@ -366,6 +366,9 @@ exports.createUser = function (user) {
         } else {
           const tsnow = new Date();
           bcrypt.hash(user.password, saltRounds, function (err, hash) {
+            if (err) {
+              reject(err);
+            }
             const u = new LoginModel({
               name: user.username,
               passwd: hash,

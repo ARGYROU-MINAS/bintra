@@ -1,4 +1,6 @@
-// config/matomo.js
+/**
+ * Define some db connection settings.
+ */
 
 require('custom-env').env(true);
 

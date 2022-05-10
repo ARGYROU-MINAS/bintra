@@ -8,9 +8,7 @@
  */
 
 const fs = require('fs');
-const cdigit = require('cdigit');
 require('datejs');
-const jsonpatch = require('json-patch');
 const PackageModel = require('../models/package.js');
 const LoginModel = require('../models/login.js');
 
@@ -29,16 +27,16 @@ function getUserObject (username) {
       name: username
     })
       .then(itemFound => {
-        if (itemFound.length == 1) {
+        if (itemFound.length === 1) {
           logger.info('Found user');
           resolve(itemFound[0]);
         } else {
-          reject('Not found');
+          reject(Error('Not found'));
         }
       })
       .catch(err => {
         logger.error('getUser failed: ' + err);
-        reject('getUser failed');
+        reject(err);
       });
   });
 }
@@ -136,7 +134,7 @@ exports.validatePackage = function (packageName, packageVersion, packageArch, pa
       hash: packageHash
     })
       .then(itemFound => {
-        if (itemFound.length == 0) {
+        if (itemFound.length === 0) {
           logger.info('Not exist yet');
 
           getUserObject(username)
@@ -162,7 +160,7 @@ exports.validatePackage = function (packageName, packageVersion, packageArch, pa
                 })
                 .catch(err => {
                   logger.error('Not saved fresh: ', err);
-                  reject('bahh');
+                  reject(err);
                 })
             })
             .catch(err => {
@@ -194,13 +192,13 @@ exports.validatePackage = function (packageName, packageVersion, packageArch, pa
             })
             .catch(err => {
               logger.error('Not updated: ', err);
-              reject('bahh');
+              reject(err);
             });
         } // if
       })
       .catch(err => { // Not really an error, just a fresh entry
         logger.error('Query failed: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -243,7 +241,7 @@ exports.listPackage = function (packageName, packageVersion, packageArch, packag
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -276,14 +274,14 @@ exports.listPackageSingle = function (packageId) {
           const r = renameAttributes(item[0]);
           resolve(r);
         } else {
-          reject({
+          reject(Error({
             code: 404,
             msg: 'not found'
-          });
+          }));
         }
       })
       .catch(err => {
-		        replyWithError(reject, err);
+        replyWithError(reject, err);
       });
   });
 };
@@ -305,7 +303,7 @@ exports.listPackages = function (skip, count, sort, direction, age) {
     logger.info('In list service');
 
     let sdir = -1;
-    if (direction == 'up') sdir = 1;
+    if (direction === 'up') sdir = 1;
 
     const date = new Date();
     const marginDate = new Date(date.setDate(date.getDate() - age));
@@ -330,7 +328,7 @@ exports.listPackages = function (skip, count, sort, direction, age) {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -355,6 +353,9 @@ exports.listPagePackages = function (page, size, sorters, filter) {
     logger.info('skip=' + iSkip + ', amount=' + size);
 
     PackageModel.countDocuments({}, function (err, count) {
+      if (err) {
+        reject(err);
+      }
       logger.info('All entries: ' + count);
 
       PackageModel.find({}, {
@@ -382,7 +383,7 @@ exports.listPagePackages = function (page, size, sorters, filter) {
         })
         .catch(err2 => {
           logger.error('Not OK: ', err2);
-          reject('bahh');
+          reject(err2);
         });
     });
   });
@@ -410,7 +411,7 @@ exports.listPackagesFull = function (count) {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -479,17 +480,17 @@ exports.searchPackages = function (jsearch) {
       })
       .limit(count)
       .then(item => {
-        if (item.length == 0) {
-          reject({
+        if (item.length === 0) {
+          reject(Error({
             code: 404,
             msg: 'not found'
-          });
+          }));
         } else {
           resolve(item);
         }
       })
       .catch(err => {
-		        replyWithError(reject, err);
+        replyWithError(reject, err);
       });
   });
 };
@@ -497,7 +498,7 @@ exports.searchPackages = function (jsearch) {
 function checkDeleteStatus (resolve, reject, query) {
   PackageModel.deleteOne(query)
     .then(item => {
-      if (item.deletedCount != 1) {
+      if (item.deletedCount !== 1) {
         logger.error('not found, not deleted');
         reject({
           code: 404,
@@ -508,7 +509,7 @@ function checkDeleteStatus (resolve, reject, query) {
       }
     })
     .catch(err => {
-	        replyWithError(reject, err);
+      replyWithError(reject, err);
     });
 }
 
@@ -567,6 +568,9 @@ exports.countPackage = function () {
     logger.info('In count service');
 
     PackageModel.countDocuments({}, function (err, count) {
+      if (err) {
+        reject(err);
+      }
       const examples = {};
       examples['application/json'] = {
         count
@@ -595,6 +599,9 @@ exports.summaryArch = function () {
         }
       }
     ], function (err, answer) {
+      if (err) {
+        reject(err);
+      }
       replyWithSummary(resolve, answer);
     });
   });
@@ -619,6 +626,9 @@ exports.summaryFamily = function () {
         }
       }
     ], function (err, answer) {
+      if (err) {
+        reject(err);
+      }
       replyWithSummary(resolve, answer);
     });
   });
@@ -638,6 +648,9 @@ exports.countPerCreator = function () {
     PackageModel.aggregate([
       { $group: { _id: '$creator', count: { $sum: 1 } } }
     ], function (err, answer) {
+      if (err) {
+        reject(err);
+      }
       replyWithSummary(resolve, answer);
     });
   });

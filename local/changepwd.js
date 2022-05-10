@@ -1,5 +1,4 @@
 const c = require('./common.js');
-const bcrypt = require('bcrypt');
 
 const username = c.cmdArgs[0];
 const password = c.cmdArgs[1];

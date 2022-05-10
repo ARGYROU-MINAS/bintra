@@ -20,7 +20,6 @@ logger.level = process.env.LOGLEVEL || 'warn';
 const favicon = require('serve-favicon');
 const serveStatic = require('serve-static');
 const oas3Tools = require('./myoas/'); // here was required the oas3-tools before
-const jsyaml = require('js-yaml');
 const mongoose = require('mongoose');
 const auth = require('./utils/auth');
 const webFilterOK = require('./utils/webfilter').webFilterOK;
@@ -123,9 +122,9 @@ const {
 logger.debug('DB used: ' + mongoUrl);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.on('connecting', err => { logger.info('connecting'); });
-db.on('connected', err => { logger.info('DB connected'); });
-db.on('open', err => { logger.info('DB open'); });
+db.on('connecting', err => { if (err) { logger.error(err); } logger.info('connecting'); });
+db.on('connected', err => { if (err) { logger.error(err); } logger.info('DB connected'); });
+db.on('open', err => { if (err) { logger.error(err); } logger.info('DB open'); });
 mongoose.connect(mongoUrl, { });
 
 // default CORS domain
@@ -167,7 +166,7 @@ app.use(function (req, res, next) {
 
 // Redirect root to docs UI
 app.get('/', function doRedir (req, res, next) {
-  if (req.url != '/') {
+  if (req.url !== '/') {
     next();
   } else {
     res.writeHead(301, {
@@ -227,8 +226,6 @@ app.use(function (req, res, next) {
 });
 
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
-const spec = fs.readFileSync(path.join(__dirname, 'api/swagger.yaml'), 'utf8');
-const swaggerDoc = jsyaml.load(spec);
 const swaggerDocJson = YAML.load(path.join(__dirname, 'api/swagger.yaml'));
 
 const uioptions = {
@@ -270,7 +267,7 @@ app.use(/^(?!\/v1).+/, function (req, res) {
 // Filter all parameters known
 app.use(pfilter);
 
-const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
+oas3Tools.expressAppConfig(path.join(__dirname, 'api/swagger.yaml'), options);
 
 /**
  * Start the server
