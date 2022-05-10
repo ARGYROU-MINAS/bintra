@@ -105,6 +105,21 @@ unittest:
     reports:
       junit: junit-custom.xml
 
+lint:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: test
+  variables:
+    NODE_ENV: test
+  script:
+    - npm run lint >lint.txt
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - lint.txt
+
 .zaptest:
   services:
     - name: mongo:5
