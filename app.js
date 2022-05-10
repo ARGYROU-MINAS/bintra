@@ -27,7 +27,14 @@ var webFilterOK = require("./utils/webfilter").webFilterOK;
 const express = require("express");
 var app = express();
 
-app.set('trust proxy', true);
+/* add BEHINDPROXY=uniquelocal to .env for private IP detection of proxy */
+let behindProxy = process.env.BEHINDPROXY || "";
+if("" === behindProxy) {
+	logger.warn("Direct serving, no proxy");
+} else {
+	logger.warn("Behind proxy " + behindProxy);
+	app.set('trust proxy', behindProxy);
+}
 
 // get git revision
 var gitrevFilename = path.join(__dirname, '.gitrevision');

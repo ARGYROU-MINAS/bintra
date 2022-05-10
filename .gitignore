@@ -17,3 +17,4 @@ junit-custom.xml
 
 client/**/*.so*
 client/**/*pico
+dump.rdb
