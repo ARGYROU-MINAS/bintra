@@ -255,6 +255,8 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
     .catch(function (payload) {
       logger.error("CATCH A");
       logger.error(typeof payload);
+      logger.error(payload.constructor.name);
+      logger.error("Code: " + payload.code);
       /* for (var property in payload) {
         if (object.hasOwnProperty(property)) {
             logger.error("XXX " + property + ":" + object[property]);
@@ -262,7 +264,7 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
       } */
       logger.error("CATCH B");
       // utils.writeText(res, payload.message, payload.code);
-      utils.writeText(res, 'error', 404);
+      utils.writeText(res, 'error', payload.code);
     });
 };
 
