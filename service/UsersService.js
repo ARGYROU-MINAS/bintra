@@ -13,13 +13,7 @@ const LoginModel = require('../models/login.js');
 const DomainModel = require('../models/domain.js');
 const bcrypt = require('bcrypt');
 
-const {
-  mongoHost,
-  mongoPort,
-  mongoDb,
-  mongoUrl,
-  saltRounds
-} = require('../conf');
+const saltRounds = require('../conf').saltRounds;
 
 const log4js = require('log4js');
 const logger = log4js.getLogger();
