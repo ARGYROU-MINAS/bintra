@@ -7,7 +7,6 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
-const fs = require('fs');
 require('datejs');
 const jsonpatch = require('json-patch');
 const LoginModel = require('../models/login.js');
@@ -43,7 +42,7 @@ exports.listDomains = function () {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -72,7 +71,7 @@ exports.addDomain = function (domainname) {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -93,7 +92,7 @@ exports.deleteDomain = function (domainname) {
       name: domainname
     })
       .then(item => {
-        if (item.deletedCount != 1) {
+        if (item.deletedCount !== 1) {
           logger.error('not found, not deleted');
           reject({
             code: 404,
@@ -129,7 +128,7 @@ exports.checkDomain = function (domainname) {
       name: domainname
     })
       .then(item => {
-        if (item.length == 1) {
+        if (item.length === 1) {
           resolve(item[0]);
         } else {
           resolve(null);
@@ -137,7 +136,7 @@ exports.checkDomain = function (domainname) {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -165,7 +164,7 @@ exports.listUsers = function () {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -194,7 +193,7 @@ exports.putUserStatus = function (id, newStatus) {
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -211,12 +210,12 @@ function checkGetUserStatus (resolve, reject, query) {
       if (item.length > 0) {
         resolve(item[0]);
       } else {
-        reject('not found');
+        reject(Error('not found'));
       }
     })
     .catch(err => {
       logger.error('Not OK: ', err);
-      reject('bahh');
+      reject(err);
     });
 }
 
@@ -285,12 +284,12 @@ exports.patchUser = function (idUser, jpatch) {
           patchedUser.save();
           resolve(patchedUser);
         } else {
-          reject('not found');
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -330,15 +329,15 @@ exports.deleteUser = function (idUser) {
           })
             .catch(err => {
               logger.error('Not OK' + err);
-              reject('error');
+              reject(err);
             });
         } else {
-          reject('not found');
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -361,9 +360,9 @@ exports.createUser = function (user) {
       name: domain
     })
       .then(item => {
-        if (item.length == 1) {
+        if (item.length === 1) {
           logger.error('Domain black listed: ' + domain);
-          reject('bahh');
+          reject(Error('not that domain'));
         } else {
           const tsnow = new Date();
           bcrypt.hash(user.password, saltRounds, function (err, hash) {
@@ -382,14 +381,14 @@ exports.createUser = function (user) {
               })
               .catch(errSave => {
                 logger.error('Not OK: ', errSave);
-                reject('bahh');
+                reject(errSave);
               });
           });
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -418,24 +417,24 @@ exports.checkUser = function (name, passwd) {
           bcrypt.compare(passwd, pwhash, function (err, result) {
             if (err) {
               logger.error('Some error during compare: ' + err);
-              reject('bahh');
+              reject(err);
             }
             if (result) {
               logger.info('matched');
               resolve(item[0]);
             } else {
               logger.error('Pwd mismatch');
-              reject('bahh');
+              reject(Error('pwd mismatch'));
             }
           });
         } else {
           logger.error('No entry found or perhaps not yet activated');
-          reject('bahh');
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject('bahh');
+        reject(err);
       });
   });
 };
@@ -462,12 +461,12 @@ exports.isActiveUser = function (uname) {
           resolve(true);
         } else {
           logger.error('No match found');
-          reject(false);
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject(false);
+        reject(err);
       });
   });
 };
@@ -493,19 +492,19 @@ exports.hasRole = function (uname, aRoles) {
           logger.debug('Was found OK');
           const uRole = item[0].role;
           logger.info('USer ' + uname + ' has role ' + uRole);
-          if (aRoles.indexOf(uRole) == -1) {
+          if (aRoles.indexOf(uRole) === -1) {
             logger.error('User does not have one of the wanted roles');
-            reject(false);
+            reject(Error('not in role'));
           }
           resolve(true);
         } else {
           logger.error('No match found');
-          reject(false);
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject(false);
+        reject(err);
       });
   });
 };
@@ -532,19 +531,19 @@ exports.isActiveHasRole = function (uname, aRoles) {
           logger.info('Active user was found OK');
           const uRole = item[0].role;
           logger.info('User ' + uname + ' has role ' + uRole);
-          if (aRoles.indexOf(uRole) == -1) {
+          if (aRoles.indexOf(uRole) === -1) {
             logger.error('User does not have one of the wanted roles');
-            reject(false);
+            reject(Error('not in role'));
           }
           resolve(true);
         } else {
           logger.error('No match found');
-          reject(false);
+          reject(Error('not found'));
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject(false);
+        reject(err);
       });
   });
 };
