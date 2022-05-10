@@ -7,56 +7,56 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
-var utils = require('../utils/writer.js');
-var eventEmitter = require('../utils/eventer').em;
-var PackagesService = require('../service/PackagesService');
-var UsersService = require('../service/UsersService');
-var auth = require("../utils/auth");
-var fs = require('fs');
-var path = require('path');
+const utils = require('../utils/writer.js');
+const eventEmitter = require('../utils/eventer').em;
+const PackagesService = require('../service/PackagesService');
+const UsersService = require('../service/UsersService');
+const auth = require('../utils/auth');
+const fs = require('fs');
+const path = require('path');
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec)
 
-const log4js = require("log4js");
+const log4js = require('log4js');
 const logger = log4js.getLogger();
-logger.level = process.env.LOGLEVEL || "warn";
-const EVENTNAME="apihit";
+logger.level = process.env.LOGLEVEL || 'warn';
+const EVENTNAME = 'apihit';
 
 /**
  * @function
  * Receive login data and return JWT token.
  * @private
  */
-module.exports.loginPost = function loginPost(args, res, next) {
-    var username = args.body.username;
-    var password = args.body.password;
-    var response;
+module.exports.loginPost = function loginPost (args, res, next) {
+  const username = args.body.username;
+  const password = args.body.password;
+  let response;
 
-    eventEmitter.emit('posthit', 'login');
+  eventEmitter.emit('posthit', 'login');
 
-    UsersService.checkUser(username, password)
-        .then(function(useritem) {
-            logger.info("User found: " + useritem);
-            var myRole = useritem.role;
-            logger.info("User hat role " + myRole);
-            var tokenString = auth.issueToken(username, myRole);
-            response = {
-                token: tokenString
-            };
-            res.writeHead(200, {
-                "Content-Type": "application/json"
-            });
-            return res.end(JSON.stringify(response));
-        })
-        .catch(function() {
-            response = {
-                message: "Error: Credentials incorrect"
-            };
-            res.writeHead(403, {
-                "Content-Type": "application/json"
-            });
-            return res.end(JSON.stringify(response));
-        });
+  UsersService.checkUser(username, password)
+    .then(function (useritem) {
+      logger.info('User found: ' + useritem);
+      const myRole = useritem.role;
+      logger.info('User hat role ' + myRole);
+      const tokenString = auth.issueToken(username, myRole);
+      response = {
+        token: tokenString
+      };
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
+      return res.end(JSON.stringify(response));
+    })
+    .catch(function () {
+      response = {
+        message: 'Error: Credentials incorrect'
+      };
+      res.writeHead(403, {
+        'Content-Type': 'application/json'
+      });
+      return res.end(JSON.stringify(response));
+    });
 };
 
 /**
@@ -64,16 +64,16 @@ module.exports.loginPost = function loginPost(args, res, next) {
  * List all packages and variations.
  * @public
  */
-module.exports.listUsers = function listUsers(req, res, next) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.listUsers = function listUsers (req, res, next) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.listUsers()
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.listUsers()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -81,16 +81,16 @@ module.exports.listUsers = function listUsers(req, res, next) {
  * Get user data of named user.
  * @public
  */
-module.exports.getUser = function getUser(req, res, next, name) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.getUser = function getUser (req, res, next, name) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.getUser(name)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.getUser(name)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -98,16 +98,16 @@ module.exports.getUser = function getUser(req, res, next, name) {
  * List all packages and variations.
  * @public
  */
-module.exports.deleteUser = function deleteUser(req, res, next, id) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.deleteUser = function deleteUser (req, res, next, id) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.deleteUser(id)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.deleteUser(id)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -115,18 +115,18 @@ module.exports.deleteUser = function deleteUser(req, res, next, id) {
  * List all packages and variations.
  * @public
  */
-module.exports.putUserStatus = function putUserStatus(req, res, next, status, id) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.putUserStatus = function putUserStatus (req, res, next, status, id) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    logger.info("putUserStatus " + id + "/" + status + "!");
+  logger.info('putUserStatus ' + id + '/' + status + '!');
 
-    UsersService.putUserStatus(id, status)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.putUserStatus(id, status)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -134,16 +134,16 @@ module.exports.putUserStatus = function putUserStatus(req, res, next, status, id
  * List all packages and variations.
  * @public
  */
-module.exports.listUser = function listUser(req, res, next, id) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.listUser = function listUser (req, res, next, id) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.listUser(id)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.listUser(id)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -151,16 +151,16 @@ module.exports.listUser = function listUser(req, res, next, id) {
  * List all black listed domains.
  * @public
  */
-module.exports.listDomains = function listDomains(req, res, next) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.listDomains = function listDomains (req, res, next) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.listDomains()
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.listDomains()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -168,16 +168,16 @@ module.exports.listDomains = function listDomains(req, res, next) {
  * Add a black listed domains.
  * @public
  */
-module.exports.addDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.addDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.addDomain(name)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.addDomain(name)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -185,16 +185,16 @@ module.exports.addDomain = function listDomains(req, res, next, name) {
  * Delete a black listed domains.
  * @public
  */
-module.exports.deleteDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.deleteDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.deleteDomain(name)
-        .then(function(payload) {
-            utils.writeText(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeText(res, payload.msg, payload.code);
-        });
+  UsersService.deleteDomain(name)
+    .then(function (payload) {
+      utils.writeText(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeText(res, payload.msg, payload.code);
+    });
 };
 
 /**
@@ -202,40 +202,22 @@ module.exports.deleteDomain = function listDomains(req, res, next, name) {
  * List all black listed domains.
  * @public
  */
-module.exports.checkDomain = function listDomains(req, res, next, name) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.checkDomain = function listDomains (req, res, next, name) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.checkDomain(name)
-        .then(function(payload) {
-            if (null == payload) {
-                utils.writeJson(res, {
-                    message: 'Not found'
-                }, 404);
-            } else {
-                utils.writeJson(res, payload, 200);
-            }
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
-};
-
-
-/**
- * @method
- * List all packages and variations.
- * @public
- */
-module.exports.createUser = function createUser(req, res, next, user) {
-    eventEmitter.emit(EVENTNAME, req);
-
-    UsersService.createUser(user)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  UsersService.checkDomain(name)
+    .then(function (payload) {
+      if (payload == null) {
+        utils.writeJson(res, {
+          message: 'Not found'
+        }, 404);
+      } else {
+        utils.writeJson(res, payload, 200);
+      }
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -243,16 +225,16 @@ module.exports.createUser = function createUser(req, res, next, user) {
  * List all packages and variations.
  * @public
  */
-module.exports.searchPackages = function searchPackages(req, res, next, jsearch) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.createUser = function createUser (req, res, next, user) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    PackagesService.searchPackages(jsearch)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeText(res, payload.msg, payload.code);
-        });
+  UsersService.createUser(user)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -260,16 +242,33 @@ module.exports.searchPackages = function searchPackages(req, res, next, jsearch)
  * List all packages and variations.
  * @public
  */
-module.exports.patchUser = function patchUser(req, res, next, jpatch, id) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.searchPackages = function searchPackages (req, res, next, jsearch) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    UsersService.patchUser(id, jpatch)
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  PackagesService.searchPackages(jsearch)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeText(res, payload.msg, payload.code);
+    });
+};
+
+/**
+ * @method
+ * List all packages and variations.
+ * @public
+ */
+module.exports.patchUser = function patchUser (req, res, next, jpatch, id) {
+  eventEmitter.emit(EVENTNAME, req);
+
+  UsersService.patchUser(id, jpatch)
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };
 
 /**
@@ -277,16 +276,16 @@ module.exports.patchUser = function patchUser(req, res, next, jpatch, id) {
  * Delete package with given package data. Permission required.
  * @public
  */
-module.exports.deletePackage = function deletePackage(req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.deletePackage = function deletePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    PackagesService.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
-        .then(function(payload) {
-            utils.writeText(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeText(res, payload.msg, payload.code);
-        });
+  PackagesService.deletePackage(packageName, packageVersion, packageArch, packageFamily, packageHash)
+    .then(function (payload) {
+      utils.writeText(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeText(res, payload.msg, payload.code);
+    });
 };
 
 /**
@@ -294,57 +293,56 @@ module.exports.deletePackage = function deletePackage(req, res, next, packageNam
  * Delete package with given package id. Permission required.
  * @public
  */
-module.exports.deletePackageById = function deletePackageById(req, res, next, id) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.deletePackageById = function deletePackageById (req, res, next, id) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    PackagesService.deletePackageById(id)
-        .then(function(payload) {
-            utils.writeText(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeText(res, payload.msg, payload.code);
-        });
+  PackagesService.deletePackageById(id)
+    .then(function (payload) {
+      utils.writeText(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeText(res, payload.msg, payload.code);
+    });
 };
-
 
 /**
  * @method
  * Get all version names.
  * @public
  */
-module.exports.getVersions = function getVersions(req, res, next) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.getVersions = function getVersions (req, res, next) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    var jdata = process.versions;
-    var json = require('../package.json');
-    var gitrevFilename = path.join(__dirname, '../.gitrevision');
-    var gitrevision = "";
-    var nginxversion = "";
+  const jdata = process.versions;
+  const json = require('../package.json');
+  const gitrevFilename = path.join(__dirname, '../.gitrevision');
+  let gitrevision = '';
+  let nginxversion = '';
 
-    try {
-        fs.accessSync(gitrevFilename, fs.constants.R_OK);
-        gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
-    } catch (err) {
-        logger.error("gitrevision file not found at: " + gitrevFilename);
-    }
+  try {
+    fs.accessSync(gitrevFilename, fs.constants.R_OK);
+    gitrevision = fs.readFileSync(gitrevFilename, 'utf8');
+  } catch (err) {
+    logger.error('gitrevision file not found at: ' + gitrevFilename);
+  }
 
-    (async () => {
-        nginxversion = await exec('/usr/sbin/nginx -v');
-        nginxversion = nginxversion.stderr.trim();
-        let re = /.+nginx\/(.+)/;
-        let match = re.exec(nginxversion);
-        jdata.nginx = match[1];
-    })();
+  (async () => {
+    nginxversion = await exec('/usr/sbin/nginx -v');
+    nginxversion = nginxversion.stderr.trim();
+    const re = /.+nginx\/(.+)/;
+    const match = re.exec(nginxversion);
+    jdata.nginx = match[1];
+  })();
 
-    jdata.bintra = json.version;
-    jdata.gitrevision = gitrevision.trim();
+  jdata.bintra = json.version;
+  jdata.gitrevision = gitrevision.trim();
 
-    var payload = JSON.stringify(jdata);
-    res.writeHead(200, {
-        "Content-Type": "application/json"
-    });
+  const payload = JSON.stringify(jdata);
+  res.writeHead(200, {
+    'Content-Type': 'application/json'
+  });
 
-    return res.end(payload);
+  return res.end(payload);
 };
 
 /**
@@ -352,14 +350,14 @@ module.exports.getVersions = function getVersions(req, res, next) {
  * Get count per creator.
  * @public
  **/
-module.exports.getCountPerCreator = function getVersions(req, res, next) {
-    eventEmitter.emit(EVENTNAME, req);
+module.exports.getCountPerCreator = function getVersions (req, res, next) {
+  eventEmitter.emit(EVENTNAME, req);
 
-    PackagesService.countPerCreator()
-        .then(function(payload) {
-            utils.writeJson(res, payload, 200);
-        })
-        .catch(function(payload) {
-            utils.writeJson(res, payload, 400);
-        });
+  PackagesService.countPerCreator()
+    .then(function (payload) {
+      utils.writeJson(res, payload, 200);
+    })
+    .catch(function (payload) {
+      utils.writeJson(res, payload, 400);
+    });
 };

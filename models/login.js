@@ -1,48 +1,47 @@
 // models/login.js
 
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Schema = mongoose.Schema;
-
-var LoginSchema = new Schema({
-    tscreated: {
-        type: Date,
-        default: Date.now
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: false
-    },
-    passwd: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ['user', 'admin', 'api'],
-        required: true,
-        default: 'user'
-    },
-    status: {
-        type: String,
-        enum: ['register', 'active', 'disabled', 'deleted'],
-        required: true,
-        default: 'disabled'
-    }
+const LoginSchema = new Schema({
+  tscreated: {
+    type: Date,
+    default: Date.now
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: false
+  },
+  passwd: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin', 'api'],
+    required: true,
+    default: 'user'
+  },
+  status: {
+    type: String,
+    enum: ['register', 'active', 'disabled', 'deleted'],
+    required: true,
+    default: 'disabled'
+  }
 });
 
 LoginSchema.index({
-    name: 1
+  name: 1
 }, {
-    unique: true
+  unique: true
 });
 LoginSchema.index({
-    tscreated: 1
+  tscreated: 1
 });
 
 module.exports = mongoose.model('LoginModel', LoginSchema);

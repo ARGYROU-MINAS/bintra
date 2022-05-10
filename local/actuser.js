@@ -1,21 +1,20 @@
 const c = require('./common.js');
 
-var username = c.cmdArgs[0];
-console.log("Disable user name=" + username);
+const username = c.cmdArgs[0];
+console.log('Disable user name=' + username);
 
-c.doconnect().then(function(db) {
-	c.setUserStatus(username, "active")
-		.then(function(payload) {
-			console.log("Did update");
-			process.exit(0);
-		})
-		.catch(function(payload) {
-			console.error("Had error");
-			process.exit(1);
-		})
+c.doconnect().then(function (db) {
+  c.setUserStatus(username, 'active')
+    .then(function (payload) {
+      console.log('Did update');
+      process.exit(0);
+    })
+    .catch(function (payload) {
+      console.error('Had error');
+      process.exit(1);
+    })
 })
-.catch(function(err) {
-	console.error("connect error " + err);
-	process.exit(1);
-});
-
+  .catch(function (err) {
+    console.error('connect error ' + err);
+    process.exit(1);
+  });

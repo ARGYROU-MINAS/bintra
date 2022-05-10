@@ -14,9 +14,9 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["./**/*.js"],
+      files: ['./**/*.js'],
       rules: {
-        "semi": "off"
+        semi: 'off'
       }
     }
   ]
