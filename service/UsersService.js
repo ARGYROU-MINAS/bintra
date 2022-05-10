@@ -94,7 +94,7 @@ exports.deleteDomain = function (domainname) {
       .then(item => {
         if (item.deletedCount !== 1) {
           logger.error('not found, not deleted');
-          let e = new Error('not found');
+          const e = new Error('not found');
           e.code = 404;
           e.msg = 'not found';
           reject(e);
@@ -207,7 +207,7 @@ function checkGetUserStatus (resolve, reject, query) {
       if (item.length > 0) {
         resolve(item[0]);
       } else {
-        let e = new Error('not found');
+        const e = new Error('not found');
         e.code = 404;
         e.msg = 'not found';
         reject(e);
@@ -282,7 +282,7 @@ exports.patchUser = function (idUser, jpatch) {
           patchedUser.save();
           resolve(patchedUser);
         } else {
-          let e = new Error('not found');
+          const e = new Error('not found');
           e.code = 404;
           e.msg = 'not found';
           reject(e);
@@ -333,7 +333,7 @@ exports.deleteUser = function (idUser) {
               reject(err);
             });
         } else {
-          let e = new Error('not found');
+          const e = new Error('not found');
           e.code = 404;
           e.msg = 'not found';
           reject(e);
@@ -366,7 +366,7 @@ exports.createUser = function (user) {
       .then(item => {
         if (item.length === 1) {
           logger.error('Domain black listed: ' + domain);
-          let e = new Error('not that domain');
+          const e = new Error('not that domain');
           e.code = 400;
           e.msg = 'not that domain';
           reject(e);

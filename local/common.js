@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
 const {
-  mongoHost,
-  mongoPort,
-  mongoDb,
   mongoUrl,
   saltRounds
 } = require('../conf');

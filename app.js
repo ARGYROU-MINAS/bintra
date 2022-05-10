@@ -102,7 +102,6 @@ const YAML = require('yamljs');
 
 const pfilter = require('./controllers/pfilter');
 
-const emitter = require('events').EventEmitter;
 const eventEmitter = require('./utils/eventer').em;
 eventEmitter.setMaxListeners(0); // temp solution somehow
 require('./subscribers/matomo');
@@ -113,12 +112,7 @@ require('./subscribers/prometheus.js');
 const myworker = require('./worker/worker');
 
 // Connect to mongo DB
-const {
-  mongoHost,
-  mongoPort,
-  mongoDb,
-  mongoUrl
-} = require('./conf');
+const mongoUrl = require('./conf').mongoUrl;
 logger.debug('DB used: ' + mongoUrl);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));

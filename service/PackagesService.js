@@ -7,7 +7,6 @@
  * @author Kai KRETSCHMANN <kai@kretschmann.consulting>
  */
 
-const fs = require('fs');
 require('datejs');
 const PackageModel = require('../models/package.js');
 const LoginModel = require('../models/login.js');
@@ -480,7 +479,7 @@ exports.searchPackages = function (jsearch) {
       .then(item => {
         if (item.length === 0) {
           logger.error('XXX No item found');
-          let e = new Error('not found');
+          const e = new Error('not found');
           e.msg = 'Not found';
           e.code = 404;
           reject(e);
