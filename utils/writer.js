@@ -1,7 +1,7 @@
 const ResponsePayload = function (code, payload) {
   this.code = code;
   this.payload = payload;
-}
+};
 
 function setHeaders (response) {
   response.setHeader('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
@@ -11,23 +11,23 @@ function setHeaders (response) {
 
 exports.respondWithCode = function (code, payload) {
   return new ResponsePayload(code, payload);
-}
+};
 
-const writeText = exports.writeText = function (response, payload, code) {
+exports.writeText = function (response, payload, code) {
   setHeaders(response);
   response.writeHead(code, {
     'Content-Type': 'text/plain; charset=utf-8'
   });
   response.end(payload);
-}
+};
 
-var writeJson = exports.writeJson = function (response, arg1, arg2) {
+exports.writeJson = function (response, arg1, arg2) {
   let code;
   let payload;
 
   if (arg1 && arg1 instanceof ResponsePayload) {
-    writeJson(response, arg1.payload, arg1.code);
-    return;
+    arg2 = arg1.code
+    arg1 = arg1.payload;
   }
 
   if (arg2 && Number.isInteger(arg2)) {
@@ -62,4 +62,4 @@ var writeJson = exports.writeJson = function (response, arg1, arg2) {
     });
   }
   response.end(payload);
-}
+};
