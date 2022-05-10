@@ -13,7 +13,6 @@ require("datejs");
 var jsonpatch = require('json-patch');
 var PackageModel = require('../models/package.js');
 var LoginModel = require('../models/login.js');
-const bcrypt = require('bcrypt');
 
 var eventEmitter = require('../utils/eventer').em;
 
@@ -206,7 +205,7 @@ exports.validatePackage = function(packageName, packageVersion, packageArch, pac
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -249,7 +248,7 @@ exports.listPackage = function(packageName, packageVersion, packageArch, package
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -286,10 +285,10 @@ exports.listPackageSingle = function(packageId) {
                 }
             })
             .catch(err => {
-		replyWithError(reject, err);
+		        replyWithError(reject, err);
             });
     });
-}
+};
 
 /**
  * @method
@@ -336,7 +335,7 @@ exports.listPackages = function(skip, count, sort, direction, age) {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -389,7 +388,7 @@ exports.listPagePackages = function(page, size, sorters, filter) {
                 });
         });
     });
-}
+};
 
 /**
  * @method
@@ -416,7 +415,7 @@ exports.listPackagesFull = function(count) {
                 reject("bahh");
             });
     });
-}
+};
 
 function optionalWildcard(searchvalue) {
     if (searchvalue.endsWith("*")) {
@@ -492,10 +491,10 @@ exports.searchPackages = function(jsearch) {
                 }
             })
             .catch(err => {
-		replyWithError(reject, err);
+		        replyWithError(reject, err);
             });
     });
-}
+};
 
 function checkDeleteStatus(resolve, reject, query) {
     PackageModel.deleteOne(query)
@@ -511,7 +510,7 @@ function checkDeleteStatus(resolve, reject, query) {
             }
         })
         .catch(err => {
-	    replyWithError(reject, err);
+	        replyWithError(reject, err);
         });
 }
 
@@ -539,7 +538,7 @@ exports.deletePackage = function(packageName, packageVersion, packageArch, packa
         };
         checkDeleteStatus(resolve, reject, query);
     });
-}
+};
 
 /**
  * @method
@@ -556,7 +555,7 @@ exports.deletePackageById = function(packageId) {
             _id: packageId
         });
     });
-}
+};
 
 /**
  * @method
@@ -577,7 +576,7 @@ exports.countPackage = function() {
             resolve(examples[Object.keys(examples)[0]]);
         });
     });
-}
+};
 
 /**
  * @method
@@ -591,18 +590,17 @@ exports.summaryArch = function() {
         logger.info("In summaryArch service");
 
         PackageModel.aggregate( [
-  {
-    $group: {
-       _id: "$arch",
-       count: { $sum: 1 }
-    }
-  }
-] 
-		    , function(err, answer) {
-            replyWithSummary(resolve, answer);
-        });
+            {
+                $group: {
+                    _id: "$arch",
+                    count: { $sum: 1 }
+                }
+            }
+            ], function(err, answer) {
+                replyWithSummary(resolve, answer);
+            });
     });
-}
+};
 
 /**
  * @method
@@ -616,18 +614,17 @@ exports.summaryFamily = function() {
         logger.info("In summaryFamily service");
 
         PackageModel.aggregate( [
-  {
-    $group: {
-       _id: "$family",
-       count: { $sum: 1 }
-    }
-  }
-]
-                    , function(err, answer) {
-            replyWithSummary(resolve, answer);
-        });
+            {
+                $group: {
+                    _id: "$family",
+                    count: { $sum: 1 }
+                }
+            }
+            ], function(err, answer) {
+                replyWithSummary(resolve, answer);
+            });
     });
-}
+};
 
 /**
  * @method
@@ -646,5 +643,4 @@ exports.countPerCreator = function() {
             replyWithSummary(resolve, answer);
         });
     });
-}
-
+};

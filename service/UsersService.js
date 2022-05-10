@@ -8,7 +8,6 @@
  */
 
 var fs = require('fs');
-const cdigit = require("cdigit");
 require("datejs");
 var jsonpatch = require('json-patch');
 var LoginModel = require('../models/login.js');
@@ -22,8 +21,6 @@ const {
     mongoUrl,
     saltRounds
 } = require('../conf');
-
-var eventEmitter = require('../utils/eventer').em;
 
 const log4js = require("log4js");
 const logger = log4js.getLogger();
@@ -50,7 +47,7 @@ exports.listDomains = function() {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -79,7 +76,7 @@ exports.addDomain = function(domainname) {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -115,7 +112,7 @@ exports.deleteDomain = function(domainname) {
                 });
             });
     });
-}
+};
 
 /**
  * @method
@@ -144,7 +141,7 @@ exports.checkDomain = function(domainname) {
                 reject("bahh");
             });
     });
-}
+};
 
 
 /**
@@ -173,7 +170,7 @@ exports.listUsers = function() {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -202,7 +199,7 @@ exports.putUserStatus = function(id, newStatus) {
                 reject("bahh");
             });
     });
-}
+};
 
 function checkGetUserStatus(resolve, reject, query) {
     LoginModel.find(query, {
@@ -241,7 +238,7 @@ exports.listUser = function(idUser) {
             _id: idUser
         });
     });
-}
+};
 
 /**
  * @method
@@ -259,7 +256,7 @@ exports.getUser = function(name) {
             name: name
         });
     });
-}
+};
 
 
 /**
@@ -299,7 +296,7 @@ exports.patchUser = function(idUser, jpatch) {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -347,7 +344,7 @@ exports.deleteUser = function(idUser) {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -399,7 +396,7 @@ exports.createUser = function(user) {
             });
 
     });
-}
+};
 
 /**
  * @method
@@ -445,7 +442,7 @@ exports.checkUser = function(name, passwd) {
                 reject("bahh");
             });
     });
-}
+};
 
 /**
  * @method
@@ -477,7 +474,7 @@ exports.isActiveUser = function(uname) {
                 reject(false);
             });
     });
-}
+};
 
 /**
  * @method
@@ -515,7 +512,7 @@ exports.hasRole = function(uname, aRoles) {
                 reject(false);
             });
     });
-}
+};
 
 /**
  * @method
@@ -554,4 +551,4 @@ exports.isActiveHasRole = function(uname, aRoles) {
                 reject(false);
             });
     });
-}
+};

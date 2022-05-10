@@ -14,7 +14,7 @@ const connectionDetails = {
 	host: process.env.REDIS_HOSTNAME || "127.0.0.1",
 	password: null,
 	port: process.env.REDIS_PORT || 6379,
-	database: 0,
+	database: 0
 };
 
 
@@ -48,5 +48,4 @@ exports.listQueues = function() {
 				});
 		});
 	});
-}
-
+};
