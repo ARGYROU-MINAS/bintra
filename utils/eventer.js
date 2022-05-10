@@ -1,5 +1,5 @@
-const emitter = require('events').EventEmitter;
-const eventEmitter = new emitter();
+const Emitter = require('events').EventEmitter;
+const eventEmitter = new Emitter();
 
 module.exports = {
   em: eventEmitter

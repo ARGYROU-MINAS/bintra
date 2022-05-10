@@ -1,9 +1,5 @@
 'use strict';
 
-const LoginModel = require('../models/login.js');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 const UsersService = require('../service/UsersService');
 
 const jwt = require('jsonwebtoken');
@@ -18,8 +14,8 @@ logger.level = process.env.LOGLEVEL || 'warn';
 exports.verifyToken = async function (req, scopes, schema) {
   logger.info('In verifyToken');
 
-  const current_req_scopes = req.openapi.schema['x-security-scopes']
-  logger.info(current_req_scopes);
+  const currentReqScopes = req.openapi.schema['x-security-scopes']
+  logger.info(currentReqScopes);
   logger.info(schema);
   const token = req.headers.authorization;
 
@@ -27,7 +23,7 @@ exports.verifyToken = async function (req, scopes, schema) {
 
   // validate the 'Authorization' header. it should have the following format:
   // 'Bearer tokenString'
-  if (token && token.indexOf('Bearer ') == 0) {
+  if (token && token.indexOf('Bearer ') === 0) {
     const tokenString = token.split(' ')[1];
     let decodedToken = '';
 
@@ -39,7 +35,7 @@ exports.verifyToken = async function (req, scopes, schema) {
       req.sentry.setUser({ ip_address: req.ip });
       req.sentry.setContext('JWT', {
         msg: err.message
-	    });
+      });
       req.sentry.captureException(err);
       throw (err);
     }
@@ -56,7 +52,7 @@ exports.verifyToken = async function (req, scopes, schema) {
       logger.info('User has role ' + decodedToken.role + ' in JWT');
 
       // check if the issuer matches
-      const issuerMatch = decodedToken.iss == issuer;
+      const issuerMatch = decodedToken.iss === issuer;
       if (!issuerMatch) {
         logger.error("issuer doesn't match");
         return false;
@@ -64,7 +60,7 @@ exports.verifyToken = async function (req, scopes, schema) {
 
       // Check if users role matches api precondition, will return if OK, otherwise jump out
       logger.debug('Check active users role matching API requirements');
-      await UsersService.isActiveHasRole(decodedToken.sub, current_req_scopes);
+      await UsersService.isActiveHasRole(decodedToken.sub, currentReqScopes);
 
       req.auth = decodedToken;
       logger.debug('Added AUTH to request object');

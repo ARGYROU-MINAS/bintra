@@ -1,6 +1,5 @@
 // subscribers
 
-const emitter = require('events').EventEmitter;
 const eventEmitter = require('../utils/eventer').em;
 
 const log4js = require('log4js');

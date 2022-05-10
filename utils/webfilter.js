@@ -6,12 +6,12 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 logger.level = process.env.LOGLEVEL || 'warn';
 
-const p_env = /\.env/g;
-const p_php = /\.php/g;
-const p_git = /\.git/g;
-const p_wp = /wp-(admin|content|login)/g;
+const pEnv = /\.env/g;
+const pPhp = /\.php/g;
+const pGit = /\.git/g;
+const pWp = /wp-(admin|content|login)/g;
 
-const webFilterOK = exports.webFilterOK = function (req) {
+exports.webFilterOK = function (req) {
   let u = req.originalUrl;
   if (u.indexOf('?') > -1) {
     logger.debug('Had to split argument off');
@@ -20,10 +20,10 @@ const webFilterOK = exports.webFilterOK = function (req) {
   logger.debug(u);
 
   if (u.startsWith('//')) return false;
-  if (u.search(p_env) > -1) return false;
-  if (u.search(p_php) > -1) return false;
-  if (u.search(p_git) > -1) return false;
-  if (u.search(p_wp) > -1) return false;
+  if (u.search(pEnv) > -1) return false;
+  if (u.search(pPhp) > -1) return false;
+  if (u.search(pGit) > -1) return false;
+  if (u.search(pWp) > -1) return false;
 
   logger.debug('Query was clean');
   return true;

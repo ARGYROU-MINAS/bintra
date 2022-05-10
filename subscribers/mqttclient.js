@@ -1,6 +1,5 @@
 // subscribers
 
-const emitter = require('events').EventEmitter;
 const eventEmitter = require('../utils/eventer').em;
 const os = require('os');
 const mqtt = require('mqtt');
@@ -22,7 +21,7 @@ if (typeof process.env.MQTT_HOSTNAME === 'undefined' || process.env.MQTT_HOSTNAM
     clientId: 'bintraService' + os.hostname()
   };
 
-  if (process.env.MQTT_USERNAME != '') {
+  if (process.env.MQTT_USERNAME !== '') {
     mqttOptions.username = process.env.MQTT_USERNAME;
     mqttOptions.password = process.env.MQTT_PASSWORD;
     logger.info('MQTT using login ' + mqttOptions.username);

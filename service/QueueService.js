@@ -1,8 +1,5 @@
 'use strict';
 
-const Worker = require('node-resque').Worker;
-const Plugins = require('node-resque').Plugins;
-const Scheduler = require('node-resque').Scheduler;
 const Queue = require('node-resque').Queue;
 
 const log4js = require('log4js');
@@ -43,7 +40,7 @@ exports.listQueues = function () {
         })
         .catch(err => {
           logger.error('Not OK: ', err);
-          reject('bahh');
+          reject(err);
         });
     });
   });

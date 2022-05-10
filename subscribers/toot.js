@@ -1,6 +1,5 @@
 // subscribers
 
-const emitter = require('events').EventEmitter;
 const eventEmitter = require('../utils/eventer').em;
 
 const log4js = require('log4js');
@@ -10,7 +9,7 @@ logger.level = process.env.LOGLEVEL || 'warn';
 const myworker = require('../worker/worker');
 
 eventEmitter.on('putdata', function getPutDataHit (packageName, packageVersion, packageArch, packageFamily, packageHash, isnew) {
-  if (process.env.TOOTAUTH == 'XXX') return;
+  if (process.env.TOOTAUTH === 'XXX') return;
   logger.debug('In toot subscriber');
 
   let t;
