@@ -11,5 +11,13 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-  }
+  },
+  overrides: [
+    {
+      files: ["./**/*.js"],
+      rules: {
+        "semi": "off"
+      }
+    }
+  ]
 }
