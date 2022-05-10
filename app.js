@@ -155,12 +155,14 @@ app.use(function(req, res, next) {
 	Sentry.setUser({
 		ip_address: req.ip
 	});
-	Sentry.setContext("GeoIP", {
-		country: req.headers['geoip-country-code'],
-		city: req.headers['geoip-city-name'],
-		zip: req.headers['geoip-zip'],
-		statecode: req.headers['geoip-state-code']
-	});
+	if(typeof req.headers['geoip-country-code'] !== 'undefined') {
+		Sentry.setContext("GeoIP", {
+			country: req.headers['geoip-country-code'],
+			city: req.headers['geoip-city-name'],
+			zip: req.headers['geoip-zip'],
+			statecode: req.headers['geoip-state-code']
+		});
+	} // if
 	req.sentry = Sentry;
 	next();
 });
@@ -277,9 +279,10 @@ var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/swag
 /**
  * Start the server
  */
+logger.info("MaxSockets: " + http.globalAgent.maxSockets);
 var serverPort = process.env.BIND_PORT;
 var serverHost = process.env.BIND_HOST;
-logger.info("Bind to %s : %d", serverHost, serverPort);
+logger.info("Bind to %s:%d", serverHost, serverPort);
 var server = http.createServer(app).listen(serverPort, serverHost, function() {
 	logger.info('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
 	logger.info('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
