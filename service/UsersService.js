@@ -94,20 +94,17 @@ exports.deleteDomain = function (domainname) {
       .then(item => {
         if (item.deletedCount !== 1) {
           logger.error('not found, not deleted');
-          reject(Error({
-            code: 404,
-            msg: 'not found'
-          }));
+          let e = new Error('not found');
+          e.code = 404;
+          e.msg = 'not found';
+          reject(e);
         } else {
           resolve('OK');
         }
       })
       .catch(err => {
         logger.error('Not OK: ', err);
-        reject(Error({
-          code: 400,
-          msg: 'bahh'
-        }));
+        reject(err);
       });
   });
 };
@@ -210,7 +207,10 @@ function checkGetUserStatus (resolve, reject, query) {
       if (item.length > 0) {
         resolve(item[0]);
       } else {
-        reject(Error('not found'));
+        let e = new Error('not found');
+        e.code = 404;
+        e.msg = 'not found';
+        reject(e);
       }
     })
     .catch(err => {
@@ -249,9 +249,7 @@ exports.getUser = function (name) {
   return new Promise(function (resolve, reject) {
     logger.info('In get user service');
 
-    checkGetUserStatus(resolve, reject, {
-      name
-    });
+    checkGetUserStatus(resolve, reject, { name });
   });
 };
 
@@ -284,7 +282,10 @@ exports.patchUser = function (idUser, jpatch) {
           patchedUser.save();
           resolve(patchedUser);
         } else {
-          reject(Error('not found'));
+          let e = new Error('not found');
+          e.code = 404;
+          e.msg = 'not found';
+          reject(e);
         }
       })
       .catch(err => {
@@ -332,7 +333,10 @@ exports.deleteUser = function (idUser) {
               reject(err);
             });
         } else {
-          reject(Error('not found'));
+          let e = new Error('not found');
+          e.code = 404;
+          e.msg = 'not found';
+          reject(e);
         }
       })
       .catch(err => {
@@ -362,7 +366,10 @@ exports.createUser = function (user) {
       .then(item => {
         if (item.length === 1) {
           logger.error('Domain black listed: ' + domain);
-          reject(Error('not that domain'));
+          let e = new Error('not that domain');
+          e.code = 400;
+          e.msg = 'not that domain';
+          reject(e);
         } else {
           const tsnow = new Date();
           bcrypt.hash(user.password, saltRounds, function (err, hash) {
