@@ -19,5 +19,18 @@ module.exports = {
         semi: 'off'
       }
     }
+  ],
+  ignorePatterns: [
+    'node_modules/',
+    'myoas/',
+    'static/',
+    'workflows/',
+    'mochawesome-report/',
+    'pub_mkdocs/',
+    'out/',
+    'documentation/',
+    'bintra-*/',
+    'test/',
+    'testutils/'
   ]
 }
