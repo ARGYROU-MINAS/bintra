@@ -53,7 +53,7 @@
     "log4js": "^6.4.6",
     "mastodon": "^1.2.2",
     "matomo-tracker": "^2.2.4",
-    "mongodb": "^4.5.0",
+    "mongodb": "^4.6.0",
     "mongoose": "^6.3.3",
     "mqtt": "^4.3.7",
     "node-resque": "^9.1.7",
