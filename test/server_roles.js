@@ -23,6 +23,15 @@ chai.use(chaiHttp);
 var tokenUser = "";
 var tokenAdmin = "";
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('server roles', () => {
     captureLogs();
 

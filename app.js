@@ -25,6 +25,7 @@ const auth = require('./utils/auth');
 const webFilterOK = require('./utils/webfilter').webFilterOK;
 const express = require('express');
 const app = express();
+app.didStart = false;
 
 /* add BEHINDPROXY=uniquelocal to .env for private IP detection of proxy */
 const behindProxy = process.env.BEHINDPROXY || '';
@@ -273,6 +274,8 @@ logger.info('Bind to %s:%d', serverHost, serverPort);
 const server = http.createServer(app).listen(serverPort, serverHost, function () {
   logger.info('Your server is listening on port %d (http://%s:%d)', serverPort, serverHost, serverPort);
   logger.info('Swagger-ui is available on http://%s:%d/docs', serverHost, serverPort);
+  app.emit('appStarted');
+  app.didStart = true;
 });
 
 async function workerStop () {

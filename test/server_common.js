@@ -31,6 +31,15 @@ function sleep(ms) {
   });
 }
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('server', () => {
     captureLogs();
 
@@ -117,6 +126,10 @@ describe('server', () => {
             request(server)
                 .get('/v1/test')
                 .end((err, res) => {
+		    if(err) {
+			    logger.error(err);
+			    done(err);
+		    }
                     res.should.have.status(200);
                     res.body.should.have.property('message', 'you called default');
                     done();

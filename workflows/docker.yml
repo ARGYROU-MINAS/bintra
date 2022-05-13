@@ -3,7 +3,7 @@
 
 .myglobals:
   tags:
-    - docker
+    - $RUNNERTAG
 
 dodocker:
   stage: build

@@ -11,7 +11,7 @@ stages:
 .myglobals:
   interruptible: true
   tags:
-    - docker
+    - $RUNNERTAG
 
 .sourcechanged:
   rules:

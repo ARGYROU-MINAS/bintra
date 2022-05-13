@@ -48,6 +48,15 @@ function getUserObject(username) {
 	});
 }
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('server', () => {
 	captureLogs();
 
