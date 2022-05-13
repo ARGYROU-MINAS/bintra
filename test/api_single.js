@@ -25,6 +25,15 @@ const UsersService = require('../service/UsersService.js');
 
 var JWT;
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('User stuff', function() {
     captureLogs();
 
