@@ -23,6 +23,15 @@ chai.use(chaiHttp);
 
 var packageid = "";
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('PFilter server tests', function() {
     captureLogs();
 

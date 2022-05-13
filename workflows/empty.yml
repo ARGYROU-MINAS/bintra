@@ -2,7 +2,7 @@ dummy:
   stage: build
   interruptible: true
   tags:
-    - docker
+    - $RUNNERTAG
   image: node:16
   script:
     - echo "Dummy step"

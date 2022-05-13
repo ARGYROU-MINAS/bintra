@@ -39,6 +39,15 @@ const pHash = '44e978970ac5a511d4ba83364a76d81041ccd71129e57cdd8384cd460ff9bd35'
 
 const dName = 'example.xyz';
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('PFilter put server tests', function() {
     captureLogs();
 
@@ -98,7 +107,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+			logger.error(err);
+			done(err);
+		    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     reply.should.have.lengthOf.above(0);
                     done();
@@ -111,7 +125,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     idUser = reply._id;
                     logger.info("Bob user id=" + idUser);
@@ -136,7 +155,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     done();
                 });
@@ -151,7 +175,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     done();
                 });
@@ -168,7 +197,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     done();
                 });
@@ -180,7 +214,12 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
+		    res.should.be.json;
                     var reply = res.body;
                     done();
                 });
@@ -195,6 +234,10 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
                     var reply = res.body;
                     reply.should.have.lengthOf(0);
@@ -222,6 +265,10 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
                     var reply = res.body[0];
                     done();
@@ -234,6 +281,10 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
                     done();
                 });
@@ -248,6 +299,10 @@ describe('PFilter put server tests', function() {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+		    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
                     done();
                 });
@@ -273,5 +328,6 @@ describe('PFilter put server tests', function() {
         await LoginModel.deleteMany({
             name: 'max'
         });
+	await DomainModel.deleteMany({});
     });
 });

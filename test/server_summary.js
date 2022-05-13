@@ -45,6 +45,15 @@ function getUserObject(username) {
     });
 }
 
+before(function (done) {
+    logger.warn('Wait for app server start');
+    if(server.didStart) done();
+    server.on("appStarted", function() {
+        logger.info('app server started');
+        done();
+    });
+});
+
 describe('server', () => {
 	captureLogs();
 
@@ -101,7 +110,12 @@ describe('server', () => {
 			request(server)
 				.get('/v1/summary/arch')
 				.end((err, res) => {
+					if(err) {
+						logger.error(err);
+						done(err);
+					}
 					res.should.have.status(200);
+					res.should.be.json;
 					res.body.should.have.property('summary');
 					done();
 				});
@@ -111,8 +125,13 @@ describe('server', () => {
 			request(server)
 				.get('/v1/summary/family')
 				.end((err, res) => {
+					if(err) {
+						logger.error(err);
+						done(err);
+					}
 					logger.info("did get reply");
 					res.should.have.status(200);
+					res.should.be.json;
 					res.body.should.have.property('summary');
 					done();
 				});

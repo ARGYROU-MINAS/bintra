@@ -1,0 +1,4 @@
+parallel: false
+retries: 2
+exit: true
+timeout: 10000
