@@ -50,7 +50,7 @@
     "js-yaml": "^4.1.0",
     "json-patch": "^0.7.0",
     "jsonwebtoken": "^8.5.1",
-    "log4js": "^6.4.6",
+    "log4js": "^6.4.7",
     "mastodon": "^1.2.2",
     "matomo-tracker": "^2.2.4",
     "mongodb": "^4.6.0",
