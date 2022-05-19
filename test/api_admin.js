@@ -3,75 +3,75 @@
  * @see DDATA-functional-API-numbers
  */
 
-var chai = require('chai');
-var expect = chai.expect;
-var chaiAsPromised = require('chai-as-promised');
+const chai = require('chai');
+const expect = chai.expect;
+const chaiAsPromised = require('chai-as-promised');
 
 const captureLogs = require('../testutils/capture-logs');
 
 chai.use(chaiAsPromised);
 chai.use(require('chai-json-schema'));
 
-var PackageModel = require('../models/package.js');
-var LoginModel = require('../models/login.js');
+const PackageModel = require('../models/package.js');
+const LoginModel = require('../models/login.js');
 
 const PackagesService = require('../service/PackagesService.js');
 
-const log4js = require("log4js");
+const log4js = require('log4js');
 const logger = log4js.getLogger();
-logger.level = process.env.LOGLEVEL || "warn";
+logger.level = process.env.LOGLEVEL || 'warn';
 
-describe('admin only functions', function() {
-    captureLogs();
+describe('admin only functions', function () {
+  captureLogs();
 
-    context('[BINTRA-14] delete package by id', function() {
-        before(async () => {
-            await PackageModel.deleteMany({});
-            var tsnow = new Date();
-            var packageNew = new PackageModel({
-                name: 'theName',
-                version: 'theVersion',
-                arch: 'theArchitecture',
-                family: 'theFamily',
-                hash: 'theHash',
-                tscreated: tsnow,
-                tsupdated: tsnow
-            });
-            await packageNew.save();
-        });
-        it('[STEP-1] should have one reply', async () => {
-            var result = await PackagesService.listPackagesFull();
-            var theID = result[0]._id;
-            logger.info("ID=" + theID);
-            await PackagesService.deletePackageById(theID);
-            result = await PackagesService.listPackagesFull();
-            return expect(result).to.have.length(0);
-        });
+  context('[BINTRA-14] delete package by id', function () {
+    before(async () => {
+      await PackageModel.deleteMany({});
+      const tsnow = new Date();
+      const packageNew = new PackageModel({
+        name: 'theName',
+        version: 'theVersion',
+        arch: 'theArchitecture',
+        family: 'theFamily',
+        hash: 'theHash',
+        tscreated: tsnow,
+        tsupdated: tsnow
+      });
+      await packageNew.save();
     });
-
-    context('[BINTRA-15] get full package info', function() {
-        before(async () => {
-            await PackageModel.deleteMany({});
-            var tsnow = new Date();
-            var packageNew = new PackageModel({
-                name: 'theName',
-                version: 'theVersion',
-                arch: 'theArchitecture',
-                family: 'theFamily',
-                hash: 'theHash',
-                tscreated: tsnow,
-                tsupdated: tsnow
-            });
-            await packageNew.save();
-        });
-        it('[STEP-1] packagesFull', async () => {
-            var result = await PackagesService.listPackagesFull(111);
-            return expect(result).to.have.length(1);
-        });
+    it('[STEP-1] should have one reply', async () => {
+      let result = await PackagesService.listPackagesFull();
+      const theID = result[0]._id;
+      logger.info('ID=' + theID);
+      await PackagesService.deletePackageById(theID);
+      result = await PackagesService.listPackagesFull();
+      return expect(result).to.have.length(0);
     });
+  });
 
-    after(async () => {
-        logger.info("after run");
-        await PackageModel.deleteMany({});
+  context('[BINTRA-15] get full package info', function () {
+    before(async () => {
+      await PackageModel.deleteMany({});
+      const tsnow = new Date();
+      const packageNew = new PackageModel({
+        name: 'theName',
+        version: 'theVersion',
+        arch: 'theArchitecture',
+        family: 'theFamily',
+        hash: 'theHash',
+        tscreated: tsnow,
+        tsupdated: tsnow
+      });
+      await packageNew.save();
     });
+    it('[STEP-1] packagesFull', async () => {
+      const result = await PackagesService.listPackagesFull(111);
+      return expect(result).to.have.length(1);
+    });
+  });
+
+  after(async () => {
+    logger.info('after run');
+    await PackageModel.deleteMany({});
+  });
 });
