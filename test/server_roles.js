@@ -2,6 +2,7 @@
 process.env.NODE_ENV = 'test';
 
 // Require the dev-dependencies
+const appWait = require('../utils/appwait').appWait;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app').app;
@@ -24,15 +25,7 @@ let tokenUser = '';
 let tokenAdmin = '';
 
 before(function (done) {
-  logger.warn('Wait for app server start');
-  if (server.didStart) {
-    logger.info('app server already started');
-    done();
-  }
-  server.on('appStarted', function () {
-    logger.info('app server now started');
-    done();
-  });
+  appWait(done);
 });
 
 describe('server roles', () => {

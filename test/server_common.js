@@ -7,6 +7,7 @@ const UsersService = require('../service/UsersService.js');
 const uauth = require('../utils/auth.js');
 
 // Require the dev-dependencies
+const appWait = require('../utils/appwait').appWait;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app').app;
@@ -32,12 +33,7 @@ function sleep (ms) {
 }
 
 before(function (done) {
-  logger.warn('Wait for app server start');
-  if (server.didStart) done();
-  server.on('appStarted', function () {
-    logger.info('app server started');
-    done();
-  });
+  appWait(done);
 });
 
 describe('server', () => {

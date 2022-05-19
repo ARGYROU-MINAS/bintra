@@ -3,6 +3,7 @@
  * @see DDATA-functional-API-numbers
  */
 
+const appWait = require('../utils/appwait').appWait;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app').app;
@@ -59,12 +60,7 @@ function getUserObject (username) {
 }
 
 before(function (done) {
-  logger.warn('Wait for app server start');
-  if (server.didStart) done();
-  server.on('appStarted', function () {
-    logger.info('app server started');
-    done();
-  });
+  appWait(done);
 });
 
 describe('PFilter put server tests', function () {

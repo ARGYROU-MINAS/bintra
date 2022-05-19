@@ -3,6 +3,7 @@
  * @see DDATA-functional-API-numbers
  */
 
+const appWait = require('../utils/appwait').appWait;
 const chai = require('chai');
 chai.use(require('chai-json-schema'));
 const expect = chai.expect;
@@ -20,12 +21,7 @@ logger.level = process.env.LOGLEVEL || 'warn';
 chai.use(chaiHttp);
 
 before(function (done) {
-  logger.warn('Wait for app server start');
-  if (server.didStart) done();
-  server.on('appStarted', function () {
-    logger.info('app server started');
-    done();
-  });
+  appWait(done);
 });
 
 describe('Queue server tests', function () {
