@@ -34,7 +34,7 @@ describe('server roles', () => {
   before(async () => {
     logger.info('prepare DB before');
     const adminUtil = mongoose.connection.db.admin();
-    const result = await adminUtil.ping();
+    await adminUtil.ping();
 
     await LoginModel.deleteMany({
       name: 'max'
@@ -101,6 +101,9 @@ describe('server roles', () => {
           password: 'nono'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(403);
           res.body.should.have.property('message', 'Error: Credentials incorrect');
           done();
@@ -115,6 +118,9 @@ describe('server roles', () => {
           password: 'zzz'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(403);
           res.body.should.have.property('message', 'Error: Credentials incorrect');
           done();
@@ -129,6 +135,9 @@ describe('server roles', () => {
           password: 'xxx'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.should.have.property('token');
           tokenUser = res.body.token;
@@ -144,6 +153,9 @@ describe('server roles', () => {
           password: 'yyy'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.should.have.property('token');
           tokenAdmin = res.body.token;
@@ -205,7 +217,7 @@ describe('server roles', () => {
           if (err) {
             logger.error(err);
             done(err);
-		    }
+          }
           res.should.have.status(200);
           logger.info(res.body);
           res.body.should.have.property('node');

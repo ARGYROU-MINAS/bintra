@@ -32,16 +32,16 @@ function getUserObject (username) {
       name: username
     })
       .then(itemFound => {
-        if (itemFound.length == 1) {
+        if (itemFound.length === 1) {
           logger.info('Found user');
           resolve(itemFound[0]);
         } else {
-          reject('Not found');
+          reject(new Error('Not found'));
         }
       })
       .catch(err => {
         logger.error('getUser failed: ' + err);
-        reject('getUser failed');
+        reject(new Error('getUser failed'));
       });
   });
 }
@@ -58,7 +58,7 @@ describe('server', () => {
       logger.info('In before method');
       const adminUtil = mongoose.connection.db.admin();
       logger.debug('do ping');
-      const result = await adminUtil.ping();
+      await adminUtil.ping();
 
       logger.debug('Do delete max');
       await LoginModel.deleteMany({
@@ -111,7 +111,7 @@ describe('server', () => {
             done(err);
           }
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           res.body.should.have.property('summary');
           done();
         });
@@ -127,7 +127,7 @@ describe('server', () => {
           }
           logger.info('did get reply');
           res.should.have.status(200);
-          res.should.be.json;
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           res.body.should.have.property('summary');
           done();
         });
