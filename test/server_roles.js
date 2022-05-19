@@ -161,6 +161,10 @@ describe('server roles', () => {
             request(server)
                 .get('/v1/packagesfull')
                 .end((err, res) => {
+                    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(401);
                     done();
                 });
@@ -172,6 +176,10 @@ describe('server roles', () => {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+                    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(401);
                     done();
                 });
@@ -183,6 +191,10 @@ describe('server roles', () => {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+                    if(err) {
+                        logger.error(err);
+                        done(err);
+                    }
                     res.should.have.status(200);
                     done();
                 });
@@ -194,6 +206,10 @@ describe('server roles', () => {
                     type: 'bearer'
                 })
                 .end((err, res) => {
+                    if(err) {
+                        logger.error(err);
+                        done(err);
+		    }
                     res.should.have.status(200);
                     logger.info(res.body);
                     res.body.should.have.property('node');

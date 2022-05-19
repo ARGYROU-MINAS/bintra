@@ -11,11 +11,10 @@ const utils = require('../utils/writer.js');
 const eventEmitter = require('../utils/eventer').em;
 const PackagesService = require('../service/PackagesService');
 const UsersService = require('../service/UsersService');
+const mongoose = require('mongoose');
 const auth = require('../utils/auth');
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
-const exec = promisify(require('child_process').exec)
 
 const log4js = require('log4js');
 const logger = log4js.getLogger();
@@ -318,7 +317,6 @@ module.exports.getVersions = function getVersions (req, res, next) {
   const json = require('../package.json');
   const gitrevFilename = path.join(__dirname, '../.gitrevision');
   let gitrevision = '';
-  let nginxversion = '';
 
   try {
     fs.accessSync(gitrevFilename, fs.constants.R_OK);
@@ -327,23 +325,34 @@ module.exports.getVersions = function getVersions (req, res, next) {
     logger.error('gitrevision file not found at: ' + gitrevFilename);
   }
 
-  (async () => {
-    nginxversion = await exec('/usr/sbin/nginx -v');
-    nginxversion = nginxversion.stderr.trim();
-    const re = /.+nginx\/(.+)/;
-    const match = re.exec(nginxversion);
-    jdata.nginx = match[1];
-  })();
-
   jdata.bintra = json.version;
+  logger.debug('bintra version found: ' + jdata.bintra);
+
   jdata.gitrevision = gitrevision.trim();
+  logger.debug('git revision found: ' + jdata.gitrevision);
 
-  const payload = JSON.stringify(jdata);
-  res.writeHead(200, {
-    'Content-Type': 'application/json'
+  // get DB version
+  const admin = new mongoose.mongo.Admin(mongoose.connection.db);
+  admin.buildInfo(function (err, info) {
+    if (err) {
+      logger.error(err);
+      res.writeHead(500, {
+        'Content-Type': 'text/plain'
+      });
+      return res.end();
+    }
+
+    logger.debug('mongo version found: ' + info.version);
+    jdata.mongodb = info.version;
+
+    const payload = JSON.stringify(jdata);
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
+
+    logger.info('return');
+    return res.end(payload);
   });
-
-  return res.end(payload);
 };
 
 /**
