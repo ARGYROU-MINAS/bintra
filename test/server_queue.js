@@ -46,6 +46,9 @@ describe('Queue server tests', function () {
       request(server)
         .get('/v1/queue')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.forEach(entry => expect(entry).to.be.jsonSchema(queueSchema));
           done();
