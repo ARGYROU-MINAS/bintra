@@ -29,8 +29,9 @@ describe('server', () => {
 
   describe('[BINTRA-8] GET feeds', () => {
     before(async () => {
-	    const adminUtil = mongoose.connection.db.admin();
-      const result = await adminUtil.ping();
+      const adminUtil = mongoose.connection.db.admin();
+      await adminUtil.ping();
+
       const tsnow = new Date();
       const packageNew = new PackageModel({
         name: 'theName',
@@ -48,6 +49,9 @@ describe('server', () => {
       request(server)
         .get('/v1/feed.rss')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.should.have.header('content-type', 'application/rss+xml');
           done();
@@ -57,6 +61,9 @@ describe('server', () => {
       request(server)
         .get('/v1/feed.atom')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.should.have.header('content-type', 'application/rss+xml');
           done();
@@ -66,6 +73,9 @@ describe('server', () => {
       request(server)
         .get('/v1/feed.json')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.should.have.header('content-type', 'application/json');
           done();

@@ -42,7 +42,7 @@ describe('server', () => {
   before(async () => {
     logger.info('run before');
     const adminUtil = mongoose.connection.db.admin();
-    const result = await adminUtil.ping();
+    await adminUtil.ping();
 
     await DomainModel.deleteMany({});
 
@@ -95,6 +95,9 @@ describe('server', () => {
       request(server)
         .get('/abc')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(404);
           done();
         });
@@ -103,6 +106,9 @@ describe('server', () => {
       request(server)
         .get('/')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(301);
           done();
         });
@@ -111,6 +117,9 @@ describe('server', () => {
       request(server)
         .post('/')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(404);
           done();
         });
@@ -122,10 +131,9 @@ describe('server', () => {
       request(server)
         .get('/v1/test')
         .end((err, res) => {
-		    if (err) {
-			    logger.error(err);
-			    done(err);
-		    }
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.should.have.property('message', 'you called default');
           done();
@@ -143,6 +151,9 @@ describe('server', () => {
           password: 'nono'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(403);
           res.body.should.have.property('message', 'Error: Credentials incorrect');
           done();
@@ -160,8 +171,12 @@ describe('server', () => {
           packageName: 'a*'
         })
         .end((err, res) => {
-          res.should.have.status(404);
-          done();
+          if (err) {
+            res.should.have.status(404);
+            done();
+          } else {
+            done(new Error('should have failed'));
+          }
         });
     });
   });

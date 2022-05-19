@@ -19,7 +19,6 @@ chai.use(chaiHttp);
 
 const LoginModel = require('../models/login.js');
 const UsersService = require('../service/UsersService.js');
-const PackageService = require('../service/PackagesService.js');
 
 const uauth = require('../utils/auth.js');
 
@@ -45,16 +44,16 @@ function getUserObject (username) {
       name: username
     })
       .then(itemFound => {
-        if (itemFound.length == 1) {
+        if (itemFound.length === 1) {
           logger.info('Found user');
           resolve(itemFound[0]);
         } else {
-          reject('Not found');
+          reject(new Error('Not found'));
         }
       })
       .catch(err => {
         logger.error('getUser failed: ' + err);
-        reject('getUser failed');
+        reject(new Error('getUser failed'));
       });
   });
 }
@@ -69,7 +68,7 @@ describe('PFilter put server tests', function () {
   before(async () => {
     logger.info('run before');
     const adminUtil = mongoose.connection.db.admin();
-    const result = await adminUtil.ping();
+    await adminUtil.ping();
 
     await PackageModel.deleteMany({});
     await LoginModel.deleteMany({
@@ -124,6 +123,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           const reply = res.body[0];
           reply.should.have.property('count', 2);
@@ -145,6 +147,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(404);
           done();
         });
@@ -163,6 +168,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           done();
         });
@@ -174,6 +182,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(404);
           done();
         });
@@ -192,6 +203,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           const reply = res.body[0];
           reply.should.have.property('count', 1);
@@ -206,6 +220,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           done();
         });

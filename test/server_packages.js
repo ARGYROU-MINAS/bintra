@@ -14,7 +14,6 @@ const request = require('supertest');
 const captureLogs = require('../testutils/capture-logs');
 
 const PackageModel = require('../models/package.js');
-const PackageService = require('../service/PackagesService.js');
 
 const log4js = require('log4js');
 const logger = log4js.getLogger();
@@ -34,7 +33,7 @@ describe('PFilter server tests', function () {
   before(async () => {
     logger.info('run before');
     const adminUtil = mongoose.connection.db.admin();
-    const result = await adminUtil.ping();
+    await adminUtil.ping();
 
     await PackageModel.deleteMany({});
 
@@ -56,6 +55,9 @@ describe('PFilter server tests', function () {
       request(server)
         .get('/v1/count')
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.should.have.property('count', 1);
           done();
@@ -71,6 +73,9 @@ describe('PFilter server tests', function () {
           direction: 'down'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           packageid = res.body[0]._id;
           logger.info(packageid);
@@ -87,6 +92,9 @@ describe('PFilter server tests', function () {
           direction: 'do wn'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(400);
           done();
         });
@@ -95,6 +103,9 @@ describe('PFilter server tests', function () {
       request(server)
         .get('/v1/package/' + packageid)
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(200);
           res.body.should.have.property('id', packageid);
           done();

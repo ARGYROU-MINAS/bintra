@@ -19,7 +19,6 @@ chai.use(chaiHttp);
 
 const LoginModel = require('../models/login.js');
 const UsersService = require('../service/UsersService.js');
-const PackageService = require('../service/PackagesService.js');
 
 const log4js = require('log4js');
 const logger = log4js.getLogger();
@@ -27,7 +26,6 @@ logger.level = process.env.LOGLEVEL || 'warn';
 
 const uauth = require('../utils/auth.js');
 
-const packageid = '';
 let tokenUser = '';
 
 const pName = 'theName';
