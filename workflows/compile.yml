@@ -81,6 +81,7 @@ unittest:
   variables:
     NODE_ENV: test
   before_script:
+    - df .
     - echo "Using parallel services suffix comp"
     - npm install
     - ping -c 3 mongocomp
@@ -93,6 +94,7 @@ unittest:
     - npm run combined test/api_* test/server_adminsummary.js test/server_summary.js test/server_common.js test/server_admuser.js test/server_delpackage.js  test/server_feeds.js test/server_packages.js test/server_queue.js test/server_roles.js test/server_putpackage.js test/server_webfilter.js test/local_*
   after_script:
     - echo "show dbs" | mongosh --host mongocomp
+    - df .
   coverage: "/Statements\\s+:\\s+(\\d+\\.\\d+)%/"
   allow_failure: false
   artifacts:

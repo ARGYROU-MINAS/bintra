@@ -25,9 +25,12 @@ var tokenAdmin = "";
 
 before(function (done) {
     logger.warn('Wait for app server start');
-    if(server.didStart) done();
+    if(server.didStart) {
+        logger.info('app server already started');
+        done();
+    }
     server.on("appStarted", function() {
-        logger.info('app server started');
+        logger.info('app server now started');
         done();
     });
 });
