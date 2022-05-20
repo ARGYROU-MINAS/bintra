@@ -3,7 +3,9 @@
  * @see DDATA-functional-API-numbers
  */
 
+const appWait = require('../utils/appwait').appWait;
 const chai = require('chai');
+const chaiHttp = require('chai-http');
 const expect = chai.expect;
 const should = chai.should();
 const chaiAsPromised = require('chai-as-promised');
@@ -17,6 +19,7 @@ logger.level = process.env.LOGLEVEL || 'info';
 const captureLogs = require('../testutils/capture-logs');
 
 chai.use(chaiAsPromised);
+chai.use(chaiHttp);
 chai.use(require('chai-json-schema'));
 
 const LoginModel = require('../models/login.js');
@@ -26,12 +29,7 @@ const UsersService = require('../service/UsersService.js');
 let JWT;
 
 before(function (done) {
-  logger.warn('Wait for app server start');
-  if (server.didStart) done();
-  server.on('appStarted', function () {
-    logger.info('app server started');
-    done();
-  });
+  appWait(done);
 });
 
 describe('User stuff', function () {
@@ -60,8 +58,10 @@ describe('User stuff', function () {
       LoginModel.find({})
         .then(itemFound => {
           logger.info('Login database filled: ' + itemFound.length);
+          expect(itemFound).to.have.lengthOf(1);
           done();
-        });
+        })
+        .catch(err => done(err));
     });
     it('[STEP-2] should get token', (done) => {
       request(server)
@@ -71,10 +71,10 @@ describe('User stuff', function () {
           username: 'max',
           password: 'xxx'
         })
-        .expect('Content-Type', /json/)
         .expect(200)
         .then(response => {
           logger.debug(response.body.token);
+          expect(response).to.be.json; // eslint-disable-line no-unused-expressions
           response.body.should.have.property('token');
           done();
         })
