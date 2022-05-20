@@ -13,14 +13,11 @@ const request = require('supertest');
 
 const captureLogs = require('../testutils/capture-logs');
 
-const PackageModel = require('../models/package.js');
-
 chai.use(chaiHttp);
 
 const LoginModel = require('../models/login.js');
 const DomainModel = require('../models/domain.js');
 const UsersService = require('../service/UsersService.js');
-const PackageService = require('../service/PackagesService.js');
 
 const uauth = require('../utils/auth.js');
 
@@ -28,7 +25,6 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 logger.level = process.env.LOGLEVEL || 'warn';
 
-const packageid = '';
 let tokenUser = '';
 let idUser = '';
 
@@ -44,7 +40,7 @@ describe('PFilter put server tests', function () {
   before(async () => {
     logger.info('run before');
     const adminUtil = mongoose.connection.db.admin();
-    const result = await adminUtil.ping();
+    await adminUtil.ping();
 
     await DomainModel.deleteMany({});
 
@@ -97,12 +93,11 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
-		    }
+          }
           res.should.have.status(200);
-		    res.should.be.json; // eslint-disable-line no-unused-expressions
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           const reply = res.body;
           reply.should.have.lengthOf.above(0);
           done();
@@ -115,12 +110,11 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
           }
           res.should.have.status(200);
-		    res.should.be.json; // eslint-disable-line no-unused-expressions
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           const reply = res.body;
           idUser = reply._id;
           logger.info('Bob user id=' + idUser);
@@ -134,6 +128,9 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
+          if (err) {
+            done(err);
+          }
           res.should.have.status(400);
           done();
         });
@@ -145,13 +142,11 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
           }
           res.should.have.status(200);
-		    res.should.be.json; // eslint-disable-line no-unused-expressions
-          const reply = res.body;
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           done();
         });
     });
@@ -165,13 +160,12 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
+          if (err) {
             logger.error(err);
             done(err);
           }
           res.should.have.status(200);
-		    res.should.be.json; // eslint-disable-line no-unused-expressions
-          const reply = res.body;
+          res.should.be.json; // eslint-disable-line no-unused-expressions
           done();
         });
     });
@@ -253,8 +247,7 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
           }
           res.should.have.status(200);
@@ -268,8 +261,7 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
           }
           res.should.have.status(200);
@@ -286,8 +278,7 @@ describe('PFilter put server tests', function () {
           type: 'bearer'
         })
         .end((err, res) => {
-		    if (err) {
-            logger.error(err);
+          if (err) {
             done(err);
           }
           res.should.have.status(200);

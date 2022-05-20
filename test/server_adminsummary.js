@@ -35,16 +35,16 @@ function getUserObject (username) {
       name: username
     })
       .then(itemFound => {
-        if (itemFound.length == 1) {
+        if (itemFound.length === 1) {
           logger.info('Found user');
           resolve(itemFound[0]);
         } else {
-          reject('Not found');
+          reject(new Error('Not found'));
         }
       })
       .catch(err => {
         logger.error('getUser failed: ' + err);
-        reject('getUser failed');
+        reject(err);
       });
   });
 }
@@ -59,7 +59,7 @@ describe('server', () => {
   describe('[BINTRA-28] GET admin summary', () => {
     before(async () => {
       const adminUtil = mongoose.connection.db.admin();
-      const result = await adminUtil.ping();
+      await adminUtil.ping();
 
       await PackageModel.deleteMany({});
       await LoginModel.deleteMany({});
@@ -105,13 +105,6 @@ describe('server', () => {
         })
         .expect('Content-Type', /json/)
         .expect(200, done);
-      /*
-				.end((err, res) => {
-					logger.info("did get reply");
-					res.should.have.status(200);
-					res.body.should.have.property('summary');
-					done();
-				}); */
     });
   });
 
