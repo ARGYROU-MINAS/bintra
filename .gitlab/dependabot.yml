@@ -7,5 +7,3 @@ updates:
     commit-message:
       prefix: "dependabot npm"
       include: "scope"
-    ignore:
-      - dependency-name: "mochawesome"
