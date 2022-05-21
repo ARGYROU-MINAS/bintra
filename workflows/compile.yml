@@ -211,7 +211,7 @@ bom:
   script:
     - npm run sbom
   after_script:
-    - "curl -X 'PUT' '${DTRACK_URL}api/v1/bom' -H 'Content-Type: application/json' -H 'X-API-Key: ${DTRACK_API}' -d @sbom.json"
+    - "curl -X 'PUT' '${DTRACK_URL}api/v1/bom' -H 'Content-Type: application/json' -H 'X-API-Key: ${DTRACK_API}' -F 'project=${DTRACK_PROJECT}' -d @sbom.json"
   artifacts:
     paths:
       - sbom.json
