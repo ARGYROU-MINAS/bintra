@@ -9,6 +9,7 @@ out/
 mochawesome-report/
 coverage/
 xunit.xml
+bom.json
 testlink.xml
 junit-custom.xml
 .nyc_output/
