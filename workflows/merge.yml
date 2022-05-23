@@ -130,17 +130,15 @@ bom:
     - .myglobals
   stage: report
   variables:
-    GIT_STRATEGY: clone
-    GIT_DEPTH: 0
     DTRACK_URL: ${DTRACK_URL}
     DTRACK_API: ${DTRACK_API}
-    DTRACK_PROJECT: ${DTRACK_PROJECT}
     DTRACK_NAME: "bintra"
   before_script:
-    - 'export DTRACK_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
+    - ls -l VERSION.cpe
   script:
     - npm run sbom
   after_script:
+    - 'export DTRACK_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
     - echo "projectName=${DTRACK_NAME}"
     - echo "projectVersion=${DTRACK_VERSION}"
     - 'curl -X POST ${DTRACK_URL}api/v1/bom -H "Content-Type: multipart/form-data" -H "X-API-Key: ${DTRACK_API}" -F "autoCreate=true" -F "projectName=${DTRACK_NAME}" -F "projectVersion=${DTRACK_VERSION}" -F bom=@bom.json'

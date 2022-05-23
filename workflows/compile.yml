@@ -211,7 +211,6 @@ bom:
   variables:
     DTRACK_URL: ${DTRACK_URL}
     DTRACK_API: ${DTRACK_API}
-    DTRACK_PROJECT: ${DTRACK_PROJECT}
     DTRACK_NAME: "bintra"
   before_script:
     - ls -l VERSION.cpe
