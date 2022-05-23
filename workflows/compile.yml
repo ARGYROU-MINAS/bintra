@@ -209,6 +209,8 @@ bom:
     - .myglobals
   stage: report
   variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
     DTRACK_URL: ${DTRACK_URL}
     DTRACK_API: ${DTRACK_API}
     DTRACK_PROJECT: ${DTRACK_PROJECT}
