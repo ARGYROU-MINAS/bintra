@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.4.30
+  version: 1.4.31
 
 servers:
   - url: https://api.binarytransparency.net/v1
