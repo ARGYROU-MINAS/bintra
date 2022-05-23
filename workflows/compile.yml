@@ -263,8 +263,12 @@ semgrep-sast:
   variables:
     SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
 
+bandit-sast:
+  needs: ["semgrep-sast"]
+
 .secret-analyzer:
   extends:
     - .sourcechanged
     - .myglobals
   stage: analyze
+  needs: ["bandit-sast"]
