@@ -249,6 +249,7 @@ sast:
     - .sourcechanged
     - .myglobals
   stage: analyze
+  needs: ["sonarqube"]
   artifacts:
     reports:
       sast: gl-sast-report.json
@@ -258,6 +259,7 @@ include:
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 semgrep-sast:
+  needs: ["eslint-sast"]
   variables:
     SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules, documentation, pub_mkdocs, myoas, mochawesome-report, coverage, out
 
