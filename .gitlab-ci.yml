@@ -6,7 +6,6 @@ stages:
   - deploy
 
 include:
-  - template: Security/SAST.gitlab-ci.yml
   - local: 'workflows/empty.yml'
 
   - project: 'kgroup/dependabot-standalone'
