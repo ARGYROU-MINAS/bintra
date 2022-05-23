@@ -163,7 +163,7 @@ publish:
     - chmod 0700 ~/.ssh
     - eval $(ssh-agent -s)
     - echo "$SSH_CI_PRIV" | tr -d '\r' | ssh-add -
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "Expect error 502 from here" && date
   script:
     - echo "Run playbook with 'TAG=$CI_COMMIT_TAG'"
