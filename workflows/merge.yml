@@ -124,6 +124,27 @@ testlink:
   script:
     - python tl2rest.py
 
+bom:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: report
+  variables:
+    DTRACK_URL: ${DTRACK_URL}
+    DTRACK_API: ${DTRACK_API}
+    DTRACK_PROJECT: ${DTRACK_PROJECT}
+    DTRACK_NAME: "bintra"
+  before_script:
+    - export DTRACK_VERSION=$(git describe --abbrev=0)
+  script:
+    - npm run sbom
+  after_script:
+    - 'curl -X POST ${DTRACK_URL}api/v1/bom -H "Content-Type: multipart/form-data" -H "X-API-Key: ${DTRACK_API}" -F "autoCreate=true" -F "projectName=${DTRACK_NAME}" -F "projectVersion=${DTRACK_VERSION}" -F bom=@bom.json'
+  allow_failure: true
+  artifacts:
+    paths:
+      - bom.json
+
 sonarqube:
   extends:
     - .sourcechanged
