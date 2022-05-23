@@ -209,14 +209,12 @@ bom:
     - .myglobals
   stage: report
   variables:
-    GIT_STRATEGY: clone
-    GIT_DEPTH: 0
     DTRACK_URL: ${DTRACK_URL}
     DTRACK_API: ${DTRACK_API}
     DTRACK_PROJECT: ${DTRACK_PROJECT}
     DTRACK_NAME: "bintra"
   before_script:
-    - export DTRACK_VERSION=$(git describe --abbrev=0)
+    - 'export DTRACK_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
   script:
     - npm run sbom
   after_script:
