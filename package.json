@@ -36,7 +36,7 @@
   "private": true,
   "dependencies": {
     "@cyclonedx/bom": "^3.9.0",
-    "@sentry/node": "^6.19.7",
+    "@sentry/node": "^7.1.1",
     "@sentry/tracing": "^7.0.0",
     "ansi-regex": "^6.0.1",
     "bcrypt": "^5.0.1",
