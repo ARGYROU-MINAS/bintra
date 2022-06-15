@@ -279,3 +279,5 @@ container_scanning:
   cache: []
   variables:
     GIT_STRATEGY: fetch
+    SECURE_LOG_LEVEL: 'debug'
+    CS_DEFAULT_BRANCH_IMAGE: $CI_REGISTRY_IMAGE/$CI_DEFAULT_BRANCH:fat
