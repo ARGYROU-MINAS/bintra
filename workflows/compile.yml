@@ -40,6 +40,7 @@ variables:
   NEXUS_URL_RPM: "https://nexus.myocastor.de/repository/bintra_rpm/"
   NEXUS_URL_DEB: "https://nexus.myocastor.de/repository/bintra/"
 
+
 makedocs:
   extends:
     - .myglobals
@@ -257,6 +258,7 @@ sast:
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
 
 semgrep-sast:
   needs: ["eslint-sast"]
@@ -272,3 +274,8 @@ bandit-sast:
     - .myglobals
   stage: analyze
   needs: ["bandit-sast"]
+
+container_scanning:
+  cache: []
+  variables:
+    GIT_STRATEGY: fetch

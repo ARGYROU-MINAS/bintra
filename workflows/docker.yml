@@ -5,6 +5,14 @@
   tags:
     - $RUNNERTAG
 
+include:
+  - template: Security/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  cache: []
+  variables:
+    GIT_STRATEGY: fetch
+
 dodocker:
   stage: build
   image: docker:19.03.12
