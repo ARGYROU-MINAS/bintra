@@ -35,7 +35,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@cyclonedx/bom": "^3.9.0",
+    "@cyclonedx/bom": "^3.10.0",
     "@sentry/node": "^7.1.1",
     "@sentry/tracing": "^7.1.1",
     "ansi-regex": "^6.0.1",
