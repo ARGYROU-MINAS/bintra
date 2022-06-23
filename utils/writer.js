@@ -4,7 +4,7 @@ const ResponsePayload = function (code, payload) {
 };
 
 function setHeaders (response) {
-  response.setHeader('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
+  response.setHeader('Cache-Control', 'max-age=0, no-store');
   response.setHeader('Pragma', 'no-cache');
   response.setHeader('Expires', '-1');
 }
