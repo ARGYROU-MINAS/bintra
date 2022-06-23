@@ -5,5 +5,5 @@
 	path = bintra-automation
 	url = git@gitlab.kretschmann.software:kgroup/bintra-automation.git
 [submodule "bintra.hosting"]
-	path = bintra.hosting
+	path = bintra-hosting
 	url = git@gitlab.kretschmann.software:kgroup/bintra-hosting.git
