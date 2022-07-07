@@ -1,6 +1,6 @@
 {
   "name": "bintra",
-  "version": "1.4.34",
+  "version": "1.4.35",
   "description": "Binary Transparency Directory API",
   "main": "app.js",
   "homepage": "https://bintra.directory/",
