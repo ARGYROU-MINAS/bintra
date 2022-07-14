@@ -226,6 +226,26 @@ bom:
     paths:
       - bom.json
 
+msbom:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: report
+  variables:
+    SBOM_NAME: "bintra"
+  before_script:
+    - wget -q -O /usr/local/bin/sbom https://github.com/microsoft/sbom-tool/releases/download/v0.1.2/sbom-tool-linux-x64
+    - chmod 755 /usr/local/bin/sbom
+    - ls -l VERSION.cpe
+  script:
+    - 'export SBOM_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
+    - echo "projectVersion=${SBOM_VERSION}"
+    - /usr/local/bin/sbom generate -b . -bc . -pn ${SBOM_NAME} -pv "${SBOM_VERSION}" -nsb https://bintra.directory
+  allow_failure: true
+  artifacts:
+    paths:
+      - _manifest/spdx_2.2/
+
 sonarqube:
   extends:
     - .sourcechanged
