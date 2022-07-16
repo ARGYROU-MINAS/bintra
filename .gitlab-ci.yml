@@ -5,6 +5,9 @@ stages:
   - analyze
   - deploy
 
+variables:
+  RUNNER_GENERATE_ARTIFACTS_METADATA: "true"
+
 include:
   - local: 'workflows/empty.yml'
 
