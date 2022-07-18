@@ -65,6 +65,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
   /package:
     get:
@@ -115,6 +117,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
     put:
       tags:
@@ -176,6 +180,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -237,6 +243,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -268,6 +276,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
     delete:
       tags:
@@ -293,6 +303,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -320,6 +332,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
 
   /domains:
@@ -344,6 +358,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -375,6 +391,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -406,6 +424,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -441,6 +461,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -478,6 +500,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -539,6 +563,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
 
   /packages:
@@ -607,6 +633,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
 
   /test:
@@ -643,6 +671,8 @@ paths:
                 $ref: '#/components/schemas/Message'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -681,6 +711,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -709,6 +741,8 @@ paths:
           $ref: '#/components/responses/RateLimiting'
         500:
           $ref: '#/components/responses/BadResult'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -741,6 +775,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -781,6 +817,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -823,6 +861,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -860,6 +900,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -902,6 +944,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -934,6 +978,8 @@ paths:
                 type: object
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
   /countPerCreator:
     get:
@@ -951,6 +997,8 @@ paths:
                 $ref: '#/components/schemas/SummaryReply'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -984,6 +1032,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
 
   /feed.{type}:
@@ -1020,6 +1070,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
 
 
   /token:
@@ -1044,6 +1096,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -1073,6 +1127,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -1100,6 +1156,9 @@ paths:
           $ref: '#/components/responses/BadRequest'
         429:
           $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
 
 components:
   parameters:
@@ -1401,6 +1460,12 @@ components:
             type: string
     RateLimiting:
       description: Too many requests per time
+      content:
+        text/plain:
+          schema:
+            type: string
+    DefaultError:
+      description: Unspecified error occured
       content:
         text/plain:
           schema:
