@@ -58,7 +58,7 @@
     "mongodb": "^4.8.0",
     "mongoose": "^6.4.4",
     "mqtt": "^4.3.7",
-    "node-resque": "^9.1.7",
+    "node-resque": "^9.2.0",
     "oas3-tools": "^2.2.2",
     "prom-client": "^14.0.0",
     "serve-favicon": "^2.5.0",
