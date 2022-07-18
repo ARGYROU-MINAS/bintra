@@ -269,8 +269,12 @@ coverity:
     - .sourcechanged
     - .myglobals
   stage: analyze
+  cache:
+    key: coverity-$CI_COMMIT_REF_SLUG
+    paths:
+       - coverity_tool.tgz
   before_script:
-    - wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=bintra" -O coverity_tool.tgz
+    - wget -nc -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=bintra" -O coverity_tool.tgz
     - mkdir coverity-tool
     - tar xzf coverity_tool.tgz --strip-components=1 -C coverity-tool
     - export PATH="${CI_PROJECT_DIR}/coverity-tool/bin:$PATH"
