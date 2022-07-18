@@ -25,6 +25,7 @@ const auth = require('./utils/auth');
 const webFilterOK = require('./utils/webfilter').webFilterOK;
 const express = require('express');
 const app = express();
+app.disable('x-powered-by');
 app.didStart = false;
 
 /* add BEHINDPROXY=uniquelocal to .env for private IP detection of proxy */
