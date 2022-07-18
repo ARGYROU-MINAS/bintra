@@ -264,6 +264,21 @@ sonarqube:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: false
 
+coverty:
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: analyze
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  before_script:
+    - wget https://scan.coverity.com/download/linux64 --post-data "token=${COVERTY_TOKEN}&project=bintra" -O coverity_tool.tgz
+  script:
+    - npm install
+    - tar czf /tmp/bintra.tar.gz .
+    - curl --form token=${COVERTY_TOKEN} --form email=${COVERTY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${CI_COMMIT_REF_SLUG}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
+  allow_failure: false
+
 sast:
   extends:
     - .sourcechanged
