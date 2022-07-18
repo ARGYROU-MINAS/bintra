@@ -63,6 +63,9 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
+        429:
+          $ref: '#/components/responses/RateLimiting'
+
   /package:
     get:
       tags:
@@ -110,6 +113,8 @@ paths:
                   $ref: '#/components/schemas/PackageVariants'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
     put:
       tags:
@@ -169,6 +174,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -228,6 +235,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -257,6 +266,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         404:
           $ref: '#/components/responses/NotFound'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
     delete:
       tags:
@@ -280,6 +291,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -305,6 +318,8 @@ paths:
                 $ref: '#/components/schemas/PackageCount'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 
   /domains:
@@ -327,6 +342,8 @@ paths:
                   $ref: '#/components/schemas/DomainItem'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -356,6 +373,8 @@ paths:
                 $ref: '#/components/schemas/DomainItem'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -385,6 +404,8 @@ paths:
                 $ref: '#/components/schemas/DomainItem'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -414,10 +435,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DomainItem'
-        404:
-          $ref: '#/components/responses/NotFound'
         400:
           $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -453,6 +476,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -512,6 +537,8 @@ paths:
                 $ref: '#/components/schemas/Pagedata'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 
   /packages:
@@ -578,6 +605,8 @@ paths:
                 $ref: '#/components/schemas/PackageItem'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 
   /test:
@@ -612,6 +641,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -648,6 +679,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -672,6 +705,8 @@ paths:
                 $ref: '#/components/schemas/UserList'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
         500:
           $ref: '#/components/responses/BadResult'
       security:
@@ -704,6 +739,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -742,6 +779,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -782,6 +821,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -817,6 +858,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -857,6 +900,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -887,6 +932,8 @@ paths:
             application/json:
               schema:
                 type: object
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
   /countPerCreator:
     get:
@@ -902,6 +949,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SummaryReply'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -933,6 +982,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         404:
           $ref: '#/components/responses/NotFound'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 
   /feed.{type}:
@@ -967,6 +1018,8 @@ paths:
                 type: string
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 
   /token:
@@ -989,6 +1042,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -1016,6 +1071,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        429:
+          $ref: '#/components/responses/RateLimiting'
       security:
         - bearerauth: []
       x-security-scopes:
@@ -1041,6 +1098,8 @@ paths:
                   $ref: '#/components/schemas/QueueEntries'
         400:
           $ref: '#/components/responses/BadRequest'
+        429:
+          $ref: '#/components/responses/RateLimiting'
 
 components:
   parameters:
@@ -1336,6 +1395,12 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: Bad Request, nothing found for this data
+      content:
+        text/plain:
+          schema:
+            type: string
+    RateLimiting:
+      description: Too many requests per time
       content:
         text/plain:
           schema:

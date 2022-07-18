@@ -264,23 +264,21 @@ sonarqube:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.branch.name=${CI_COMMIT_REF_SLUG}
   allow_failure: false
 
-coverty:
+coverity:
   extends:
     - .sourcechanged
     - .myglobals
   stage: analyze
   before_script:
-    - wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERTY_TOKEN}&project=bintra" -O coverity_tool.tgz
-    - mkdir coverty-tool
-    - tar xzf coverity_tool.tgz --strip-components=1 -C coverty-tool
-    - ls -l; ls -l coverty-tool
-    - export PATH="${CI_PROJECT_DIR}/coverty-tool/bin:$PATH"
+    - wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=bintra" -O coverity_tool.tgz
+    - mkdir coverity-tool
+    - tar xzf coverity_tool.tgz --strip-components=1 -C coverity-tool
+    - export PATH="${CI_PROJECT_DIR}/coverity-tool/bin:$PATH"
   script:
     - npm install
     - cov-build --dir cov-int --no-command --fs-capture-search ${CI_PROJECT_DIR}
-    - ls -l; ls -l cov-int
     - tar czf /tmp/bintra.tar.gz cov-int/
-    - curl --form token=${COVERTY_TOKEN} --form email=${COVERTY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${CI_COMMIT_REF_SLUG}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
+    - curl --form token=${COVERITY_TOKEN} --form email=${COVERITY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${CI_COMMIT_REF_SLUG}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
   allow_failure: true
   artifacts:
     paths:
