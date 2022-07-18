@@ -271,12 +271,13 @@ coverty:
   stage: analyze
   before_script:
     - wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERTY_TOKEN}&project=bintra" -O coverity_tool.tgz
-    - tar czf coverity_tool.tgz
-    - ls -l
+    - tar xzf coverity_tool.tgz --strip-components=1 -C coverty-tool
+    - ls -l; ls -l coverty-tool
+    - export PATH="${CI_PROJECT_DIR}/coverty-tool/bin:$PATH"
   script:
     - npm install
-    - ./coverty_tool/bin/cov-build --dir cov-int --no-command --fs-capture-search ${CI_PROJECT_DIR}
-    - ls -l cov-int
+    - cov-build --dir cov-int --no-command --fs-capture-search ${CI_PROJECT_DIR}
+    - ls -l; ls -l cov-int
     - tar czf /tmp/bintra.tar.gz cov-int/
     - curl --form token=${COVERTY_TOKEN} --form email=${COVERTY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${CI_COMMIT_REF_SLUG}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
   allow_failure: true
