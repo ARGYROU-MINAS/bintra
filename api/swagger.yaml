@@ -809,9 +809,8 @@ paths:
         - name: id
           in: path
           required: true
-          description: positive, non-zero numeric id of user
           schema:
-            $ref: '#/components/schemas/UserID'
+            $ref: '#/components/schemas/idParam'
       responses:
         200:
           description: positive result we hope
@@ -844,9 +843,8 @@ paths:
         - name: id
           in: path
           required: true
-          description: positive, non-zero numeric id of user
           schema:
-            $ref: '#/components/schemas/UserID'
+            $ref: '#/components/schemas/idParam'
         - name: status
           in: query
           description: New status enum value
@@ -886,9 +884,8 @@ paths:
         - name: id
           in: path
           required: true
-          description: positive, non-zero numeric id of user
           schema:
-            $ref: '#/components/schemas/UserID'
+            $ref: '#/components/schemas/idParam'
       responses:
         200:
           description: positive result we hope
@@ -920,10 +917,9 @@ paths:
       parameters:
         - name: id
           in: path
-          description: positive, non-zero numeric id of user
           required: true
           schema:
-            $ref: '#/components/schemas/UserID'
+            $ref: '#/components/schemas/idParam'
       requestBody:
         content:
           '*/*':
@@ -1165,7 +1161,7 @@ components:
       in: path
       name: id
       required: true
-      description: Package ID (24 hex chars)
+      description: Object ID (24 hex chars)
       schema:
         maxLength: 24
         minLength: 24
@@ -1181,11 +1177,6 @@ components:
         - Fedora
         - RedHat
         - Windows
-
-    UserID:
-      type: integer
-      minimum: 1
-      description: positive, non-zero numeric id of user
 
     SearchRequest:
       type: object
