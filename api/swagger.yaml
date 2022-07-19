@@ -653,6 +653,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        429:
+          $ref: '#/components/responses/RateLimiting'
+        default:
+          $ref: '#/components/responses/DefaultError'
+
 
     delete:
       tags:
@@ -927,7 +932,7 @@ paths:
             type: string
       requestBody:
         content:
-          '*/*':
+          'application/json-patch+json':
             schema:
               $ref: '#/components/schemas/PatchRequest'
         required: false
