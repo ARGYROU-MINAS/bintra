@@ -172,6 +172,7 @@ describe('PFilter put server tests', function () {
     it('patch user', (done) => {
       request(server)
         .patch('/v1/user/' + idUser)
+        .set('Content-Type', 'application/json-patch+json')
         .send([{
           op: 'replace',
           path: '/email',
