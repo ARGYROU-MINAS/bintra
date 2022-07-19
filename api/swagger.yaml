@@ -808,13 +808,10 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Package ID (24 hex chars)
           required: true
+          description: positive, non-zero numeric id of user
           schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
+            $ref: '#/components/schemas/UserID'
       responses:
         200:
           description: positive result we hope
@@ -846,13 +843,10 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Package ID (24 hex chars)
           required: true
+          description: positive, non-zero numeric id of user
           schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
+            $ref: '#/components/schemas/UserID'
         - name: status
           in: query
           description: New status enum value
@@ -891,13 +885,10 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Package ID (24 hex chars)
           required: true
+          description: positive, non-zero numeric id of user
           schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
+            $ref: '#/components/schemas/UserID'
       responses:
         200:
           description: positive result we hope
@@ -929,13 +920,10 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Package ID (24 hex chars)
+          description: positive, non-zero numeric id of user
           required: true
           schema:
-            maxLength: 24
-            minLength: 24
-            pattern: ^[a-fA-F0-9]{24}$
-            type: string
+            $ref: '#/components/schemas/UserID'
       requestBody:
         content:
           '*/*':
@@ -1193,6 +1181,11 @@ components:
         - Fedora
         - RedHat
         - Windows
+
+    UserID:
+      type: integer
+      minimum: 1
+      description: positive, non-zero numeric id of user
 
     SearchRequest:
       type: object
