@@ -5,7 +5,10 @@ openapi: 3.0.1
 info:
   title: Binary Transparency  API
   description: bintra API
+  termsOfService: https://bintra.directory/privacy-policy/
   contact:
+    name: Kai KRETSCHMANN
+    url: https://gitlab.kretschmann.software/kgroup/bintra/-/issues
     email: kai@kretschmann.consulting
   license:
     name: MIT
@@ -14,8 +17,11 @@ info:
 
 servers:
   - url: https://api.binarytransparency.net/v1
+    description: Live server
   - url: http://192.168.0.249:8080/v1
+    description: Test for development
   - url: http://127.0.0.1:8087/v1
+    description: Test for automation
 
 tags:
   - name: default
