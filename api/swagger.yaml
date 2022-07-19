@@ -932,7 +932,7 @@ paths:
             type: string
       requestBody:
         content:
-          'application/json-patch+json':
+          '*/*':
             schema:
               $ref: '#/components/schemas/PatchRequest'
         required: false
