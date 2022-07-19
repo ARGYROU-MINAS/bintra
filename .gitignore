@@ -15,6 +15,7 @@ junit-custom.xml
 .nyc_output/
 *.deb
 **/__pycache__/
+cov-int/
 
 client/**/*.so*
 client/**/*pico
