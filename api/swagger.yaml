@@ -797,6 +797,8 @@ paths:
 
 
   /user/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
     get:
       tags:
         - admin
@@ -805,12 +807,6 @@ paths:
         Get all user data
       operationId: listUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/idParam'
       responses:
         200:
           description: positive result we hope
@@ -840,11 +836,6 @@ paths:
       operationId: putUserStatus
       x-swagger-router-controller: Admins
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/idParam'
         - name: status
           in: query
           description: New status enum value
@@ -880,12 +871,6 @@ paths:
         Deletes the user entry
       operationId: deleteUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/idParam'
       responses:
         200:
           description: positive result we hope
@@ -914,12 +899,6 @@ paths:
         Update fields for a user
       operationId: patchUser
       x-swagger-router-controller: Admins
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/idParam'
       requestBody:
         content:
           '*/*':
@@ -1169,6 +1148,13 @@ components:
         type: string
 
   schemas:
+    ObjectID:
+      type: string
+      description: Object ID (24 hex chars)
+      pattern: ^[a-fA-F0-9]{24}$
+      minLength: 24
+      maxLength: 24
+
     Families:
       type: string
       enum:
