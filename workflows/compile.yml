@@ -279,11 +279,12 @@ coverity:
     - mkdir coverity-tool
     - tar xzf coverity_tool.tgz --strip-components=1 -C coverity-tool
     - export PATH="${CI_PROJECT_DIR}/coverity-tool/bin:$PATH"
+    - 'export COVERITY_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
   script:
     - npm install
     - cov-build --dir cov-int --no-command --fs-capture-search ${CI_PROJECT_DIR}
     - tar czf /tmp/bintra.tar.gz cov-int/
-    - curl --form token=${COVERITY_TOKEN} --form email=${COVERITY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${CI_COMMIT_REF_SLUG}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
+    - curl --form token=${COVERITY_TOKEN} --form email=${COVERITY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${COVERITY_VERSION}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
   allow_failure: true
   artifacts:
     paths:
