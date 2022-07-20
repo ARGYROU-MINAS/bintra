@@ -126,6 +126,7 @@ mongoose.connect(mongoUrl, { });
 // default CORS domain
 const corsWhitelist = ['https://api.bintra.directory', 'https://api.binarytransparency.net', 'https://bintra.directory', 'http://192.168.0.249:8080', 'http://127.0.0.1:8087'];
 const corsOptions = {
+  methods: ['GET','POST','DELETE','PUT','PATCH'],
   origin: function (origin, callback) {
     if (!(origin)) {
       callback(null, true);
