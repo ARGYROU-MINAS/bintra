@@ -58,19 +58,19 @@ paths:
                 - username
                 - password
       responses:
-        200:
+        '200':
           description: Success
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Token'
-        403:
+        '403':
           description: Access Denied
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -113,7 +113,7 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: single good result we hope
           content:
             application/json:
@@ -121,9 +121,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PackageVariants'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -171,7 +171,7 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: |
             Single array entry with high count in best case,
             otherwise multiple entries with one high count and one or more
@@ -182,11 +182,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PackageItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -236,20 +236,20 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result we hope
           content: {}
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        403:
+        '403':
           description: Access Denied
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -272,18 +272,18 @@ paths:
       x-swagger-router-controller: Users
       security: []   # No security
       responses:
-        200:
+        '200':
           description: single good result we hope
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/PackageVariants'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        404:
+        '404':
           $ref: '#/components/responses/NotFound'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -297,20 +297,20 @@ paths:
       operationId: deletePackageById
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result we hope
           content: {}
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        403:
+        '403':
           description: Access Denied
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -332,15 +332,15 @@ paths:
       x-swagger-router-controller: Users
       security: []   # No security
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PackageCount'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -356,7 +356,7 @@ paths:
       operationId: listDomains
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result
           content:
             application/json:
@@ -364,9 +364,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DomainItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -390,16 +390,16 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/DomainItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -423,16 +423,16 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result
           content:
             application/json:
               schema:
                 type: object
                 $ref: '#/components/schemas/DomainItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -457,7 +457,7 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result
           content:
             application/json:
@@ -465,11 +465,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DomainItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        404:
+        '404':
           $ref: '#/components/responses/NotFound'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -496,7 +496,7 @@ paths:
             type: integer
             minimum: 1
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
@@ -504,11 +504,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PackageItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -564,15 +564,15 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pagedata'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -635,15 +635,15 @@ paths:
             type: integer
             minimum: 1
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PackageItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -660,13 +660,13 @@ paths:
       x-swagger-router-controller: Users
       security: []   # No security
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -681,13 +681,13 @@ paths:
       operationId: testAdmin
       x-swagger-router-controller: Users
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -717,17 +717,17 @@ paths:
             maxLength: 100
             pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -747,17 +747,17 @@ paths:
       operationId: listUsers
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserList'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
-        500:
+        '5XX':
           $ref: '#/components/responses/BadResult'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -781,17 +781,17 @@ paths:
               $ref: '#/components/schemas/Registration'
         required: true
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -815,17 +815,17 @@ paths:
       operationId: listUser
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -850,17 +850,17 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -879,17 +879,17 @@ paths:
       operationId: deleteUser
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -913,17 +913,17 @@ paths:
               $ref: '#/components/schemas/PatchRequest'
         required: false
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -952,13 +952,13 @@ paths:
               - family
               - arch
       responses:
-        200:
+        '200':
           description: Json reply, summary object with array
           content:
             application/json:
               schema:
                 type: object
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -971,13 +971,13 @@ paths:
       operationId: getCountPerCreator
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: Json reply, summary object with array
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SummaryReply'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1003,17 +1003,17 @@ paths:
               $ref: '#/components/schemas/SearchRequest'
         required: true
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PackageItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        404:
+        '404':
           $ref: '#/components/responses/NotFound'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1041,7 +1041,7 @@ paths:
               - atom
               - json
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/rss+xml:
@@ -1050,9 +1050,9 @@ paths:
             application/json:
               schema:
                 type: string
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1068,17 +1068,17 @@ paths:
       operationId: checkToken
       x-swagger-router-controller: Users
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1099,17 +1099,17 @@ paths:
       operationId: getVersions
       x-swagger-router-controller: Admins
       responses:
-        200:
+        '200':
           description: positive result we hope
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/VersionItem'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        401:
+        '401':
           $ref: '#/components/responses/Unauthorized'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1129,7 +1129,7 @@ paths:
       x-swagger-router-controller: Queue
       security: []   # No security
       responses:
-        200:
+        '200':
           description: list of queue entries
           content:
             application/json:
@@ -1137,9 +1137,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/QueueEntries'
-        400:
+        '400':
           $ref: '#/components/responses/BadRequest'
-        429:
+        '429':
           $ref: '#/components/responses/RateLimiting'
         default:
           $ref: '#/components/responses/DefaultError'
@@ -1261,8 +1261,9 @@ components:
           type: string
           minLength: 3
           maxLength: 100
-          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
-          example: username
+          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+[a-zA-Z0-9]?$'
+          example: user-name
+          description: new unique username with only letters, numbers, and dot or hyphen inside
         password:
           type: string
           format: password
@@ -1311,7 +1312,7 @@ components:
           type: string
           minLength: 3
           maxLength: 100
-          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+$'
+          pattern: '^[a-zA-Z][a-zA-Z0-9\-\.]+[a-zA-Z0-9]?$'
         email:
           type: string
         status:
