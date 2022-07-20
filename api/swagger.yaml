@@ -41,6 +41,7 @@ paths:
       description: Login for a particular role from db
       operationId: loginPost
       x-swagger-router-controller: Admins
+      security: []   # No security
       requestBody:
         description: Login data as html form
         required: true
@@ -85,6 +86,7 @@ paths:
         faked entries.
       operationId: listPackage
       x-swagger-router-controller: Users
+      security: []   # No security
       parameters:
         - name: packageName
           in: query
@@ -268,6 +270,7 @@ paths:
         Return single package data
       operationId: listPackageSingle
       x-swagger-router-controller: Users
+      security: []   # No security
       responses:
         200:
           description: single good result we hope
@@ -327,6 +330,7 @@ paths:
         package before installing it
       operationId: countPackage
       x-swagger-router-controller: Users
+      security: []   # No security
       responses:
         200:
           description: positive result we hope
@@ -523,6 +527,7 @@ paths:
         Get all package data in a paged way
       operationId: listPagePackages
       x-swagger-router-controller: Users
+      security: []   # No security
       parameters:
         - name: page
           in: query
@@ -582,6 +587,7 @@ paths:
         Get all package data
       operationId: listPackages
       x-swagger-router-controller: Users
+      security: []   # No security
       parameters:
         - name: skip
           in: query
@@ -652,6 +658,7 @@ paths:
         Some dummy function everyone can access
       operationId: testDefault
       x-swagger-router-controller: Users
+      security: []   # No security
       responses:
         200:
           description: positive result we hope
@@ -933,6 +940,7 @@ paths:
       summary: get aggregated number of entries by parametric criteria
       operationId: summaryByWhat
       x-swagger-router-controller: Users
+      security: []   # No security
       parameters:
         - name: bywhat
           in: path
@@ -987,6 +995,7 @@ paths:
       operationId: searchPackages
       x-swagger-router-controller: Admins
       x-codegen-request-body-name: jsearch
+      security: []   # No security
       requestBody:
         content:
           application/json:
@@ -1019,6 +1028,7 @@ paths:
         Get all the latest entries in some RSS defined format type
       operationId: bintraFeed
       x-swagger-router-controller: Feeds
+      security: []   # No security
       parameters:
         - name: type
           in: path
@@ -1117,6 +1127,7 @@ paths:
         Get name of worker queues and number of current entries if any
       operationId: listQueues
       x-swagger-router-controller: Queue
+      security: []   # No security
       responses:
         200:
           description: list of queue entries
