@@ -27,6 +27,7 @@ logger.level = process.env.LOGLEVEL || 'warn';
 const uauth = require('../utils/auth.js');
 
 let tokenUser = '';
+let nowseconds = Math.round(+new Date()/1000);
 
 const pName = 'theName';
 const pVersion = 'theVersion';
@@ -54,6 +55,12 @@ function getUserObject (username) {
         logger.error('getUser failed: ' + err);
         reject(new Error('getUser failed'));
       });
+  });
+}
+
+function sleep (ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
   });
 }
 
@@ -93,6 +100,8 @@ describe('PFilter put server tests', function () {
 
     const userObject = await getUserObject('max');
     const tsnow = new Date();
+    logger.info('Initial timestamp:');
+    logger.info(tsnow);
     const packageNew = new PackageModel({
       name: pName,
       version: pVersion,
@@ -104,6 +113,9 @@ describe('PFilter put server tests', function () {
       creator: userObject
     });
     await packageNew.save();
+
+    // Give timestamp check some time to get changes seen
+    await sleep(1000);
   });
 
   context('[BINTRA-10] Check PUT action', () => {
@@ -127,6 +139,17 @@ describe('PFilter put server tests', function () {
           res.should.have.status(200);
           const reply = res.body[0];
           reply.should.have.property('count', 2);
+
+          logger.info(reply.tscreated);
+          logger.info(reply.tsupdated);
+          reply.tscreated.should.not.equal(reply.tsupdated);
+
+          let epochreply = new Date(reply.tsupdated);
+          let epochseconds = Math.round(epochreply.getTime() / 1000);
+          let deltaseconds = epochseconds - nowseconds;
+          logger.info('did need seconds: ' + deltaseconds);
+          deltaseconds.should.be.below(60); // maximum one minute delta allowed
+
           done();
         });
     });
