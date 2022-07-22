@@ -171,7 +171,8 @@ describe('PFilter put server tests', function () {
     });
     it('patch user', (done) => {
       request(server)
-        .patch('/v1/user/' + idUser) //.set('Content-Type', 'application/json-patch+json')
+        .patch('/v1/user/' + idUser)
+	//.set('Content-Type', 'application/json-patch+json')
         .send([{
           op: 'replace',
           path: '/email',
@@ -186,6 +187,22 @@ describe('PFilter put server tests', function () {
           }
           res.should.have.status(200);
           res.should.be.json; // eslint-disable-line no-unused-expressions
+          done();
+        });
+    });
+    it('List patched user', (done) => {
+      request(server)
+        .get('/v1/user/' + idUser)
+        .auth(tokenUser, {
+          type: 'bearer'
+        })
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          res.should.have.status(200);
+          res.should.be.json; // eslint-disable-line no-unused-expressions
+          res.body.email.should.equal('new@example.com');
           done();
         });
     });

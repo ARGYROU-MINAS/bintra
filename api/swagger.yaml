@@ -908,7 +908,10 @@ paths:
       x-swagger-router-controller: Admins
       requestBody:
         content:
-          '*/*':
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/PatchRequest'
+          'application/json-patch+json':
             schema:
               $ref: '#/components/schemas/PatchRequest'
         required: false

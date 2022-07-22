@@ -260,7 +260,9 @@ module.exports.searchPackages = function searchPackages (req, res, next, jsearch
  * @public
  */
 module.exports.patchUser = function patchUser (req, res, next, jpatch, id) {
+  logger.info('In PATCH controller');
   eventEmitter.emit(EVENTNAME, req);
+  logger.info(req.headers['content-type']);
 
   UsersService.patchUser(id, jpatch)
     .then(function (payload) {
