@@ -276,9 +276,7 @@ coverity:
   before_script:
     - wget -nc -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=bintra" -O coverity_tool.tgz || true
     - ls -l coverity_tool.tgz
-    - mkdir coverity-tool
-    - tar xzf coverity_tool.tgz --strip-components=1 -C coverity-tool
-    - mv --update coverity-tool ${CI_BUILDS_DIR}
+    - cd ${CI_BUILDS_DIR}; mkdir -p coverity-tool; tar xzf coverity_tool.tgz --strip-components=1 -C coverity-tool; cd ${CI_PROJECT_DIR}
     - export PATH="${CI_BUILDS_DIR}/coverity-tool/bin:$PATH"
     - 'export COVERITY_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
   script:
