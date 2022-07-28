@@ -39,6 +39,7 @@ variables:
   FF_NETWORK_PER_BUILD: 1
   NEXUS_URL_RPM: "https://nexus.myocastor.de/repository/bintra_rpm/"
   NEXUS_URL_DEB: "https://nexus.myocastor.de/repository/bintra/"
+  COVERITY_PATH: "/tmp/"
 
 makedocs:
   extends:
@@ -274,16 +275,18 @@ coverity:
     paths:
        - coverity_tool.tgz
   before_script:
-    - wget -nc -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=bintra" -O coverity_tool.tgz || true
+    - wget -nc -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=${COVERITY_PROJECT}" -O coverity_tool.tgz || true
     - ls -l coverity_tool.tgz
-    - cd ${CI_BUILDS_DIR}; mkdir -p coverity-tool; tar xzf ${CI_PROJECT_DIR}/coverity_tool.tgz --strip-components=1 -C coverity-tool; cd ${CI_PROJECT_DIR}
-    - export PATH="${CI_BUILDS_DIR}/coverity-tool/bin:$PATH"
+    - cd ${COVERITY_PATH}; mkdir -p coverity-tool; tar xzf ${CI_PROJECT_DIR}/coverity_tool.tgz --strip-components=1 -C coverity-tool; cd ${CI_PROJECT_DIR}
+    - export PATH="${COVERITY_PATH}coverity-tool/bin:$PATH"
     - 'export COVERITY_VERSION=$(cut -d ":" -f 6 <VERSION.cpe)'
   script:
     - npm install
     - cov-build --dir cov-int --no-command --fs-capture-search ${CI_PROJECT_DIR}
-    - tar czf /tmp/bintra.tar.gz cov-int/
-    - curl --form token=${COVERITY_TOKEN} --form email=${COVERITY_LOGIN} --form file=@/tmp/bintra.tar.gz --form version="${COVERITY_VERSION}" --form description="Bintra" https://scan.coverity.com/builds?project=bintra
+    - tar czf /tmp/${COVERITY_PROJECT}.tar.gz cov-int/
+    - curl --form token=${COVERITY_TOKEN} --form email=${COVERITY_LOGIN} --form file=@/tmp/${COVERITY_PROJECT}.tar.gz --form version="${COVERITY_VERSION}" --form description="${COVERITY_PROJECT}" https://scan.coverity.com/builds?project=${COVERITY_PROJECT}
+  after_script:
+    - ls -l ${COVERITY_PATH}
   allow_failure: true
   artifacts:
     paths:
