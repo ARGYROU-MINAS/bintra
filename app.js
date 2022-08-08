@@ -146,8 +146,13 @@ app.use(cors(corsOptions));
 
 // Add Sentry to app object
 app.use(function (req, res, next) {
+  let realip = req.ip;
+  if(typeof req.headers['x-real-ip'] !== 'undefined') {
+    realip = req.headers['x-real-ip'];
+  }
+
   Sentry.setUser({
-    ip_address: req.ip
+    ip_address: realip
   });
   if (typeof req.headers['geoip-country-code'] !== 'undefined') {
     Sentry.setContext('GeoIP', {
