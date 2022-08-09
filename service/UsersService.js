@@ -417,7 +417,6 @@ exports.checkUser = function (name, passwd) {
       .then(item => {
         if (item.length > 0) {
           const pwhash = item[0].passwd;
-          logger.info('pwd=' + passwd + '; hashfromdb=' + pwhash);
           bcrypt.compare(passwd, pwhash, function (err, result) {
             if (err) {
               logger.error('Some error during compare: ' + err);
@@ -428,12 +427,12 @@ exports.checkUser = function (name, passwd) {
               resolve(item[0]);
             } else {
               logger.error('Pwd mismatch');
-              reject(Error('pwd mismatch'));
+              reject(Error('pwd mismatch')); // do not show that detail to the end user, just log it
             }
           });
         } else {
           logger.error('No entry found or perhaps not yet activated');
-          reject(Error('not found'));
+          reject(Error('not found')); // do not show that detail to the end user, just log it
         }
       })
       .catch(err => {
