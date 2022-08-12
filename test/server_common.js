@@ -210,6 +210,49 @@ describe('server', () => {
     });
   });
 
+  describe('[BINTRA-] Check matomo headers', () => {
+    it('[STEP-1] request normal', (done) => {
+      request(server)
+        .get('/v1/count')
+        .expect(200)
+        .then(response => {
+          done();
+        })
+        .catch(err => done(err));
+    });
+    it('[STEP-2] request forwarded for', (done) => {
+      request(server)
+        .get('/v1/count')
+        .set('x-forwarded-for', '1.2.3.4')
+        .expect(200)
+        .then(response => {
+          done();
+        })
+        .catch(err => done(err));
+    });
+    it('[STEP-3] request real-ip', (done) => {
+      request(server)
+        .get('/v1/count')
+        .set('x-real-ip', '1.2.3.4')
+        .expect(200)
+        .then(response => {
+          done();
+        })
+        .catch(err => done(err));
+    });
+    it('[STEP-3] request forwarded and real-ip', (done) => {
+      request(server)
+        .get('/v1/count')
+        .set('x-real-ip', '1.2.3.4')
+        .set('x-forwarded-for', '4.5.6.7')
+        .expect(200)
+        .then(response => {
+          done();
+        })
+        .catch(err => done(err));
+    });
+  });
+
   after(async () => {
     logger.info('after run');
     await LoginModel.deleteMany({
