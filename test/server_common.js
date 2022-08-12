@@ -210,7 +210,7 @@ describe('server', () => {
     });
   });
 
-  describe('[BINTRA-] Check matomo headers', () => {
+  describe('[BINTRA-33] Check matomo headers', () => {
     it('[STEP-1] request normal', (done) => {
       request(server)
         .get('/v1/count')
