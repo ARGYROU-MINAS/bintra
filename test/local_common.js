@@ -65,6 +65,11 @@ describe('Local common functions', function () {
         return expect(UsersService.isActiveUser(userName)).to.be.rejectedWith(false);
       });
     });
+    it('[STEP-4] Check set user password', function () {
+      Common.setUserPasswd(userName, 'newpwd').then(result => {
+        return expect(UsersService.isActiveUser(userName)).to.eventually.equal(false);
+      });
+    });
   });
 
   after(async () => {
