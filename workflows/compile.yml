@@ -29,6 +29,7 @@
       - conf.js
       - setup_env_test.sh
       - workflows/*.yml
+      - sonar-project.properties
 
 image: node:16
 cache:
