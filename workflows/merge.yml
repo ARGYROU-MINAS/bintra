@@ -100,7 +100,7 @@ unittest:
     reports:
       junit: junit-custom.xml
 
-.testlink:
+testlink:
   extends:
     - .sourcechanged
     - .myglobals
