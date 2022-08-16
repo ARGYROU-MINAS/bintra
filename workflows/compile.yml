@@ -181,7 +181,7 @@ lint:
     paths:
       - reports/
 
-.testlink:
+testlink:
   extends:
     - .sourcechanged
     - .myglobals
