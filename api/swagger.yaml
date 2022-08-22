@@ -1362,6 +1362,8 @@ components:
           type: string
         family:
           $ref: '#/components/schemas/Families'
+        subfamily:
+          type: string
         count:
           type: integer
           example: 123
@@ -1387,6 +1389,8 @@ components:
           type: string
         packageFamily:
           $ref: '#/components/schemas/Families'
+        packageSubFamily:
+          type: string
         packageHash:
           type: string
         count:
