@@ -3,7 +3,7 @@ version: '3'
 
 services:
   database:
-    image: mongo:latest
+    image: mongo:5
     container_name: 'bintra-mongo'
     restart: unless-stopped
     cap_drop:
