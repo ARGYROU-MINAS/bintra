@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:11
 MAINTAINER Kai KRETSCHMANN
 
 RUN apt-get update && apt-get upgrade -y
