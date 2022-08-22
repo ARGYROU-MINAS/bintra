@@ -165,6 +165,9 @@ describe('User stuff', function () {
         .then(itemFound => {
           itemFound.should.have.length(1);
           done();
+        })
+        .catch(err => {
+          done(err);
         });
     });
     it('[STEP-2] Add again package in users name', (done) => {
