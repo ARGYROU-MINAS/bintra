@@ -29,6 +29,9 @@ const PackageSchema = new Schema({
     type: String,
     required: true
   },
+  subfamily: {
+    type: String
+  },
   hash: {
     type: String,
     required: true
