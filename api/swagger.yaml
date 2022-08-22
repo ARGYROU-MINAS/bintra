@@ -13,7 +13,7 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 1.4.40
+  version: 1.5.0
 
 servers:
   - url: https://api.binarytransparency.net/v1
@@ -164,6 +164,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Families'
+        - name: packageSubFamily
+          in: query
+          description: Future family sub info
+          required: false
+          schema:
+            type: string
         - name: packageHash
           in: query
           description: SHA256 hash of downloaded file

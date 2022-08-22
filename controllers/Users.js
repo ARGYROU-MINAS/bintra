@@ -49,10 +49,12 @@ module.exports.checkToken = function checkToken (req, res, next) {
  * Validate package, store information and return alternatives.
  * @public
  */
-module.exports.validatePackage = function validatePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageHash) {
+module.exports.validatePackage = function validatePackage (req, res, next, packageName, packageVersion, packageArch, packageFamily, packageSubFamily, packageHash) {
   const username = req.auth.sub;
 
   eventEmitter.emit(EVENTNAME, req);
+
+  logger.debug('subfamily=' + packageSubFamily);
 
   PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
     .then(function (payload) {
