@@ -133,21 +133,21 @@ describe('User stuff', function () {
 
   context('[BINTRA-21] add package as user', () => {
     it('[STEP-1] Add package in users name', (done) => {
-      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
+      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', '10.2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
         .then(itemFound => {
           itemFound.should.have.length(1);
           done();
         });
     });
     it('[STEP-2] Add again package in users name', (done) => {
-      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
+      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', '10.2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'max')
         .then(itemFound => {
           itemFound.should.have.length(1);
           done();
         });
     });
     it('[STEP-3] Add again package in wrong users name', (done) => {
-      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'maria')
+      PackagesService.validatePackage('theName', 'theVersion', 'theArch', 'debian', '10.2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'maria')
         .then(itemFound => {
           logger.error('should not pass');
           done();

@@ -56,7 +56,7 @@ module.exports.validatePackage = function validatePackage (req, res, next, packa
 
   logger.debug('subfamily=' + packageSubFamily);
 
-  PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageHash, username)
+  PackagesService.validatePackage(packageName, packageVersion, packageArch, packageFamily, packageSubFamily, packageHash, username)
     .then(function (payload) {
       utils.writeJson(res, payload, 200);
     })

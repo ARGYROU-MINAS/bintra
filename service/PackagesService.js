@@ -113,11 +113,12 @@ function replyWithSummary (resolve, answer) {
  * @param {string} packageVersion - Version of the package
  * @param {string} packageArch - Architecture of the package
  * @param {string} packageFamily - Architecture of the package
+ * @param {string} packageSubFamily - Optional subfamily string
  * @param {string} packageHash - SHA hash of the package
  * @param {string} username - The user asking for this, used for creator
  * @returns String
  **/
-exports.validatePackage = function (packageName, packageVersion, packageArch, packageFamily, packageHash, username) {
+exports.validatePackage = function (packageName, packageVersion, packageArch, packageFamily, packageSubFamily, packageHash, username) {
   return new Promise(function (resolve, reject) {
     logger.info('In validate service for ' + username);
     const tsnow = new Date();
