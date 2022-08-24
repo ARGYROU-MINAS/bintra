@@ -8,7 +8,7 @@
 cache:
   - key: $CI_COMMIT_REF_SLUG
     paths:
-      - /usr/local/bin
+      - tools/
 
 preparedocker:
   stage: .pre
@@ -16,7 +16,9 @@ preparedocker:
   before_script:
     - apk add --no-cache curl
   script:
-    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b tools/
+  after_script:
+    - ls -l tools/
 
 dodocker:
   stage: build
@@ -33,12 +35,12 @@ dodocker:
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-    - ls -l /usr/local/bin/ || true
+    - ls -l tools/ || true
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
   after_script:
-    - syft registry.kretschmann.software/kgroup/bintra:$D -o cyclonedx-xml=sbom_$D.xml
+    - ./tools/syft registry.kretschmann.software/kgroup/bintra:$D -o cyclonedx-xml=sbom_$D.xml
   artifacts:
     paths:
       - sbom_*.xml
