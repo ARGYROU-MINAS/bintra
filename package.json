@@ -60,7 +60,7 @@
     "mqtt": "^4.3.7",
     "node-resque": "^9.2.0",
     "oas3-tools": "^2.2.2",
-    "prom-client": "^14.0.0",
+    "prom-client": "^14.1.0",
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.15.0",
     "swagger-ui-express": "^4.5.0",
