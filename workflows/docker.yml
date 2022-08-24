@@ -7,7 +7,8 @@
 
 dodocker:
   stage: build
-  image: docker:20.10.17
+  #image: docker:20.10.17
+  image: docker:22.06-rc-cli
   parallel:
     matrix:
       - D: ['fat', 'deb', 'mqtt', 'pub']
@@ -23,9 +24,9 @@ dodocker:
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
-#  after_script:
-#    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
-#  artifacts:
-#    paths:
-#      - sbom_*.json
+  after_script:
+    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
+  artifacts:
+    paths:
+      - sbom_*.json
 
