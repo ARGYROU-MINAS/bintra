@@ -22,9 +22,10 @@ dodocker:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
-    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
-  artifacts:
-    paths:
-      - sbom_*.json
+#  after_script:
+#    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
+#  artifacts:
+#    paths:
+#      - sbom_*.json
 
