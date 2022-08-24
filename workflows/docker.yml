@@ -5,6 +5,11 @@
   tags:
     - $RUNNERTAG
 
+cache:
+  - key: $CI_COMMIT_REF_SLUG
+    paths:
+      - /usr/local/bin
+
 preparedocker:
   stage: .pre
   image: alpine:latest
@@ -12,10 +17,6 @@ preparedocker:
     - apk add --no-cache curl
   script:
     - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-  cache:
-    - key: $CI_COMMIT_REF_SLUG
-      paths:
-        - /usr/local/bin
 
 dodocker:
   stage: build
