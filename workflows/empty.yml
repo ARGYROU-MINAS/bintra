@@ -2,7 +2,7 @@ dummy:
   variables:
     GIT_STRATEGY: none
   cache: []
-  stage: build
+  stage: .pre
   interruptible: true
   tags:
     - $RUNNERTAG
