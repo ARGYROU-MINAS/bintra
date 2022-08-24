@@ -14,7 +14,7 @@ dodocker:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
-    - docker:19.03.12-dind
+    - docker:20-dind
   extends:
     - .myglobals
   before_script:
@@ -23,9 +23,9 @@ dodocker:
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
-  after_script:
-    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
-  artifacts:
-    paths:
-      - sbom_*.json
+#  after_script:
+#    - docker sbom --format spdx-json --output sbom_$D.json registry.kretschmann.software/kgroup/bintra:$D
+#  artifacts:
+#    paths:
+#      - sbom_*.json
 
