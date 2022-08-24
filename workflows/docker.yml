@@ -5,6 +5,18 @@
   tags:
     - $RUNNERTAG
 
+preparedocker:
+  stage: .pre
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+  cache:
+    - key: $CI_COMMIT_REF_SLUG
+      paths:
+        - /usr/local/bin
+
 dodocker:
   stage: build
   image: docker:20.10.17
@@ -20,7 +32,7 @@ dodocker:
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - ls -l /usr/local/bin/ || true
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
