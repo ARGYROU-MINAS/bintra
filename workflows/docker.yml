@@ -20,7 +20,12 @@ dodocker:
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
   script:
     - docker build -t registry.kretschmann.software/kgroup/bintra:$D . -f Dockerfile_$D
     - docker push registry.kretschmann.software/kgroup/bintra:$D
-
+  after_script:
+    - syft registry.kretschmann.software/kgroup/bintra:$D -o cyclonedx-xml=sbom_$D.xml
+  artifacts:
+    paths:
+      - sbom_*.xml
