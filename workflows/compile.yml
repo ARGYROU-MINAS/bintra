@@ -110,6 +110,35 @@ unittest:
     reports:
       junit: junit-custom.xml
 
+localtest:
+  services:
+    - name: mongo:5
+      alias: mongocomp
+    - name: redis:6
+      alias: rediscomp
+    - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
+      alias: mqttcomp
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: test
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
+  variables:
+    NODE_ENV: test
+  before_script:
+    - df .
+    - echo "Using parallel services suffix comp"
+    - npm install
+    - ping -c 3 mongocomp
+    - ping -c 3 rediscomp
+    - ping -c 3 mqttcomp
+    - mongosh --host mongocomp <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongocomp
+    - "./setup_env_test.sh -s comp"
+  script:
+    - npm run combined test/local_*
+  allow_failure: true
+
 lint:
   extends:
     - .sourcechanged
