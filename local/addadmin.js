@@ -24,7 +24,6 @@ c.doconnect().then(function (db) {
     // store hash in database
     await login.save();
 
-
     process.exit();
   }); // hash
 }); // doconnect
