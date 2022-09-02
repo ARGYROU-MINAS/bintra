@@ -5,19 +5,26 @@ const username = c.cmdArgs[0];
 const password = c.cmdArgs[1];
 console.log('Add admin name=' + username + ' Password=' + password);
 
-// salt, hash, and store
-bcrypt.hash(password, c.saltRounds, async function (err, hash) {
-  if (err) {
-    throw err;
-  }
-  const login = new c.LoginModel({
-    name: username,
-    passwd: hash,
-    role: 'admin'
-  });
+c.doconnect().then(function (db) {
+  console.log('db connected');
 
-  // store hash in database
-  await login.save();
+  // salt, hash, and store
+  bcrypt.hash(password, c.saltRounds, async function (err, hash) {
+    if (err) {
+      throw err;
+    }
+    console.log('calculated pwd hash ' + hash);
+    const login = new c.LoginModel({
+      name: username,
+      passwd: hash,
+      role: 'admin',
+      status: 'active'
+    });
 
-  process.exit();
-});
+    // store hash in database
+    await login.save();
+
+
+    process.exit();
+  }); // hash
+}); // doconnect
