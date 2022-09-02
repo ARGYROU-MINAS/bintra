@@ -93,7 +93,7 @@ unittest:
     - echo "show dbs" | mongosh --host mongocomp
     - "./setup_env_test.sh -s comp"
   script:
-    - npm run combined test/api_* test/server_adminsummary.js test/server_summary.js test/server_common.js test/server_admuser.js test/server_delpackage.js  test/server_feeds.js test/server_packages.js test/server_queue.js test/server_roles.js test/server_putpackage.js test/server_webfilter.js test/local_*
+    - npm run combined test/api_* test/server_adminsummary.js test/server_summary.js test/server_common.js test/server_admuser.js test/server_delpackage.js  test/server_feeds.js test/server_packages.js test/server_queue.js test/server_roles.js test/server_putpackage.js test/server_webfilter.js
   after_script:
     - echo "show dbs" | mongosh --host mongocomp
     - df .
