@@ -122,6 +122,7 @@ localtest:
     - .sourcechanged
     - .myglobals
   stage: test
+  needs: ["unittest"]
   image: "$CI_REGISTRY/kgroup/bintra:fat"
   variables:
     NODE_ENV: test
