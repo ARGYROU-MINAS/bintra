@@ -100,6 +100,36 @@ unittest:
     reports:
       junit: junit-custom.xml
 
+localtest:
+  services:
+    - name: mongo:5
+      alias: mongomerge
+    - name: redis:6
+      alias: redismerge
+    - name: "$CI_REGISTRY/kgroup/bintra:mqtt"
+      alias: mqttmerge
+  extends:
+    - .sourcechanged
+    - .myglobals
+  stage: test
+  needs: ["unittest"]
+  image: "$CI_REGISTRY/kgroup/bintra:fat"
+  variables:
+    NODE_ENV: test
+  before_script:
+    - df .
+    - echo "Using parallel services suffix merge"
+    - npm install
+    - ping -c 3 mongomerge
+    - ping -c 3 redismerge
+    - ping -c 3 mqttmerge
+    - mongosh --host mongomerge <testutils/cleanup.js
+    - echo "show dbs" | mongosh --host mongomerge
+    - "./setup_env_test.sh -s merge"
+  script:
+    - npm run combined test/local_*
+  allow_failure: true
+
 testlink:
   extends:
     - .sourcechanged
