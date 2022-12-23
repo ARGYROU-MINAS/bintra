@@ -51,7 +51,7 @@
     "hpp": "^0.2.3",
     "js-yaml": "^4.1.0",
     "json-patch": "^0.7.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "log4js": "^6.6.1",
     "mastodon": "^1.2.2",
     "matomo-tracker": "^2.2.4",
